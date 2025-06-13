@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">bankApp</string>
+    <string name="expenses_title">Расходы сегодня</string>
+    <string name="income_title">Доходы сегодня</string>
+    <string name="accounts_title">Мой счет</string>
+    <string name="articles_title">Мои статьи</string>
+    <string name="settings_title">Настройки</string>
+
+    <string name="expenses_button">Расходы</string>
+    <string name="income_button">Доходы</string>
+    <string name="accounts_button">Мой счет</string>
+    <string name="articles_button">Мои статьи</string>
+    <string name="settings_button">Настройки</string>
+
+    <string name="totalAmount_subtitle">Всего</string>
+    <string name="balance">Баланс</string>
+    <string name="currency">Валюта</string>
+
+    <string name="settings_dark_theme">Темная тема</string>
+    <string name="settings_main_color">Основной цвет</string>
+    <string name="settings_sound">Звуки</string>
+    <string name="settings_haptics">Хаптики</string>
+    <string name="settings_password">Код пароль</string>
+    <string name="settings_synchronization">Синхронизация</string>
+    <string name="settings_language">Язык</string>
+    <string name="settings_about_program">О программе</string>
+
+
+
+</resources>
