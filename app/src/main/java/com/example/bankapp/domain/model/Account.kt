@@ -7,10 +7,8 @@ data class Account(
     val id: Int,
     val userId: Int,
     val name: String,
-    val balance: Double,
+    val balance: String,
     val currency: String,
-    val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime
 )
 
 

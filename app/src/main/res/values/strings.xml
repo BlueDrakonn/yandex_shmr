@@ -5,11 +5,15 @@
     <string name="accounts_title">Мой счет</string>
     <string name="articles_title">Мои статьи</string>
     <string name="settings_title">Настройки</string>
+    <string name="history_title">Моя история</string>
+    <string name="expenses_add_title">Мои расходы</string>
+    <string name="income_add_title">Мои доходы</string>
+
 
     <string name="expenses_button">Расходы</string>
     <string name="income_button">Доходы</string>
-    <string name="accounts_button">Мой счет</string>
-    <string name="articles_button">Мои статьи</string>
+    <string name="accounts_button">Счет</string>
+    <string name="articles_button">Статьи</string>
     <string name="settings_button">Настройки</string>
 
     <string name="totalAmount_subtitle">Всего</string>
@@ -25,6 +29,17 @@
     <string name="settings_language">Язык</string>
     <string name="settings_about_program">О программе</string>
 
+    <string name="history_start">Начало</string>
+    <string name="history_end">Конец</string>
+    <string name="history_sum">Сумма</string>
+
+    <string name="bottom_sheet_rubble">Российский рубль ₽</string>
+    <string name="bottom_sheet_dollar">Американский доллар $</string>
+    <string name="bottom_sheet_euro">Евро</string>
+    <string name="bottom_sheet_cancel">Отмена</string>
+
+    <string name="date_picker_confirm">ок</string>
+    <string name="date_picker_cancel">Отмена</string>
 
 
 </resources>

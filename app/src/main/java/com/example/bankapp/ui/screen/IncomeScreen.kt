@@ -16,8 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bankapp.R
 import com.example.bankapp.domain.viewmodel.MainViewModel
+
 import com.example.bankapp.ui.common.LazyList
 import com.example.bankapp.ui.common.PriceDisplay
 import com.example.bankapp.ui.common.ResultStateHandler
@@ -25,7 +27,7 @@ import com.example.bankapp.ui.common.TrailingContent
 @Composable
 fun IncomeScreen(viewModel: MainViewModel) {
 
-    val mock by viewModel.incomeTransactions.collectAsState()
+    val mock by viewModel.incomeTransactionState.collectAsState()
 
     val totalAmount by viewModel.totalIncome.collectAsState()
 
@@ -46,7 +48,7 @@ fun IncomeScreen(viewModel: MainViewModel) {
                         },
                         trailingContent = {
                             PriceDisplay(
-                                amount = totalAmount,
+                                amount = totalAmount.toString(),
                                 currencySymbol = "₽" //пока мок версия
                             )
                         },

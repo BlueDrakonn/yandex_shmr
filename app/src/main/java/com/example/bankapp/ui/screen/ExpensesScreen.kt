@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bankapp.R
 import com.example.bankapp.domain.viewmodel.MainViewModel
 import com.example.bankapp.ui.common.LazyList
@@ -27,7 +28,7 @@ import com.example.bankapp.ui.common.TrailingContent
 @Composable
 fun ExpensesScreen(viewModel: MainViewModel) {
 
-    val mock by viewModel.expenseTransactions.collectAsState()
+    val mock by viewModel.expenseTransactionState.collectAsState()
 
     val totalAmount by viewModel.totalExpense.collectAsState()
 
@@ -47,7 +48,7 @@ fun ExpensesScreen(viewModel: MainViewModel) {
                         },
                         trailingContent = {
                             PriceDisplay(
-                                amount = totalAmount,
+                                amount = totalAmount.toString(),
                                 currencySymbol = "₽" //пока мок версия тк не очень понятно какой значок отображать ессли список пустой, если расходы привязаны к счету, то можно валюту ссчета, но пока ноль инфы про это
                             )
                         },
