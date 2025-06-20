@@ -30,16 +30,10 @@ fun <T> ResultStateHandler(
         }
         is ResultState.Error -> {
 
-            Box(
-                modifier = modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = state.message ?: "Unknown error",
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
+            ErrorHandler(
+                errorMessage = state.message,
+                errorCode = state.code
+            )
         }
     }
 }

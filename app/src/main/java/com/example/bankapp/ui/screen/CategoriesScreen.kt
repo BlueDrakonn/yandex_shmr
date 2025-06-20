@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bankapp.domain.viewmodel.MainViewModel
 import com.example.bankapp.ui.common.LazyList
@@ -33,7 +34,9 @@ import com.example.bankapp.ui.common.ResultStateHandler
 @Composable
 fun CategoriesScreen(viewModel: MainViewModel) {
 
-    val mock by viewModel.categoryState.collectAsState()
+
+    //val mock by viewModel.categoryState.collectAsState()
+    val mock by viewModel.observeCategories().collectAsStateWithLifecycle()
 
     var searchQuery by remember { mutableStateOf("") }
 

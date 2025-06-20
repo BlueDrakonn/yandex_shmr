@@ -348,47 +348,49 @@ fun BottomNavigationItem(
 
 
 
-        if (selected) {
+            if (selected) {
 
-            val secondaryColor = MaterialTheme.colorScheme.secondary
-            Box(
-                modifier = Modifier
-                    .size(width = 64.dp, height = 32.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .drawBehind {
-                        drawRect(
-                            color = secondaryColor,
-                            size = size
-                        )
-                    },
-                contentAlignment = Alignment.Center
+                val secondaryColor = MaterialTheme.colorScheme.secondary
+                Box(
+                    modifier = Modifier
+                        .size(width = 64.dp, height = 32.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .drawBehind {
+                            drawRect(
+                                color = secondaryColor,
+                                size = size
+                            )
+                        },
+                    contentAlignment = Alignment.Center
 
 
                 ) {
+                    Icon(
+                        painter = painterResource(iconId),
+                        contentDescription = stringResource(buttonTitleRes),
+                        modifier = Modifier
+                            .size(width = 32.dp, height = 32.dp),
+                        tint = MaterialTheme.colorScheme.primary
+
+                    )
+                }
+
+            } else {
                 Icon(
                     painter = painterResource(iconId),
                     contentDescription = stringResource(buttonTitleRes),
                     modifier = Modifier
                         .size(width = 32.dp, height = 32.dp),
-                    tint = MaterialTheme.colorScheme.primary
-
                 )
             }
 
-        } else {
-            Icon(
-                painter = painterResource(iconId),
-                contentDescription = stringResource(buttonTitleRes),
-                modifier = Modifier
-                    .size(width = 32.dp, height = 32.dp),
+            Text(
+                text = stringResource(buttonTitleRes),
+                color = textColor,
+                style = MaterialTheme.typography.labelMedium
             )
-        }
 
-        Text(
-            text = stringResource(buttonTitleRes),
-            color = textColor,
-            style = MaterialTheme.typography.labelMedium
-            )
+
     }
 
 }

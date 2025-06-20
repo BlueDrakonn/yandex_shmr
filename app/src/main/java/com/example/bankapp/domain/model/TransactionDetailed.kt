@@ -8,5 +8,7 @@ data class TransactionDetailed(
     val amount: String,
     val currency: String,
     val createdAt: String,
-    val updatedAt: String
-)
+    val updatedAt: String,
+    val transactionDate: String,
+    override val isIncome: Boolean
+): IncomeInfo

@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bankapp.R
 import com.example.bankapp.domain.viewmodel.MainViewModel
@@ -28,9 +29,9 @@ import com.example.bankapp.ui.common.TrailingContent
 @Composable
 fun ExpensesScreen(viewModel: MainViewModel) {
 
-    val mock by viewModel.expenseTransactionState.collectAsState()
+    val mock by viewModel.observeTodayExpenses().collectAsStateWithLifecycle()
 
-    val totalAmount by viewModel.totalExpense.collectAsState()
+    val totalAmount by viewModel.observeTodayTotalExpenses().collectAsStateWithLifecycle()
 
     ResultStateHandler(
         state = mock,

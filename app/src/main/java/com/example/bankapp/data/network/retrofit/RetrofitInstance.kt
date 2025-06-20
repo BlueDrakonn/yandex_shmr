@@ -4,6 +4,7 @@ import com.example.bankapp.data.network.api.ApiService
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 object RetrofitInstance {
     private const val BASE_URL = "https://shmr-finance.ru/"
@@ -22,3 +23,4 @@ object RetrofitInstance {
         retrofit.create(ApiService::class.java)
     }
 }
+

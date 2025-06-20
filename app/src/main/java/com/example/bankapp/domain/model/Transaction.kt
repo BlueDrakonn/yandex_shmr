@@ -7,5 +7,6 @@ data class Transaction (
     val icon: String? = null,
     val amount: String,
     val currency: String,
+    override val isIncome: Boolean
 
-)
+): IncomeInfo

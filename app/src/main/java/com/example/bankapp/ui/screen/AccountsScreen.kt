@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bankapp.R
 
@@ -36,7 +37,7 @@ import com.example.bankapp.ui.common.TrailingContent
 fun AccountsScreen(viewModel: MainViewModel) {
 
 
-    val mock by viewModel.accounts.collectAsState()
+    val mock by viewModel.observeAccounts().collectAsStateWithLifecycle()
 
     var showBottomSheet by remember { mutableStateOf(false) }
 

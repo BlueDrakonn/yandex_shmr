@@ -41,5 +41,8 @@
     <string name="date_picker_confirm">ок</string>
     <string name="date_picker_cancel">Отмена</string>
 
+    <string name="wrong_date_format">Неверный формат данных</string>
+    <string name="error_500">error 500</string>
+
 
 </resources>

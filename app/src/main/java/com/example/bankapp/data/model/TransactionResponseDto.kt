@@ -23,29 +23,34 @@ data class TransactionResponseDto(
     val comment: String?,
     val createdAt: String,
     val updatedAt: String
-)
+) {
+    fun toTransaction(): Transaction {
+        return Transaction(
+            id = id,
+            title = category.name,
+            subtitle = comment,
+            icon = category.emoji,
+            amount = amount.toString(),
+            currency = account.currency,
+            isIncome = category.isIncome
+        )
+    }
+    fun toTransactionDetailed(): TransactionDetailed {
+        return TransactionDetailed(
+            id = id,
+            title = category.name,
+            subtitle = comment,
+            icon = category.emoji,
+            amount = amount.toString(),
+            currency = account.currency,
+            createdAt = formatDate(createdAt),
+            updatedAt = formatDate(updatedAt),
+            transactionDate= formatDate(transactionDate),
+            isIncome = category.isIncome
+        )
+    }
 
-fun TransactionResponseDto.toTransaction(): Transaction {
-    return Transaction(
-        id = id,
-        title = category.name,
-        subtitle = comment,
-        icon = category.emoji,
-        amount = amount.toString(),
-        currency = account.currency
-    )
-}
-fun TransactionResponseDto.toTransactionDetailed(): TransactionDetailed {
-    return TransactionDetailed(
-        id = id,
-        title = category.name,
-        subtitle = comment,
-        icon = category.emoji,
-        amount = amount.toString(),
-        currency = account.currency,
-        createdAt = formatDate(createdAt),
-        updatedAt = formatDate(updatedAt)
-    )
+
 }
 
 

@@ -28,6 +28,7 @@ import com.example.bankapp.ui.common.DatePickerModal
 import com.example.bankapp.ui.common.LazyList
 import com.example.bankapp.ui.common.LeadIcon
 import com.example.bankapp.ui.common.PriceDisplay
+import com.example.bankapp.ui.common.PriceWithDate
 import com.example.bankapp.ui.common.ResultStateHandler
 import com.example.bankapp.ui.common.TrailingContent
 
@@ -40,17 +41,17 @@ enum class TransactionType {
 fun HistoryScreen(type: TransactionType, viewModel: MainViewModel) {
 
     val transactions by when (type) {
-        TransactionType.INCOME -> viewModel.incomeTransactionHistoryState.collectAsStateWithLifecycle()
-        TransactionType.EXPENSE -> viewModel.expenseTransactionHistoryState.collectAsStateWithLifecycle()
+        TransactionType.INCOME -> viewModel.observeHistoryIncome().collectAsStateWithLifecycle()
+        TransactionType.EXPENSE -> viewModel.observeHistoryExpenses().collectAsStateWithLifecycle()
     }
 
     val totalSum by when (type) {
-        TransactionType.INCOME -> viewModel.totalIncomeHistory.collectAsStateWithLifecycle()
-        TransactionType.EXPENSE -> viewModel.totalExpenseHistory.collectAsStateWithLifecycle()
+        TransactionType.INCOME -> viewModel.observeHistoryTotalIncome().collectAsStateWithLifecycle()
+        TransactionType.EXPENSE -> viewModel.observeHistoryTotalExpenses().collectAsStateWithLifecycle()
     }
 
-    val endDate by viewModel.endDate.collectAsStateWithLifecycle()
-    val startDate by viewModel.startDate.collectAsStateWithLifecycle()
+    val endDate by viewModel.observeEndDate().collectAsStateWithLifecycle()
+    val startDate by viewModel.observeStartDate().collectAsStateWithLifecycle()
 
 
     var showDatePicker by remember { mutableStateOf(false) }
@@ -115,7 +116,7 @@ fun HistoryScreen(type: TransactionType, viewModel: MainViewModel) {
 
                     ListItem(
                         modifier = Modifier
-                            .height(70.dp)
+                            //.height(70.dp)
                             .clickable { },
                         lead = { item.icon?.let { LeadIcon(label = it) } },
                         content = {
@@ -139,10 +140,15 @@ fun HistoryScreen(type: TransactionType, viewModel: MainViewModel) {
                         trailingContent = {
                             TrailingContent(
                                 content = {
-                                    PriceDisplay(
-                                        amount = item.amount,
-                                        currencySymbol = item.currency
+
+                                    PriceWithDate(
+                                        date = item.transactionDate,
+                                        price = { PriceDisplay(
+                                            amount = item.amount,
+                                            currencySymbol = item.currency
+                                        ) }
                                     )
+
                                 },
                                 icon = {
                                     Icon(

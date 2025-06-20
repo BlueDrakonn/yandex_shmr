@@ -10,15 +10,25 @@ data class AccountDto(
     val currency: String,
     val createdAt: String,
     val updatedAt: String
-)
-
-fun AccountDto.toAccount(): Account {
-    return Account(
-        id = id,
-        userId = userId,
-        name = name,
-        balance = balance,
-        currency = currency
-    )
+) {
+    fun toAccount(): Account {
+        return Account(
+            id = id,
+            userId = userId,
+            name = name,
+            balance = balance,
+            currency = currency
+        )
+    }
 }
+
+//fun AccountDto.toAccount(): Account {
+//    return Account(
+//        id = id,
+//        userId = userId,
+//        name = name,
+//        balance = balance,
+//        currency = currency
+//    )
+//}
 

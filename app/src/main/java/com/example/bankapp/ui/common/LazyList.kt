@@ -1,12 +1,15 @@
 package com.example.bankapp.ui.common
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun <T> LazyList(
@@ -14,7 +17,7 @@ fun <T> LazyList(
     topItem: (@Composable () -> Unit)? = null,
     itemsList: List<T>,
     itemTemplate: @Composable (T) -> Unit,
-    lastItemDivider: (@Composable () -> Unit) = {HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)}
+    lastItemDivider: (@Composable () -> Unit) = {HorizontalDivider(Modifier.height(1.dp),color = MaterialTheme.colorScheme.outlineVariant)}
 ) {
     Column(
         modifier = modifier

@@ -1,5 +1,6 @@
 package com.example.bankapp.data.network.api
 
+import com.example.bankapp.TOKEN
 import com.example.bankapp.data.model.AccountDto
 import com.example.bankapp.data.model.TransactionResponseDto
 import com.example.bankapp.domain.model.Category
@@ -11,7 +12,6 @@ import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-val TOKEN = "Bearer Tp1MBTvyXG55T9pvr5NFAHas"
 
 interface ApiService {
     @GET("api/v1/accounts")
