@@ -1,120 +1,195 @@
 package com.example.bankapp.domain.viewmodel
 
-
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.bankapp.data.network.retrofit.RetrofitInstance
+import com.example.bankapp.data.repository.AccountRepositoryImpl
+import com.example.bankapp.data.repository.CategoryRepositoryImpl
+import com.example.bankapp.data.repository.HistoryTransactionRepositoryImpl
+import com.example.bankapp.data.repository.TodayTransactionRepositoryImpl
 import com.example.bankapp.domain.model.Account
 import com.example.bankapp.domain.model.Category
-import com.example.bankapp.data.model.TransactionResponse
-import com.example.bankapp.mock.repository.MockRepository
+import com.example.bankapp.domain.model.IncomeInfo
 import com.example.bankapp.domain.model.Transaction
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.example.bankapp.domain.model.TransactionDetailed
+import com.example.bankapp.domain.repository.AccountRepository
+import com.example.bankapp.domain.repository.CategoryRepository
+import com.example.bankapp.domain.repository.HistoryTransactionRepository
+import com.example.bankapp.domain.repository.TodayTransactionRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 
 
 sealed class ResultState<out T> {
     data class Success<out T>(val data: T) : ResultState<T>()
+    data class Error(val message: String?, val code: Int? = null, val throwable: Throwable? = null) : ResultState<Nothing>()
     object Loading : ResultState<Nothing>()
-    data class Error(val message: String? = null, val throwable: Throwable? = null) : ResultState<Nothing>()
 }
 
+class MainViewModel(): ViewModel() {
 
-class MainViewModel : ViewModel() {
 
-    private val repository = MockRepository() // Пока mock
+    private var historyTransactionResponseJob: Job? = null
 
-    private val _totalIncome = MutableStateFlow(0.0)
-    val totalIncome: StateFlow<Double> = _totalIncome
 
-    private val _totalExpense = MutableStateFlow(0.0)
-    val totalExpense: StateFlow<Double> = _totalExpense
+    private val categoryRepository: CategoryRepository = CategoryRepositoryImpl(
+        apiService = RetrofitInstance.api
+    )
 
-    private val _categories = MutableStateFlow<ResultState<List<Category>>>(ResultState.Loading)
-    val categories: StateFlow<ResultState<List<Category>>> = _categories
+    private val accountRepository: AccountRepository = AccountRepositoryImpl(
+        apiService = RetrofitInstance.api
+    )
 
-    private val _accounts = MutableStateFlow<ResultState<List<Account>>>(ResultState.Loading)
-    val accounts: StateFlow<ResultState<List<Account>>> = _accounts
+    private val todayTransactionRepository: TodayTransactionRepository = TodayTransactionRepositoryImpl(
+        apiService = RetrofitInstance.api
+    )
 
-    private val _incomeTransactions = MutableStateFlow<ResultState<List<Transaction>>>(ResultState.Loading)
-    val incomeTransactions: StateFlow<ResultState<List<Transaction>>> = _incomeTransactions
+    private val historyTransactionRepository: HistoryTransactionRepository = HistoryTransactionRepositoryImpl(
+        apiService = RetrofitInstance.api
+    )
 
-    private val _expenseTransactions = MutableStateFlow<ResultState<List<Transaction>>>(ResultState.Loading)
-    val expenseTransactions: StateFlow<ResultState<List<Transaction>>> = _expenseTransactions
+    fun defaultDate() {
+        viewModelScope.launch {
+            historyTransactionRepository.setStartDate(LocalDate.now().withDayOfMonth(1).format(DateTimeFormatter.ISO_DATE))
+            historyTransactionRepository.setEndDate(LocalDate.now().format(DateTimeFormatter.ISO_DATE))
+
+        }
+
+    }
+
+
+    fun observeCategories(): StateFlow<ResultState<List<Category>>> {
+        return categoryRepository.categoryState
+    }
+
+    fun observeAccounts(): StateFlow<ResultState<List<Account>>> {
+        return accountRepository.accountState
+    }
+
+    fun observeTodayExpenses(): StateFlow<ResultState<List<Transaction>>>{
+        return todayTransactionRepository.transactionState.filterExpenses().stateIn(viewModelScope, SharingStarted.Lazily, ResultState.Loading)
+    }
+
+    fun observeTodayIncome(): StateFlow<ResultState<List<Transaction>>>{
+        return todayTransactionRepository.transactionState.filterIncome().stateIn(viewModelScope, SharingStarted.Lazily, ResultState.Loading)
+    }
+
+    fun observeTodayTotalExpenses(): StateFlow<Double>{
+        return todayTransactionRepository.totalExpensesState
+    }
+
+    fun observeTodayTotalIncome(): StateFlow<Double>{
+        return todayTransactionRepository.totalIncomeState
+    }
+
+    fun observeHistoryExpenses(): StateFlow<ResultState<List<TransactionDetailed>>>{
+        return historyTransactionRepository.transactionState.filterExpenses().stateIn(viewModelScope, SharingStarted.Lazily, ResultState.Loading)
+    }
+
+    fun observeHistoryIncome(): StateFlow<ResultState<List<TransactionDetailed>>>{
+        return historyTransactionRepository.transactionState.filterIncome().stateIn(viewModelScope, SharingStarted.Lazily, ResultState.Loading)
+    }
+
+    fun observeHistoryTotalExpenses(): StateFlow<Double>{
+        return historyTransactionRepository.totalExpensesState
+    }
+
+    fun observeHistoryTotalIncome(): StateFlow<Double>{
+        return historyTransactionRepository.totalIncomeState
+    }
+
+    fun observeStartDate(): StateFlow<String>{
+        return historyTransactionRepository.startDate
+    }
+
+    fun observeEndDate(): StateFlow<String>{
+        return historyTransactionRepository.endDate
+    }
+
+
+
+
 
     init {
-        loadInitialData()
-    }
+        viewModelScope.launch(Dispatchers.IO) {
 
-    private fun loadInitialData() {
-        viewModelScope.launch {
+                launch {
+                    accountRepository.loadAccounts()
+                    todayTransactionRepository.loadTodayTransaction(accountRepository.accountId)
 
-            try {
-                val loadedCategories = repository.getCategories()
-                _categories.value = ResultState.Success(loadedCategories)
-            } catch (e: Exception) {
-                _categories.value = ResultState.Error(e.message, e)
-            }
-
-            try {
-                val loadedAccounts = repository.getAccounts()
-                _accounts.value = ResultState.Success(loadedAccounts)
-
-                val firstAccountId = loadedAccounts.firstOrNull()?.id
-                if (firstAccountId != null) {
-                    loadTransactionsForAccount(firstAccountId)
-                } else {
-                    _incomeTransactions.value = ResultState.Success(emptyList())
-                    _expenseTransactions.value = ResultState.Success(emptyList())
                 }
-            } catch (e: Exception) {
-                _accounts.value = ResultState.Error(e.message, e)
-                _incomeTransactions.value = ResultState.Error("Не найдено транзакций", null)
-                _expenseTransactions.value = ResultState.Error("Не найдено транзакций", null)
-            }
+                launch {
+                    categoryRepository.loadCategories()
+                }
+
         }
     }
 
-    private suspend fun loadTransactionsForAccount(accountId: Int) {
-        _incomeTransactions.value = ResultState.Loading
-        _expenseTransactions.value = ResultState.Loading
 
-        try {
-            val todayTransactions = repository.getTodayTransactionsByAccount(accountId)
-            val incomeList = mutableListOf<Transaction>()
-            val expenseList = mutableListOf<Transaction>()
+    fun startGettingHistoryTransactions() {
 
-            todayTransactions.forEach { transaction ->
-                val uiModel = transaction.toUi()
-                if (transaction.category.isIncome) {
-                    incomeList.add(uiModel)
-                } else {
-                    expenseList.add(uiModel)
-                }
-            }
-
-            _incomeTransactions.value = ResultState.Success(incomeList)
-            _expenseTransactions.value = ResultState.Success(expenseList)
-
-            _totalIncome.value = incomeList.sumOf { it.amount }
-            _totalExpense.value = expenseList.sumOf { it.amount }
-
-        } catch (e: Exception) {
-            _incomeTransactions.value = ResultState.Error(e.message, e)
-            _expenseTransactions.value = ResultState.Error(e.message, e)
-            _totalIncome.value = 0.0
-            _totalExpense.value = 0.0
+        if (historyTransactionResponseJob?.isActive == true){
+            //Log.d("RESPONSE_DATA1", "joba не сдохла")
+            return
         }
+
+        historyTransactionResponseJob = viewModelScope.launch(Dispatchers.IO) {
+            accountRepository.accountId?.let {
+                //Log.d("RESPONSE_DATA1","$historyTransactionResponseJob}")
+                historyTransactionRepository.loadHistoryTransaction(
+                    it
+                )
+            }
+        }
+
+
+    }
+
+    fun cancelGettingHistoryTransactions() {
+        historyTransactionResponseJob?.cancel()
+    }
+
+    fun changeStartDate(date : String) {
+            historyTransactionRepository.setStartDate(date)
+            cancelGettingHistoryTransactions()
+            startGettingHistoryTransactions()
+
+    }
+
+    fun changeEndDate(date : String) {
+            historyTransactionRepository.setEndDate(date)
+            cancelGettingHistoryTransactions()
+            startGettingHistoryTransactions()
+
+
     }
 }
 
-fun TransactionResponse.toUi(): Transaction {
-    return Transaction(
-        id = id,
-        title = category.title,
-        subtitle = comment,
-        icon = category.icon,
-        amount = amount,
-        currency = account.currency
-    )
-}
+
+fun<T: IncomeInfo> StateFlow<ResultState<List<T>>>.filterExpenses(): Flow<ResultState<List<T>>> =
+    this.   map { resultState ->
+        when (resultState) {
+            is ResultState.Success -> ResultState.Success(resultState.data.filter { !it.isIncome })
+            else -> resultState
+        }
+    }
+
+fun<T: IncomeInfo> StateFlow<ResultState<List<T>>>.filterIncome(): Flow<ResultState<List<T>>> =
+    this.   map { resultState ->
+        when (resultState) {
+            is ResultState.Success -> ResultState.Success(resultState.data.filter { it.isIncome })
+            else -> resultState
+        }
+    }

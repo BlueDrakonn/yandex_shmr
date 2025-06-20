@@ -3,18 +3,28 @@ package com.example.bankapp.ui.screen
 import ListItem
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bankapp.R
+
 import com.example.bankapp.domain.viewmodel.MainViewModel
+import com.example.bankapp.ui.common.CurrencyChangeBottomSheet
 import com.example.bankapp.ui.common.LazyList
 import com.example.bankapp.ui.common.LeadIcon
 import com.example.bankapp.ui.common.PriceDisplay
@@ -22,14 +32,25 @@ import com.example.bankapp.ui.common.ResultStateHandler
 import com.example.bankapp.ui.common.TrailingContent
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountsScreen(viewModel: MainViewModel) {
 
-    val mock by viewModel.accounts.collectAsState()
+
+    val mock by viewModel.observeAccounts().collectAsStateWithLifecycle()
+
+    var showBottomSheet by remember { mutableStateOf(false) }
 
     ResultStateHandler(
         state = mock,
         onSuccess = { data ->
+
+
+            if (showBottomSheet) {
+
+                CurrencyChangeBottomSheet({showBottomSheet = false})
+            }
+
             LazyList(
                 itemsList = data,
                 lastItemDivider = {},
@@ -70,7 +91,7 @@ fun AccountsScreen(viewModel: MainViewModel) {
                     ListItem(
                         modifier = Modifier
                             .background(MaterialTheme.colorScheme.secondary)
-                            .clickable {  },
+                            .clickable { showBottomSheet = true  },
                         content = {
                             Text(
                                 text = stringResource(R.string.currency),
