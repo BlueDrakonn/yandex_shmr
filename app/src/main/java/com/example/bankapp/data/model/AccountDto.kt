@@ -22,13 +22,4 @@ data class AccountDto(
     }
 }
 
-//fun AccountDto.toAccount(): Account {
-//    return Account(
-//        id = id,
-//        userId = userId,
-//        name = name,
-//        balance = balance,
-//        currency = currency
-//    )
-//}
 

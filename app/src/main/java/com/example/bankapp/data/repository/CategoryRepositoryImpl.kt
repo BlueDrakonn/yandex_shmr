@@ -36,8 +36,6 @@ class CategoryRepositoryImpl(private  val apiService: ApiService):CategoryReposi
 
                 }
 
-
-
                 when(result) {
 
                     is ResultState.Success -> {
@@ -47,8 +45,6 @@ class CategoryRepositoryImpl(private  val apiService: ApiService):CategoryReposi
                     }
                     else -> _categoryState.value = result
                 }
-
-
             }
             else -> {}
         }

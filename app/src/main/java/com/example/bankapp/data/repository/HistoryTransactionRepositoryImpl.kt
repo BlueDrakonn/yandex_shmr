@@ -69,8 +69,6 @@ class HistoryTransactionRepositoryImpl(private val apiService: ApiService): Hist
 
     private suspend fun loadTransaction(accountId: Int) {
 
-
-
                 var result = safeApiCall(
                     mapper = {
                         val transaction = it.toTransactionDetailed()

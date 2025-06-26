@@ -22,7 +22,6 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
-
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -55,7 +54,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.bankapp.R
 import com.example.bankapp.domain.viewmodel.MainViewModel
-
+import com.example.bankapp.ui.common.AddButton
 import com.example.bankapp.ui.screen.AccountsScreen
 import com.example.bankapp.ui.screen.CategoriesScreen
 import com.example.bankapp.ui.screen.ExpensesScreen
@@ -123,84 +122,14 @@ fun AppNavigation() {
 
     val  mainViewModel: MainViewModel = viewModel()
 
-
     Scaffold(
         bottomBar = {
             BottomNavigationBar(navController) },
         topBar = {
-            CenterAlignedTopAppBar(
-                navigationIcon = {
-                    when(currentScreen) {
-                    Screen.HISTORY_INCOME -> IconButton(onClick = {navController.popBackStack()}) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "navigate to previous screen")
-                    }
-                    Screen.HISTORY_EXPENSES -> IconButton(onClick = {navController.popBackStack()}) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "navigate to previous screen")
-                    }
-                    else -> Unit
-                }
-                                 },
-                title = {
-                    Text(
-                        text = stringResource(currentScreen.titleRes),
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        style = MaterialTheme.typography.titleLarge
-                    )},
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = PrimaryGreen,
-                ),
 
-                actions = {
-                    when (currentScreen) {
-                    Screen.EXPENSES -> IconButton(
-                        onClick = { navController.navigate(Screen.HISTORY_EXPENSES.route)}
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.history),
-                            contentDescription = "history"
-                        ) }
-                    Screen.INCOME -> IconButton(
-                        onClick = {navController.navigate(Screen.HISTORY_INCOME.route)}
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.history),
-                            contentDescription = "history"
-                        )
-                    }
-                    Screen.ACCOUNTS -> IconButton(onClick = {}) {
-                        Icon(
-                            painter = painterResource(R.drawable.edit),
-                            contentDescription = "edit"
-                        )
-                    }
-                    Screen.HISTORY_INCOME -> IconButton(
-                        onClick = {
-
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.state_layer),
-                            contentDescription = "change history period"
-                        )
-                    }
-                    Screen.HISTORY_EXPENSES -> IconButton(
-                        onClick = {
-
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.state_layer),
-                            contentDescription = "change history period"
-                        )
-                    }
-                    else -> Unit
-                }
-
-                }
+            TopAppBar(
+                navController = navController,
+                currentScreen = currentScreen
             )
 
         },
@@ -211,7 +140,6 @@ fun AppNavigation() {
             else -> Unit
         }}
     ) { padding ->
-
 
         NavHost(
             navController = navController,
@@ -224,12 +152,9 @@ fun AppNavigation() {
             composable(Screen.ARTICLES.route) { CategoriesScreen(mainViewModel) }
             composable(Screen.SETTINGS.route) { SettingsScreen() }
             composable(Screen.HISTORY_INCOME.route) {
-
                 HistoryScreen(type = TransactionType.INCOME,viewModel = mainViewModel)
-
             }
             composable(Screen.HISTORY_EXPENSES.route) {
-
                 HistoryScreen(type = TransactionType.EXPENSE,viewModel = mainViewModel)
             }
         }
@@ -240,157 +165,10 @@ fun AppNavigation() {
 
 
 
-@Composable
-fun AddButton(onClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .size(56.dp)
-            .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.primary)
-            .clickable { onClick() },
-        contentAlignment = Alignment.Center
-    ) {
-        RoundedPlusIcon()
-    }
-}
-
-@Composable
-fun RoundedPlusIcon() {
-    Canvas(modifier = Modifier.size(15.56.dp)) {
-        val strokeWidth = 2.dp.toPx()
-        val cornerRadius = 2.dp.toPx()
-
-
-        drawRoundRect(
-            color = Color.White,
-            topLeft = Offset(0f, size.height / 2 - strokeWidth / 2),
-            size = Size(size.width, strokeWidth),
-            cornerRadius = CornerRadius(cornerRadius, cornerRadius)
-        )
-
-
-        drawRoundRect(
-            color = Color.White,
-            topLeft = Offset(size.width / 2 - strokeWidth / 2, 0f),
-            size = Size(strokeWidth, size.height),
-            cornerRadius = CornerRadius(cornerRadius, cornerRadius)
-        )
-    }
-}
-
-@Composable
-fun BottomNavigationBar(navController: NavController) {
-    val items = listOf(
-        Screen.EXPENSES,
-        Screen.INCOME,
-        Screen.ACCOUNTS,
-        Screen.ARTICLES,
-        Screen.SETTINGS
-    )
-
-    BottomAppBar {
-        val navBackStackEntry = navController.currentBackStackEntryAsState().value
-        val currentRoute = navBackStackEntry?.destination?.route
-
-        val selectedItem = items.find { it.route == currentRoute }?.route ?: navController.previousBackStackEntry?.destination?.route
-
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically)
-        {
-            items.forEach { screen ->
-
-                screen.iconId?.let {
-                    screen.buttonTitleRes?.let { it1 ->
-                        BottomNavigationItem(
-                            iconId = it,
-                            buttonTitleRes = it1,
-                            selected = selectedItem == screen.route,
-                            onClick = { navController.navigate(screen.route) }
-                        )
-                    }
-                }
-            }
-
-        }
-
-    }
-}
 
 
 
-@Composable
-fun BottomNavigationItem(
-    iconId: Int,
-    buttonTitleRes: Int ,
-    selected: Boolean,
-    onClick: () -> Unit,
-) {
-    val interactionSource = remember { MutableInteractionSource() }
-    val textColor = if (selected) {
-        MaterialTheme.colorScheme.onPrimary
-    } else {
-        MaterialTheme.colorScheme.onSecondary
-    }
-
-    Column(
-        modifier = Modifier
-            .size(width = 72.8.dp, height = 80.dp)
-            .clickable(
-                interactionSource = interactionSource,
-                indication = null
-            ) { onClick() },
-        verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
-        horizontalAlignment = Alignment.CenterHorizontally
-        ) {
 
 
 
-            if (selected) {
 
-                val secondaryColor = MaterialTheme.colorScheme.secondary
-                Box(
-                    modifier = Modifier
-                        .size(width = 64.dp, height = 32.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .drawBehind {
-                            drawRect(
-                                color = secondaryColor,
-                                size = size
-                            )
-                        },
-                    contentAlignment = Alignment.Center
-
-
-                ) {
-                    Icon(
-                        painter = painterResource(iconId),
-                        contentDescription = stringResource(buttonTitleRes),
-                        modifier = Modifier
-                            .size(width = 32.dp, height = 32.dp),
-                        tint = MaterialTheme.colorScheme.primary
-
-                    )
-                }
-
-            } else {
-                Icon(
-                    painter = painterResource(iconId),
-                    contentDescription = stringResource(buttonTitleRes),
-                    modifier = Modifier
-                        .size(width = 32.dp, height = 32.dp),
-                )
-            }
-
-            Text(
-                text = stringResource(buttonTitleRes),
-                color = textColor,
-                style = MaterialTheme.typography.labelMedium
-            )
-
-
-    }
-
-}
