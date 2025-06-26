@@ -14,7 +14,7 @@ import java.io.IOException
 suspend fun <T, R> safeApiCall(block: suspend () -> Response<List<T>>, mapper: (T) -> R): ResultState<List<R>> {
     var currentRetry = 1
     val maxRetries = 3
-    val delayTime = 2000L
+
     var lastErrorBody: String? = null
     val context = MyApplication.context
 
@@ -39,9 +39,9 @@ suspend fun <T, R> safeApiCall(block: suspend () -> Response<List<T>>, mapper: (
                 lastErrorBody = errorMessage
 
                 if (errorCode == 500 && currentRetry < maxRetries) {
-                    Log.d("ERROR_500","$currentRetry")
+
                     currentRetry++
-                    delay(delayTime)
+                    delay(Delays.ERROR_500_RETRY)
                 } else {
                     return ResultState.Error(message = errorMessage, code = errorCode)
                 }

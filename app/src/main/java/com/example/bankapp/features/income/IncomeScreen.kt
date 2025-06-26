@@ -1,4 +1,4 @@
-package com.example.bankapp.ui.screen
+package com.example.bankapp.features.income
 
 import ListItem
 import androidx.compose.foundation.background
@@ -9,7 +9,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,14 +16,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bankapp.R
 import com.example.bankapp.domain.viewmodel.MainViewModel
 
-import com.example.bankapp.ui.common.LazyList
-import com.example.bankapp.ui.common.PriceDisplay
-import com.example.bankapp.ui.common.ResultStateHandler
-import com.example.bankapp.ui.common.TrailingContent
+import com.example.bankapp.features.common.LazyList
+import com.example.bankapp.features.common.PriceDisplay
+import com.example.bankapp.features.common.ResultStateHandler
+import com.example.bankapp.features.common.TrailingContent
 @Composable
 fun IncomeScreen(viewModel: MainViewModel) {
 

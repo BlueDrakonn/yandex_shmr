@@ -7,6 +7,7 @@ import com.example.bankapp.domain.model.Category
 
 import com.example.bankapp.domain.repository.AccountRepository
 import com.example.bankapp.domain.viewmodel.ResultState
+import com.example.bankapp.utils.Delays
 import com.example.bankapp.utils.safeApiCall
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,7 +33,7 @@ class AccountRepositoryImpl(private val apiService: ApiService): AccountReposito
 
                 if(result == ResultState.Error(message = "no internet connection")) {
                     _accountState.value = result
-                    delay(7000)
+                    delay(Delays.INTERNET_ERROR_RETRY)
                     result = safeApiCall(
                         mapper = { it.toAccount() },
                         block = { apiService.getAccounts()  }

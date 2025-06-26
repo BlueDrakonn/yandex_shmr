@@ -1,6 +1,6 @@
 package com.example.bankapp.domain.viewmodel
 
-import android.util.Log
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bankapp.data.network.retrofit.RetrofitInstance
@@ -19,14 +19,12 @@ import com.example.bankapp.domain.repository.HistoryTransactionRepository
 import com.example.bankapp.domain.repository.TodayTransactionRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -38,7 +36,7 @@ sealed class ResultState<out T> {
     object Loading : ResultState<Nothing>()
 }
 
-class MainViewModel(): ViewModel() {
+class MainViewModel: ViewModel() {
 
 
     private var historyTransactionResponseJob: Job? = null
@@ -133,7 +131,6 @@ class MainViewModel(): ViewModel() {
                 launch {
                     categoryRepository.loadCategories()
                 }
-
         }
     }
 
@@ -141,13 +138,12 @@ class MainViewModel(): ViewModel() {
     fun startGettingHistoryTransactions() {
 
         if (historyTransactionResponseJob?.isActive == true){
-            //Log.d("RESPONSE_DATA1", "joba не сдохла")
+
             return
         }
 
         historyTransactionResponseJob = viewModelScope.launch(Dispatchers.IO) {
             accountRepository.accountId?.let {
-                //Log.d("RESPONSE_DATA1","$historyTransactionResponseJob}")
                 historyTransactionRepository.loadHistoryTransaction(
                     it
                 )
@@ -172,7 +168,6 @@ class MainViewModel(): ViewModel() {
             historyTransactionRepository.setEndDate(date)
             cancelGettingHistoryTransactions()
             startGettingHistoryTransactions()
-
 
     }
 }

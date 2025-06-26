@@ -7,6 +7,7 @@ import com.example.bankapp.domain.model.Transaction
 import com.example.bankapp.domain.model.TransactionDetailed
 import com.example.bankapp.domain.repository.HistoryTransactionRepository
 import com.example.bankapp.domain.viewmodel.ResultState
+import com.example.bankapp.utils.Delays
 import com.example.bankapp.utils.safeApiCall
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -90,7 +91,7 @@ class HistoryTransactionRepositoryImpl(private val apiService: ApiService): Hist
 
                 if(result == ResultState.Error(message = "no internet connection")) {
                     _transactionState.value = result
-                    delay(7000)
+                    delay(Delays.INTERNET_ERROR_RETRY)
 
                     result = safeApiCall(
                         mapper = {

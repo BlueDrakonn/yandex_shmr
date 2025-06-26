@@ -1,4 +1,4 @@
-package com.example.bankapp.ui.screen
+package com.example.bankapp.features.categories
 
 import ListItem
 import androidx.compose.foundation.background
@@ -14,7 +14,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,11 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bankapp.domain.viewmodel.MainViewModel
-import com.example.bankapp.ui.common.LazyList
-import com.example.bankapp.ui.common.LeadIcon
-import com.example.bankapp.ui.common.ResultStateHandler
+import com.example.bankapp.features.common.LazyList
+import com.example.bankapp.features.common.LeadIcon
+import com.example.bankapp.features.common.ResultStateHandler
 
 
 @Composable

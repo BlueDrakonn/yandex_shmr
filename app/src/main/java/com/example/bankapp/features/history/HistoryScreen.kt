@@ -1,10 +1,9 @@
-package com.example.bankapp.ui.screen
+package com.example.bankapp.features.history
 
 import ListItem
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -19,18 +18,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.util.fastCbrt
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.bankapp.R
 import com.example.bankapp.domain.viewmodel.MainViewModel
-import com.example.bankapp.ui.common.DatePickerModal
-import com.example.bankapp.ui.common.LazyList
-import com.example.bankapp.ui.common.LeadIcon
-import com.example.bankapp.ui.common.PriceDisplay
-import com.example.bankapp.ui.common.PriceWithDate
-import com.example.bankapp.ui.common.ResultStateHandler
-import com.example.bankapp.ui.common.TrailingContent
+import com.example.bankapp.features.common.DatePickerModal
+import com.example.bankapp.features.common.LazyList
+import com.example.bankapp.features.common.LeadIcon
+import com.example.bankapp.features.common.PriceDisplay
+import com.example.bankapp.features.common.PriceWithDate
+import com.example.bankapp.features.common.ResultStateHandler
+import com.example.bankapp.features.common.TrailingContent
 
 
 enum class TransactionType {

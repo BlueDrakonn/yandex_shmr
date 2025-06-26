@@ -1,4 +1,4 @@
-package com.example.bankapp.ui.common
+package com.example.bankapp.features.common
 
 import android.widget.Toast
 import androidx.compose.material3.DatePicker

@@ -1,4 +1,4 @@
-package com.example.bankapp.ui.navigation
+package com.example.bankapp.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack

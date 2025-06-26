@@ -5,6 +5,7 @@ import com.example.bankapp.data.network.api.ApiService
 import com.example.bankapp.domain.model.Category
 import com.example.bankapp.domain.repository.CategoryRepository
 import com.example.bankapp.domain.viewmodel.ResultState
+import com.example.bankapp.utils.Delays
 import com.example.bankapp.utils.safeApiCall
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,7 +28,7 @@ class CategoryRepositoryImpl(private  val apiService: ApiService):CategoryReposi
                 )
 
                 if(result == ResultState.Error(message = "no internet connection")) {
-                    delay(7000)
+                    delay(Delays.INTERNET_ERROR_RETRY)
                     _categoryState.value = result
                     result = safeApiCall(
                         mapper = { it },

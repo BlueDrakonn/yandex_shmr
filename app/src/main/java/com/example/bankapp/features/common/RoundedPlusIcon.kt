@@ -1,4 +1,4 @@
-package com.example.bankapp.ui.common
+package com.example.bankapp.features.common
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.size

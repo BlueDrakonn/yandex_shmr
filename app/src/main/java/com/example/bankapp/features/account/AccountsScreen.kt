@@ -1,4 +1,4 @@
-package com.example.bankapp.ui.screen
+package com.example.bankapp.features.account
 
 import ListItem
 import androidx.compose.foundation.background
@@ -8,28 +8,24 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bankapp.R
 
 import com.example.bankapp.domain.viewmodel.MainViewModel
-import com.example.bankapp.ui.common.CurrencyChangeBottomSheet
-import com.example.bankapp.ui.common.LazyList
-import com.example.bankapp.ui.common.LeadIcon
-import com.example.bankapp.ui.common.PriceDisplay
-import com.example.bankapp.ui.common.ResultStateHandler
-import com.example.bankapp.ui.common.TrailingContent
+import com.example.bankapp.features.common.CurrencyChangeBottomSheet
+import com.example.bankapp.features.common.LazyList
+import com.example.bankapp.features.common.LeadIcon
+import com.example.bankapp.features.common.PriceDisplay
+import com.example.bankapp.features.common.ResultStateHandler
+import com.example.bankapp.features.common.TrailingContent
 
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -1,4 +1,4 @@
-package com.example.bankapp.ui.common
+package com.example.bankapp.features.common
 
 
 import androidx.compose.material3.MaterialTheme

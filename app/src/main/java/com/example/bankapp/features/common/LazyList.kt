@@ -1,4 +1,4 @@
-package com.example.bankapp.ui.common
+package com.example.bankapp.features.common
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height

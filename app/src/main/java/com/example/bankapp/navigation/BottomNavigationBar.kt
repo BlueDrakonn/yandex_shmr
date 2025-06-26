@@ -1,4 +1,4 @@
-package com.example.bankapp.ui.navigation
+package com.example.bankapp.navigation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
