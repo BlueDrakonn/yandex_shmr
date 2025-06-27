@@ -1,12 +1,14 @@
 package com.example.bankapp.core.navigation
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import com.example.bankapp.R
 
 enum class Screen(
     val route: String,
-    val titleRes: Int,
-    val buttonTitleRes: Int? = null,
-    val iconId: Int? = null,
+    @StringRes val titleRes: Int,
+    @StringRes val buttonTitleRes: Int? = null,
+    @DrawableRes val iconId: Int? = null,
 ) {
     EXPENSES(
         "EXPENSES",
