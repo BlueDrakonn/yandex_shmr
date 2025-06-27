@@ -16,7 +16,13 @@ fun <T> LazyList(
     topItem: (@Composable () -> Unit)? = null,
     itemsList: List<T>,
     itemTemplate: @Composable (T) -> Unit,
-    lastItemDivider: (@Composable () -> Unit) = {HorizontalDivider(Modifier.height(1.dp),color = MaterialTheme.colorScheme.outlineVariant)}
+    lastItemDivider: (@Composable () -> Unit) = {
+        HorizontalDivider(
+            Modifier
+                .height(1.dp),
+            color = MaterialTheme.colorScheme.outlineVariant
+        )
+    }
 ) {
     Column(
         modifier = modifier
@@ -30,7 +36,7 @@ fun <T> LazyList(
             itemsIndexed(itemsList) { index, item ->
                 itemTemplate(item)
 
-                // проверка ласт элема
+
                 if (index < itemsList.lastIndex) {
                     HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                 } else {
@@ -39,5 +45,4 @@ fun <T> LazyList(
             }
         }
     }
-
 }

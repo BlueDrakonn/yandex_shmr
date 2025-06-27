@@ -1,4 +1,4 @@
-package com.example.bankapp.utils
+package com.example.bankapp.core.Constants
 
 object Delays {
     const val ERROR_500_RETRY = 2000L

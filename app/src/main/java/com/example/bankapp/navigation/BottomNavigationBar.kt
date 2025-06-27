@@ -20,7 +20,9 @@ fun BottomNavigationBar(navController: NavController) {
         val navBackStackEntry = navController.currentBackStackEntryAsState().value
         val currentRoute = navBackStackEntry?.destination?.route
 
-        val selectedItem = items.find { it.route == currentRoute }?.route ?: navController.previousBackStackEntry?.destination?.route
+        val selectedItem = items.find {
+            it.route == currentRoute
+        }?.route ?: navController.previousBackStackEntry?.destination?.route
 
         Row(modifier = Modifier
             .fillMaxWidth()

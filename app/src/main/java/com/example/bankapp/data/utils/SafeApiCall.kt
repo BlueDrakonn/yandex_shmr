@@ -5,7 +5,7 @@ import com.example.bankapp.data.model.parseError
 import kotlinx.coroutines.delay
 import retrofit2.Response
 import com.example.bankapp.core.ResultState
-import com.example.bankapp.utils.Delays
+import com.example.bankapp.core.Constants.Delays
 
 
 /**
@@ -16,9 +16,9 @@ import com.example.bankapp.utils.Delays
 
 suspend fun <T, R> safeApiCall(block: suspend () -> Response<List<T>>, mapper: (T) -> R): ResultState<List<R>> {
     var currentRetry = 1
-    val maxRetries = 3
 
-    while (currentRetry <= maxRetries) {
+
+    while (currentRetry <= SafeApiCallConstants.MAX_RETRY) {
         try {
             val response = block()
 
@@ -27,7 +27,7 @@ suspend fun <T, R> safeApiCall(block: suspend () -> Response<List<T>>, mapper: (
 
             } else {
 
-                if (response.code() == 500 && currentRetry < maxRetries) {
+                if (response.code() == SafeApiCallConstants.ERROR_CODE_500 && currentRetry < SafeApiCallConstants.MAX_RETRY) {
                     currentRetry++
                     delay(Delays.ERROR_500_RETRY)
                 } else {

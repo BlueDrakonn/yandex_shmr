@@ -18,7 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.bankapp.R
-import com.example.bankapp.features.common.ui.CurrencyChangeBottomSheet
+import com.example.bankapp.features.common.ui.CurrencyBottomSheet
 import com.example.bankapp.features.common.ui.LazyList
 import com.example.bankapp.features.common.ui.LeadIcon
 import com.example.bankapp.features.common.ui.PriceDisplay
@@ -39,7 +39,7 @@ fun AccountsScreen(
         state = state,
         onSuccess = { data ->
             if (showBottomSheet) {
-                CurrencyChangeBottomSheet({showBottomSheet = false})
+                CurrencyBottomSheet({showBottomSheet = false})
             }
             LazyList(
                 itemsList = data,

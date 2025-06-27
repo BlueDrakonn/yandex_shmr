@@ -8,7 +8,7 @@ import com.example.bankapp.domain.repository.AccountRepository
 import com.example.bankapp.domain.repository.TodayTransactionRepository
 import com.example.bankapp.core.ResultState
 import com.example.bankapp.features.common.extensions.filterIncome
-import com.example.bankapp.utils.Delays
+import com.example.bankapp.core.Constants.Delays
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
