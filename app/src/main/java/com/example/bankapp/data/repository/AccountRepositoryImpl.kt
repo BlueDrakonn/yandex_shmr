@@ -5,7 +5,7 @@ import com.example.bankapp.core.ResultState
 import com.example.bankapp.data.network.api.ApiService
 import com.example.bankapp.domain.model.Account
 import com.example.bankapp.domain.repository.AccountRepository
-import com.example.bankapp.utils.safeApiCall
+import com.example.bankapp.data.utils.safeApiCall
 import javax.inject.Inject
 
 

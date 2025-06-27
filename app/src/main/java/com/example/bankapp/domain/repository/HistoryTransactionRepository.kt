@@ -8,7 +8,7 @@ import com.example.bankapp.domain.model.TransactionDetailed
 interface HistoryTransactionRepository {
 
     suspend fun loadHistoryTransaction(
-        accountId: Int,
+        accountId: Int?,
         startDate: String,
         endDate: String): ResultState<List<TransactionDetailed>>
 

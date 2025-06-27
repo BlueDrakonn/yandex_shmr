@@ -1,5 +1,6 @@
 package com.example.bankapp.data.model
 
+import com.example.bankapp.data.utils.formatDate
 import com.example.bankapp.domain.model.Category
 import com.example.bankapp.domain.model.Transaction
 import com.example.bankapp.domain.model.TransactionDetailed
@@ -54,10 +55,3 @@ data class TransactionResponseDto(
 }
 
 
-fun formatDate(input: String): String {
-    val inputFormatter = DateTimeFormatter.ISO_ZONED_DATE_TIME
-    val outputFormatter = DateTimeFormatter.ofPattern("d MMMM  HH:mm", Locale("ru"))
-
-    val zonedDateTime = ZonedDateTime.parse(input, inputFormatter)
-    return outputFormatter.format(zonedDateTime)
-}

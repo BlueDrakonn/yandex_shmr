@@ -46,6 +46,7 @@ class ExpensesViewModel @Inject constructor(
                 accountRepository.accountId
             }
 
+
             val result = transactionRepository.loadTodayTransaction(
                 accountId=accountId
             ).filterExpenses()
