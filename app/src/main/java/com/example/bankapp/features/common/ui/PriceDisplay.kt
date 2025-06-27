@@ -1,6 +1,5 @@
 package com.example.bankapp.features.common.ui
 
-
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -11,8 +10,9 @@ import androidx.compose.ui.text.style.TextAlign
 @Composable
 fun PriceDisplay(
     amount: String,
+    modifier: Modifier = Modifier,
     currencySymbol: String? = "",
-    modifier: Modifier = Modifier
+
 ) {
 
     val currency = when (currencySymbol) {
@@ -30,27 +30,3 @@ fun PriceDisplay(
         color = MaterialTheme.colorScheme.onPrimary
     )
 }
-
-//@Composable
-//fun PriceDisplay(
-//    amount: Double,
-//    currencySymbol: String? = "",
-//    modifier: Modifier = Modifier
-//) {
-//
-//    val symbols = DecimalFormatSymbols(Locale.getDefault()).apply {
-//        groupingSeparator = ' '
-//        decimalSeparator = ','
-//    }
-//    val formatter = DecimalFormat("#,##0", symbols)
-//
-//    val formattedAmount = formatter.format(amount)
-//
-//    Text(
-//        modifier = modifier,
-//        text = "$formattedAmount $currencySymbol",
-//        textAlign = TextAlign.Start,
-//        style = MaterialTheme.typography.bodyLarge,
-//        color = MaterialTheme.colorScheme.onPrimary
-//    )
-//}

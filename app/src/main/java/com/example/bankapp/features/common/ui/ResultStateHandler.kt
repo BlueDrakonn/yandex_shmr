@@ -28,7 +28,7 @@ fun <T> ResultStateHandler(
         }
         is ResultState.Error -> {
 
-            ErrorHandler(
+            ErrorDialog(
                 errorMessage = state.message,
                 errorCode = state.code
             )

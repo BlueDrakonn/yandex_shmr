@@ -32,8 +32,6 @@ class TodayTransactionRepositoryImpl @Inject constructor(
      */
     override suspend fun loadTodayTransaction(accountId: Int?): ResultState<List<Transaction>> {
 
-
-
         return safeApiCall(
             mapper = {
                 val transaction = it.toTransaction()
