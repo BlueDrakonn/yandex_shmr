@@ -65,7 +65,8 @@ fun AppNavigation() {
                 CategoriesScreen()
             }
             composable(Screen.SETTINGS.route) {
-                SettingsScreen() }
+                SettingsScreen()
+            }
             composable(Screen.HISTORY_INCOME.route) {
                 HistoryScreen(type = HistoryType.INCOME)
             }
