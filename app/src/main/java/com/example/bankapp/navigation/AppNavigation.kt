@@ -9,15 +9,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.bankapp.core.navigation.HistoryType
 import com.example.bankapp.core.navigation.Screen
-import com.example.bankapp.features.common.AddButton
+import com.example.bankapp.features.common.ui.AddButton
 import com.example.bankapp.features.account.AccountsScreen
 import com.example.bankapp.features.categories.CategoriesScreen
 import com.example.bankapp.features.expenses.ExpensesScreen
 import com.example.bankapp.features.history.HistoryScreen
 import com.example.bankapp.features.income.IncomeScreen
 import com.example.bankapp.features.settings.SettingsScreen
-import com.example.bankapp.features.history.HistoryType
+
 
 @Composable
 fun AppNavigation() {

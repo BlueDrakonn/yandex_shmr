@@ -1,16 +1,15 @@
 package com.example.bankapp.features.history
 
-import android.util.Log
-import androidx.compose.ui.util.fastCbrt
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bankapp.domain.model.TransactionDetailed
 import com.example.bankapp.domain.repository.AccountRepository
 import com.example.bankapp.domain.repository.HistoryTransactionRepository
 import com.example.bankapp.core.ResultState
-import com.example.bankapp.features.common.date.DateMode
-import com.example.bankapp.features.expenses.filterExpenses
-import com.example.bankapp.features.income.filterIncome
+import com.example.bankapp.features.common.extensions.filterExpenses
+import com.example.bankapp.features.common.extensions.filterIncome
+import com.example.bankapp.features.history.models.DateMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

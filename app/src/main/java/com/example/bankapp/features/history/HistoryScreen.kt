@@ -21,26 +21,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.bankapp.R
-import com.example.bankapp.features.common.DatePickerModal
-import com.example.bankapp.features.common.LazyList
-import com.example.bankapp.features.common.LeadIcon
-import com.example.bankapp.features.common.PriceDisplay
-import com.example.bankapp.features.common.PriceWithDate
-import com.example.bankapp.features.common.ResultStateHandler
-import com.example.bankapp.features.common.TrailingContent
-import com.example.bankapp.features.common.date.DateMode
-
-
-enum class HistoryType {
-    INCOME, EXPENSE
-}
-
-
-enum class DatePickerState {
-    CLOSED,
-    OPEN_START,
-    OPEN_END
-}
+import com.example.bankapp.core.navigation.HistoryType
+import com.example.bankapp.features.common.ui.DatePickerModal
+import com.example.bankapp.features.common.ui.LazyList
+import com.example.bankapp.features.common.ui.LeadIcon
+import com.example.bankapp.features.common.ui.PriceDisplay
+import com.example.bankapp.features.common.ui.PriceWithDate
+import com.example.bankapp.features.common.ui.ResultStateHandler
+import com.example.bankapp.features.common.ui.TrailingContent
+import com.example.bankapp.features.history.models.DateMode
+import com.example.bankapp.features.history.models.DatePickerState
 
 
 @Composable

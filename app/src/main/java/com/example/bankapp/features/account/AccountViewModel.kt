@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.bankapp.core.ResultState
 import com.example.bankapp.domain.model.Account
 import com.example.bankapp.domain.repository.AccountRepository
+import com.example.bankapp.utils.Delays
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -25,7 +26,7 @@ class AccountViewModel @Inject constructor(
         }
         .stateIn(
             viewModelScope,
-            SharingStarted.WhileSubscribed(5000L),
+            SharingStarted.WhileSubscribed(Delays.STOP_TIMEOUT_MILES),
             ResultState.Loading
             )
 

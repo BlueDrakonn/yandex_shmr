@@ -18,22 +18,22 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.bankapp.R
-import com.example.bankapp.features.common.LazyList
-import com.example.bankapp.features.common.LeadIcon
-import com.example.bankapp.features.common.PriceDisplay
-import com.example.bankapp.features.common.ResultStateHandler
-import com.example.bankapp.features.common.TrailingContent
+import com.example.bankapp.features.common.ui.LazyList
+import com.example.bankapp.features.common.ui.LeadIcon
+import com.example.bankapp.features.common.ui.PriceDisplay
+import com.example.bankapp.features.common.ui.ResultStateHandler
+import com.example.bankapp.features.common.ui.TrailingContent
 
 @Composable
 fun ExpensesScreen(
     viewModel: ExpensesViewModel = hiltViewModel()) {
 
-    val mock by viewModel.transactionState.collectAsStateWithLifecycle()
+    val state by viewModel.transactionState.collectAsStateWithLifecycle()
 
     val totalAmount by viewModel.totalExpensesState.collectAsStateWithLifecycle()
 
     ResultStateHandler(
-        state = mock,
+        state = state,
         onSuccess = { data ->
             LazyList(
                 topItem = {
@@ -81,7 +81,8 @@ fun ExpensesScreen(
                         },
                         trailingContent = {
                             TrailingContent(
-                                content = {PriceDisplay(
+                                content = {
+                                    PriceDisplay(
                                     amount = item.amount,
                                     currencySymbol = item.currency
                                                         )

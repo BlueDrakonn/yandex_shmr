@@ -1,12 +1,14 @@
 package com.example.bankapp.features.income
 
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.bankapp.domain.model.IncomeInfo
 import com.example.bankapp.domain.model.Transaction
 import com.example.bankapp.domain.repository.AccountRepository
 import com.example.bankapp.domain.repository.TodayTransactionRepository
 import com.example.bankapp.core.ResultState
+import com.example.bankapp.features.common.extensions.filterIncome
+import com.example.bankapp.utils.Delays
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -28,14 +30,14 @@ class IncomeViewModel @Inject constructor(
         }
         .stateIn(
             viewModelScope,
-            SharingStarted.WhileSubscribed(5000L),
+            SharingStarted.WhileSubscribed(Delays.STOP_TIMEOUT_MILES),
             ResultState.Loading)
 
     private var _totalIncomeState = MutableStateFlow<Double>(0.0)
     val totalIncomeState = _totalIncomeState
         .stateIn(
             viewModelScope,
-            SharingStarted.WhileSubscribed(5000L),
+            SharingStarted.WhileSubscribed(Delays.STOP_TIMEOUT_MILES),
             0.0)
 
     private fun loadIncomeTransactions(){
@@ -62,10 +64,5 @@ class IncomeViewModel @Inject constructor(
 }
 
 
-fun<T: IncomeInfo> ResultState<List<T>>.filterIncome(): ResultState<List<T>> =
 
-        when (this) {
-            is ResultState.Success -> ResultState.Success(this.data.filter { it.isIncome })
-            else -> this
-        }
 

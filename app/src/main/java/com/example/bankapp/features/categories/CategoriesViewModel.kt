@@ -1,16 +1,15 @@
 package com.example.bankapp.features.categories
 
-import android.util.Log
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bankapp.core.ResultState
 import com.example.bankapp.domain.model.Category
 import com.example.bankapp.domain.repository.CategoryRepository
+import com.example.bankapp.utils.Delays
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -28,7 +27,7 @@ class CategoriesViewModel @Inject constructor(
         }
         .stateIn(
             viewModelScope,
-            SharingStarted.WhileSubscribed(5000L),
+            SharingStarted.WhileSubscribed(Delays.STOP_TIMEOUT_MILES),
             ResultState.Loading
         )
 

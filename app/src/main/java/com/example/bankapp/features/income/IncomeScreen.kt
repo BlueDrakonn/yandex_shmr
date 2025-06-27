@@ -18,20 +18,21 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.bankapp.R
-import com.example.bankapp.features.common.LazyList
-import com.example.bankapp.features.common.PriceDisplay
-import com.example.bankapp.features.common.ResultStateHandler
-import com.example.bankapp.features.common.TrailingContent
+import com.example.bankapp.features.common.ui.LazyList
+import com.example.bankapp.features.common.ui.PriceDisplay
+import com.example.bankapp.features.common.ui.ResultStateHandler
+import com.example.bankapp.features.common.ui.TrailingContent
+
 @Composable
 fun IncomeScreen(
     viewModel: IncomeViewModel = hiltViewModel()) {
 
-    val mock by viewModel.transactionState.collectAsStateWithLifecycle()
+    val resultState by viewModel.transactionState.collectAsStateWithLifecycle()
 
     val totalAmount by viewModel.totalIncomeState.collectAsStateWithLifecycle()
 
     ResultStateHandler(
-        state = mock,
+        state = resultState,
         onSuccess = { data ->
 
             LazyList(
@@ -85,7 +86,8 @@ fun IncomeScreen(
                             )
 
                         }
-                    ) }
+                    )
+                }
             )
         }
     )
