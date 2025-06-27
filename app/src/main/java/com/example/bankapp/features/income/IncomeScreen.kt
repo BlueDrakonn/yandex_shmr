@@ -15,20 +15,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.bankapp.R
-import com.example.bankapp.domain.viewmodel.MainViewModel
-
 import com.example.bankapp.features.common.LazyList
 import com.example.bankapp.features.common.PriceDisplay
 import com.example.bankapp.features.common.ResultStateHandler
 import com.example.bankapp.features.common.TrailingContent
 @Composable
-fun IncomeScreen(viewModel: MainViewModel) {
+fun IncomeScreen(
+    viewModel: IncomeViewModel = hiltViewModel()) {
 
-    val mock by viewModel.observeTodayIncome().collectAsStateWithLifecycle()
+    val mock by viewModel.transactionState.collectAsStateWithLifecycle()
 
-    val totalAmount by viewModel.observeTodayTotalIncome().collectAsStateWithLifecycle()
+    val totalAmount by viewModel.totalIncomeState.collectAsStateWithLifecycle()
 
     ResultStateHandler(
         state = mock,
@@ -56,7 +56,6 @@ fun IncomeScreen(viewModel: MainViewModel) {
                 itemsList = data,
                 itemTemplate = { item ->
                     ListItem(
-
                         modifier = Modifier.height(68.dp).clickable {  },
                         content = {
                             Column(

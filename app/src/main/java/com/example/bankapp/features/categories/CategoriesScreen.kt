@@ -1,6 +1,7 @@
 package com.example.bankapp.features.categories
 
 import ListItem
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,20 +23,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.bankapp.domain.viewmodel.MainViewModel
 import com.example.bankapp.features.common.LazyList
 import com.example.bankapp.features.common.LeadIcon
 import com.example.bankapp.features.common.ResultStateHandler
 
 
+@SuppressLint("ViewModelConstructorInComposable")
 @Composable
-fun CategoriesScreen(viewModel: MainViewModel) {
+fun CategoriesScreen(
+    viewModel: CategoriesViewModel = hiltViewModel()) {
 
-
-    //val mock by viewModel.categoryState.collectAsState()
-    val mock by viewModel.observeCategories().collectAsStateWithLifecycle()
-
+    val mock by viewModel.categoryState.collectAsStateWithLifecycle()
     var searchQuery by remember { mutableStateOf("") }
 
     ResultStateHandler(

@@ -9,7 +9,9 @@ import androidx.activity.viewModels
 
 import com.example.bankapp.navigation.AppNavigation
 import com.example.bankapp.ui.theme.BankAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

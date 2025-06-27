@@ -18,9 +18,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.bankapp.R
-import com.example.bankapp.domain.viewmodel.MainViewModel
 import com.example.bankapp.features.common.DatePickerModal
 import com.example.bankapp.features.common.LazyList
 import com.example.bankapp.features.common.LeadIcon
@@ -28,59 +28,55 @@ import com.example.bankapp.features.common.PriceDisplay
 import com.example.bankapp.features.common.PriceWithDate
 import com.example.bankapp.features.common.ResultStateHandler
 import com.example.bankapp.features.common.TrailingContent
+import com.example.bankapp.features.common.date.DateMode
 
 
-enum class TransactionType {
+enum class HistoryType {
     INCOME, EXPENSE
 }
 
+
+enum class DatePickerState {
+    CLOSED,
+    OPEN_START,
+    OPEN_END
+}
+
+
 @Composable
-fun HistoryScreen(type: TransactionType, viewModel: MainViewModel) {
+fun HistoryScreen(
+    type: HistoryType,
+    viewModel: HistoryViewModel = hiltViewModel()
+) {
 
-    val transactions by when (type) {
-        TransactionType.INCOME -> viewModel.observeHistoryIncome().collectAsStateWithLifecycle()
-        TransactionType.EXPENSE -> viewModel.observeHistoryExpenses().collectAsStateWithLifecycle()
-    }
+    val transactions by viewModel.transactionState.collectAsStateWithLifecycle()
+    val totalSum by  viewModel.totalAmountState.collectAsStateWithLifecycle()
 
-    val totalSum by when (type) {
-        TransactionType.INCOME -> viewModel.observeHistoryTotalIncome().collectAsStateWithLifecycle()
-        TransactionType.EXPENSE -> viewModel.observeHistoryTotalExpenses().collectAsStateWithLifecycle()
-    }
+    val startDate by viewModel.startDate.collectAsStateWithLifecycle()
+    val endDate by viewModel.endDate.collectAsStateWithLifecycle()
 
-    val endDate by viewModel.observeEndDate().collectAsStateWithLifecycle()
-    val startDate by viewModel.observeStartDate().collectAsStateWithLifecycle()
-
-
-    var showDatePicker by remember { mutableStateOf(false) }
-    var showStartPicker by remember { mutableStateOf(false) }
-    var showEndPicker by remember { mutableStateOf(false) }
+    var showDatePicker by remember { mutableStateOf(DatePickerState.CLOSED) }
 
     DisposableEffect(Unit) {
 
-        viewModel.startGettingHistoryTransactions()
+        viewModel.setHistoryType(type == HistoryType.INCOME)
         onDispose {
             viewModel.cancelGettingHistoryTransactions()
             viewModel.defaultDate()
         }
     }
 
+    when(showDatePicker) {
 
-
-    if (showDatePicker) {
-        DatePickerModal(
+        DatePickerState.CLOSED -> {}
+        else -> DatePickerModal(
             onDateSelected = { date ->
-                if (showStartPicker) {
-                    viewModel.changeStartDate(date)
-                    viewModel.startGettingHistoryTransactions()
-                } else {
-                    viewModel.changeEndDate(date)
-                    viewModel.startGettingHistoryTransactions()
-                }
+                viewModel.updateDate(
+                    if(showDatePicker == DatePickerState.OPEN_START) DateMode.START else DateMode.END,
+                    date)
             },
             onDismiss = {
-                showDatePicker = false
-                showEndPicker = false
-                showStartPicker = false
+                showDatePicker = DatePickerState.CLOSED
             }
         )
     }
@@ -96,13 +92,13 @@ fun HistoryScreen(type: TransactionType, viewModel: MainViewModel) {
                         totalSum = totalSum,
                         currency = data.firstOrNull()?.currency ?: "",
                         startDataChange = {
-                            showStartPicker = true
-                            showDatePicker = true
+
+                            showDatePicker = DatePickerState.OPEN_START
 
                                           },
                         endDataChange = {
-                            showEndPicker = true
-                            showDatePicker = true
+
+                            showDatePicker = DatePickerState.OPEN_END
 
                                         },
                         modifier = Modifier.background(MaterialTheme.colorScheme.secondary)
@@ -113,7 +109,6 @@ fun HistoryScreen(type: TransactionType, viewModel: MainViewModel) {
 
                     ListItem(
                         modifier = Modifier
-                            //.height(70.dp)
                             .clickable { },
                         lead = { item.icon?.let { LeadIcon(label = it) } },
                         content = {

@@ -16,10 +16,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.bankapp.R
-
-import com.example.bankapp.domain.viewmodel.MainViewModel
 import com.example.bankapp.features.common.CurrencyChangeBottomSheet
 import com.example.bankapp.features.common.LazyList
 import com.example.bankapp.features.common.LeadIcon
@@ -28,25 +27,21 @@ import com.example.bankapp.features.common.ResultStateHandler
 import com.example.bankapp.features.common.TrailingContent
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
-fun AccountsScreen(viewModel: MainViewModel) {
+fun AccountsScreen(
+    viewModel: AccountViewModel = hiltViewModel()
+) {
 
-
-    val mock by viewModel.observeAccounts().collectAsStateWithLifecycle()
-
+    val mock by viewModel.accountState.collectAsStateWithLifecycle()
     var showBottomSheet by remember { mutableStateOf(false) }
 
     ResultStateHandler(
         state = mock,
         onSuccess = { data ->
-
-
             if (showBottomSheet) {
-
                 CurrencyChangeBottomSheet({showBottomSheet = false})
             }
-
             LazyList(
                 itemsList = data,
                 lastItemDivider = {},
@@ -83,7 +78,6 @@ fun AccountsScreen(viewModel: MainViewModel) {
 
                     )
                     HorizontalDivider( color = MaterialTheme.colorScheme.outlineVariant)
-
                     ListItem(
                         modifier = Modifier
                             .background(MaterialTheme.colorScheme.secondary)
@@ -96,7 +90,6 @@ fun AccountsScreen(viewModel: MainViewModel) {
                             )
                         },
                         trailingContent = {
-
                             TrailingContent(
                                 content = {
                                     Text(
@@ -112,17 +105,10 @@ fun AccountsScreen(viewModel: MainViewModel) {
                                         )
                                        },
                             )
-
-
                         }
-
                     )
-
                 }
             )
         }
-
     )
-
-
 }

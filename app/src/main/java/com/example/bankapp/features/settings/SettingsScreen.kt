@@ -39,7 +39,6 @@ fun SettingsScreen() {
 
     var isDarkTheme by remember { mutableStateOf(false) }
 
-
     LazyList(
         itemsList = settingsItems,
         itemTemplate = { item ->
