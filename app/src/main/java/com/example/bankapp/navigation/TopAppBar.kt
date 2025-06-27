@@ -14,6 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.example.bankapp.R
+import com.example.bankapp.core.navigation.Screen
 import com.example.bankapp.ui.theme.PrimaryGreen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -22,8 +23,6 @@ fun TopAppBar(
     navController: NavHostController,
     currentScreen: Screen
 ){
-
-
     CenterAlignedTopAppBar(
         navigationIcon = {
             when(currentScreen) {
@@ -86,7 +85,6 @@ fun TopAppBar(
                 }
                 Screen.HISTORY_EXPENSES -> IconButton(
                     onClick = {
-
                     }
                 ) {
                     Icon(
