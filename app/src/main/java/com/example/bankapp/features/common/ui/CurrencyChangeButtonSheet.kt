@@ -1,4 +1,4 @@
-package com.example.bankapp.features.common
+package com.example.bankapp.features.common.ui
 
 import ListItem
 import androidx.compose.foundation.background
@@ -25,7 +25,7 @@ import com.example.bankapp.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CurrencyChangeBottomSheet(onDismissRequest:() -> Unit ) {
+fun CurrencyBottomSheet(onDismissRequest:() -> Unit ) {
 
     val list = listOf(
         Pair(R.drawable.rubble, R.string.bottom_sheet_rubble),
@@ -37,8 +37,6 @@ fun CurrencyChangeBottomSheet(onDismissRequest:() -> Unit ) {
 
     ModalBottomSheet(onDismissRequest) {
         Column(modifier = Modifier.padding(vertical = 16.dp)) {
-
-
 
             list.forEachIndexed { index, (iconId,stringId) ->
 
@@ -59,20 +57,24 @@ fun CurrencyChangeBottomSheet(onDismissRequest:() -> Unit ) {
                         Icon(
                             painterResource(iconId),
                             contentDescription = null,
-                            tint = if(index == list.lastIndex) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.onPrimary
+                            tint =
+                                if(index == list.lastIndex) {
+                                    MaterialTheme.colorScheme.background
+                                } else MaterialTheme.colorScheme.onPrimary
                         )
                         }
                            },
                     content = {
                         Text(
                             text = stringResource(stringId),
-                            color = if(index == list.lastIndex) MaterialTheme.colorScheme.onError else MaterialTheme.colorScheme.onPrimary,
+                            color = if(index == list.lastIndex) {
+                                MaterialTheme.colorScheme.onError
+                            } else MaterialTheme.colorScheme.onPrimary,
                             style = MaterialTheme.typography.bodyLarge,
                         )
                     },
                     modifier = modifier
                         .clickable { onDismissRequest() }
-
                 )
 
                 if (index < list.lastIndex -1) {

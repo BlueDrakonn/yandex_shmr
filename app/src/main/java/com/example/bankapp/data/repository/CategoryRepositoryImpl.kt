@@ -1,53 +1,37 @@
 package com.example.bankapp.data.repository
 
-import android.util.Log
+
+import com.example.bankapp.core.ResultState
 import com.example.bankapp.data.network.api.ApiService
 import com.example.bankapp.domain.model.Category
 import com.example.bankapp.domain.repository.CategoryRepository
-import com.example.bankapp.domain.viewmodel.ResultState
-import com.example.bankapp.utils.Delays
-import com.example.bankapp.utils.safeApiCall
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-
-class CategoryRepositoryImpl(private  val apiService: ApiService):CategoryRepository {
-
-    private val _categoryState = MutableStateFlow<ResultState<List<Category>>>(ResultState.Loading)
-    override val categoryState: StateFlow<ResultState<List<Category>>> = _categoryState
-
-    override suspend fun loadCategories(){
-
-        when (_categoryState.value) {
-            ResultState.Loading -> {
+import com.example.bankapp.data.utils.safeApiCall
+import javax.inject.Inject
 
 
-                var result = safeApiCall(
-                    mapper = { it },
-                    block = { apiService.getCategories()  }
-                )
+/**
+ * Реализация репозитория категорий.
+ *
+ * Отвечает за загрузку категорий из сети через [ApiService].
+ *
+ * @property apiService Сервис для сетевых запросов.
+ */
+class CategoryRepositoryImpl @Inject constructor(
+    private val apiService: ApiService
+) : CategoryRepository {
 
-                if(result == ResultState.Error(message = "no internet connection")) {
-                    delay(Delays.INTERNET_ERROR_RETRY)
-                    _categoryState.value = result
-                    result = safeApiCall(
-                        mapper = { it },
-                        block = { apiService.getCategories()  }
-                    )
-
-                }
-
-                when(result) {
-
-                    is ResultState.Success -> {
-                        //result = result.data.map { it.toAccount() }
-                        _categoryState.value = ResultState.Success(result.data)
-
-                    }
-                    else -> _categoryState.value = result
-                }
-            }
-            else -> {}
-        }
+    /**
+     * Загружает список категорий с сервера.
+     *
+     * Выполняет запрос через [ApiService.getCategories] и возвращает
+     * результат, обернутый в [ResultState].
+     *
+     * @return [ResultState] с результатом запроса.
+     */
+    override suspend fun loadCategories(): ResultState<List<Category>> {
+        return safeApiCall(
+            mapper = { it },
+            block = { apiService.getCategories() }
+        )
     }
 }

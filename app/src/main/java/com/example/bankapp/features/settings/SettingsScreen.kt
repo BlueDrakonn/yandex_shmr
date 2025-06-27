@@ -21,24 +21,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.bankapp.R
-import com.example.bankapp.features.common.LazyList
+import com.example.bankapp.features.common.ui.LazyList
+import com.example.bankapp.features.settings.utils.SettingsItems
 
 
 @Composable
 fun SettingsScreen() {
-    val settingsItems = listOf(
-        R.string.settings_dark_theme,
-        R.string.settings_main_color,
-        R.string.settings_sound,
-        R.string.settings_haptics,
-        R.string.settings_password,
-        R.string.settings_synchronization,
-        R.string.settings_language,
-        R.string.settings_about_program,
-    )
+    val settingsItems = SettingsItems.items
 
     var isDarkTheme by remember { mutableStateOf(false) }
-
 
     LazyList(
         itemsList = settingsItems,

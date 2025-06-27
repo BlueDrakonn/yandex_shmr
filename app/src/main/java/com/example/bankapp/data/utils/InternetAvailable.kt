@@ -1,16 +1,8 @@
-package com.example.bankapp.utils
+package com.example.bankapp.data.utils
 
-import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.Manifest.permission.ACCESS_NETWORK_STATE
-import android.annotation.SuppressLint
 import android.content.Context
-import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.os.Build
-import android.widget.Toast
-import com.example.bankapp.MyApplication
-import java.security.Permission
 
 
 fun isInternetAvailable(context: Context): Boolean {

@@ -1,6 +1,5 @@
 package com.example.bankapp.domain.model
 
-import java.time.LocalDateTime
 
 
 data class Account(

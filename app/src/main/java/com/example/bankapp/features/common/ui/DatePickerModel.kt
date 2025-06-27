@@ -1,6 +1,5 @@
-package com.example.bankapp.features.common
+package com.example.bankapp.features.common.ui
 
-import android.widget.Toast
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -10,7 +9,6 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.bankapp.MyApplication
 import com.example.bankapp.R
 import java.time.Instant
 import java.time.ZoneId

@@ -1,60 +1,50 @@
 package com.example.bankapp.data.repository
 
 
+import com.example.bankapp.core.ResultState
 import com.example.bankapp.data.network.api.ApiService
 import com.example.bankapp.domain.model.Account
-import com.example.bankapp.domain.model.Category
-
 import com.example.bankapp.domain.repository.AccountRepository
-import com.example.bankapp.domain.viewmodel.ResultState
-import com.example.bankapp.utils.Delays
-import com.example.bankapp.utils.safeApiCall
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.example.bankapp.data.utils.safeApiCall
+import javax.inject.Inject
 
 
-class AccountRepositoryImpl(private val apiService: ApiService): AccountRepository {
+/**
+ * Реализация репозитория аккаунтов.
+ *
+ * Получает данные о счете пользователя через [ApiService].
+ * Хранит id аккаунта в [accountId].
+ *
+ * @property apiService Сервис для сетевых запросов.
+ */
+class AccountRepositoryImpl @Inject constructor(
+    private val apiService: ApiService
+) : AccountRepository {
 
+    /**
+     * ID текущего  аккаунта.
+     */
     override var accountId: Int? = null
 
-
-    private val _accountState = MutableStateFlow<ResultState<List<Account>>>(ResultState.Loading)
-    override val accountState: StateFlow<ResultState<List<Account>>> = _accountState
-
-    override suspend fun loadAccounts() {
-        when (_accountState.value) {
-            ResultState.Loading -> {
-                var result = safeApiCall(
-                    mapper = { it.toAccount() },
-                    block = { apiService.getAccounts()  }
-                )
-
-
-                if(result == ResultState.Error(message = "no internet connection")) {
-                    _accountState.value = result
-                    delay(Delays.INTERNET_ERROR_RETRY)
-                    result = safeApiCall(
-                        mapper = { it.toAccount() },
-                        block = { apiService.getAccounts()  }
-                    )
-                }
-
-
-                when(result) {
-
-                    is ResultState.Success -> {
-                        //result = result.data.map { it.toAccount() }
-                        _accountState.value = ResultState.Success(result.data)
-                        accountId = result.data.firstOrNull()?.userId
-                    }
-                    else -> _accountState.value = result
-                }
-
+    /**
+     * Загружает список аккаунтов пользователя с сервера(по умолчанию в списке один аккаунт).
+     *
+     * Выполняет запрос через [ApiService.getAccounts], преобразует
+     * данные и сохраняет ID первого аккаунта, если он есть.
+     *
+     * @return [ResultState] с результатом запроса.
+     */
+    override suspend fun loadAccounts(): ResultState<List<Account>> {
+        val result = safeApiCall(
+            mapper = { it.toAccount() },
+            block = { apiService.getAccounts() }
+        )
+        when (result) {
+            is ResultState.Success -> {
+                accountId = result.data.firstOrNull()?.userId
+                return result
             }
-            else -> {}
+            else -> return result
         }
     }
-
-
 }

@@ -11,22 +11,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.bankapp.core.navigation.Screen
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
-    val items = listOf(
-        Screen.EXPENSES,
-        Screen.INCOME,
-        Screen.ACCOUNTS,
-        Screen.ARTICLES,
-        Screen.SETTINGS
-    )
-
+    val items = Screen.all
     BottomAppBar {
         val navBackStackEntry = navController.currentBackStackEntryAsState().value
         val currentRoute = navBackStackEntry?.destination?.route
 
-        val selectedItem = items.find { it.route == currentRoute }?.route ?: navController.previousBackStackEntry?.destination?.route
+        val selectedItem = items.find {
+            it.route == currentRoute
+        }?.route ?: navController.previousBackStackEntry?.destination?.route
 
         Row(modifier = Modifier
             .fillMaxWidth()

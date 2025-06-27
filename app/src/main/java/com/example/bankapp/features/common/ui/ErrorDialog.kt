@@ -1,7 +1,5 @@
-package com.example.bankapp.features.common
+package com.example.bankapp.features.common.ui
 
-import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,21 +9,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-
 import androidx.compose.ui.unit.dp
+import com.example.bankapp.R
 
 @Composable
-fun ErrorHandler(
-    errorMessage: String? = "Unknown error",
+fun ErrorDialog(
+    errorMessage: String? = stringResource(R.string.unknown_error),
     errorCode: Int? = null
 ) {
 
@@ -47,7 +44,7 @@ fun ErrorHandler(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Что-то пошло не так",
+            text = stringResource(R.string.error_title),
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onBackground
         )
@@ -55,7 +52,7 @@ fun ErrorHandler(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = errorMessage ?: "Неизвестная ошибка",
+            text = errorMessage ?: stringResource(R.string.unknown_error),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onBackground,
             textAlign = TextAlign.Center
@@ -64,7 +61,7 @@ fun ErrorHandler(
         if (errorCode != null) {
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "Код ошибки: $errorCode",
+                text =  "${stringResource(R.string.error_code)} $errorCode",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
             )
