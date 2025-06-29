@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.bankapp.features.categories.store.models.CategoryIntent
 import com.example.bankapp.features.common.ui.LazyList
 import com.example.bankapp.features.common.ui.LeadIcon
 import com.example.bankapp.features.common.ui.ResultStateHandler
@@ -37,7 +38,9 @@ fun CategoriesScreen(
                     SearchInput(
                         query = searchQuery,
                         onQueryChange = { searchQuery = it },
-                        onSearchClick = {  }
+                        onSearchClick = {
+                            viewModel.handleIntent(CategoryIntent.OnSearchQuery(searchQuery))
+                        }
                     )
                 },
                 itemsList = data,

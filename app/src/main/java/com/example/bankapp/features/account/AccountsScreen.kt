@@ -26,7 +26,6 @@ import com.example.bankapp.features.common.ui.ResultStateHandler
 import com.example.bankapp.features.common.ui.TrailingContent
 
 
-
 @Composable
 fun AccountsScreen(
     viewModel: AccountViewModel = hiltViewModel()
@@ -39,7 +38,7 @@ fun AccountsScreen(
         state = state,
         onSuccess = { data ->
             if (showBottomSheet) {
-                CurrencyBottomSheet({showBottomSheet = false})
+                CurrencyBottomSheet { showBottomSheet = false }
             }
             LazyList(
                 itemsList = data,
@@ -48,7 +47,7 @@ fun AccountsScreen(
                     ListItem(
                         modifier = Modifier
                             .background(MaterialTheme.colorScheme.secondary)
-                            .clickable {  },
+                            .clickable { },
                         lead = {
                             LeadIcon(
                                 backGroundColor = MaterialTheme.colorScheme.background,
@@ -60,14 +59,15 @@ fun AccountsScreen(
                         },
                         trailingContent = {
                             TrailingContent(
-                                content =  {
+                                content = {
                                     PriceDisplay(
                                         amount = item.balance,
                                         currencySymbol = item.currency,
                                     )
                                 },
                                 icon = {
-                                    Icon(painter = painterResource(R.drawable.drillin),
+                                    Icon(
+                                        painter = painterResource(R.drawable.drillin),
                                         contentDescription = null,
                                     )
                                 }
@@ -76,11 +76,11 @@ fun AccountsScreen(
                         }
 
                     )
-                    HorizontalDivider( color = MaterialTheme.colorScheme.outlineVariant)
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                     ListItem(
                         modifier = Modifier
                             .background(MaterialTheme.colorScheme.secondary)
-                            .clickable { showBottomSheet = true  },
+                            .clickable { showBottomSheet = true },
                         content = {
                             Text(
                                 text = stringResource(R.string.currency),
@@ -101,8 +101,8 @@ fun AccountsScreen(
                                     Icon(
                                         painter = painterResource(R.drawable.drillin),
                                         contentDescription = null,
-                                        )
-                                       },
+                                    )
+                                },
                             )
                         }
                     )
