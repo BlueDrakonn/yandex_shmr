@@ -4,9 +4,14 @@ import ListItem
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -20,8 +25,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.example.bankapp.R
 import com.example.bankapp.core.navigation.HistoryType
+import com.example.bankapp.core.navigation.Screen
 import com.example.bankapp.features.common.ui.DatePickerModal
 import com.example.bankapp.features.common.ui.LazyList
 import com.example.bankapp.features.common.ui.LeadIcon
@@ -31,12 +38,14 @@ import com.example.bankapp.features.common.ui.ResultStateHandler
 import com.example.bankapp.features.common.ui.TrailingContent
 import com.example.bankapp.features.history.models.DateMode
 import com.example.bankapp.features.history.models.DatePickerState
+import com.example.bankapp.navigation.TopAppBar
 
 
 @Composable
 fun HistoryScreen(
     type: HistoryType,
-    viewModel: HistoryViewModel = hiltViewModel()
+    viewModel: HistoryViewModel = hiltViewModel(),
+    navController: NavHostController
 ) {
 
     val transactions by viewModel.transactionState.collectAsStateWithLifecycle()
@@ -71,83 +80,107 @@ fun HistoryScreen(
         )
     }
 
-    ResultStateHandler(
-        state = transactions,
-        onSuccess = { data ->
-            LazyList(
-                topItem = {
-                    HistoryTopBlock(
-                        startData = startDate,
-                        endData = endDate,
-                        totalSum = totalSum,
-                        currency = data.firstOrNull()?.currency ?: "",
-                        startDataChange = {
 
-                            showDatePicker = DatePickerState.OPEN_START
 
-                                          },
-                        endDataChange = {
-
-                            showDatePicker = DatePickerState.OPEN_END
-
-                                        },
-                        modifier = Modifier.background(MaterialTheme.colorScheme.secondary)
-                    )
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                navigationIcon = {
+                    IconButton(onClick = {navController.popBackStack()}) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "navigate to previous screen")
+                    }
                 },
-                itemsList = data,
-                itemTemplate = { item->
-
-                    ListItem(
-                        modifier = Modifier
-                            .clickable { },
-                        lead = { item.icon?.let { LeadIcon(label = it) } },
-                        content = {
-                            Column(
-                                horizontalAlignment = Alignment.Start
-                            ) {
-                                Text(
-                                    text = item.title,
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    color = MaterialTheme.colorScheme.onPrimary
-                                )
-                                if (item.subtitle != null) {
-                                    Text(
-                                        text = item.subtitle,
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSecondary
-                                    )
-                                }
-                            }
-                        },
-                        trailingContent = {
-                            TrailingContent(
-                                content = {
-
-                                    PriceWithDate(
-                                        date = item.transactionDate,
-                                        price = { PriceDisplay(
-                                            amount = item.amount,
-                                            currencySymbol = item.currency
-                                        ) }
-                                    )
-
-                                },
-                                icon = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.drillin),
-                                        contentDescription = null,
-
-                                        )
-                                }
-                            )
-                        }
-
-                    )
-                },
-
+                title = stringResource(Screen.HISTORY_INCOME.titleRes),
+                action = {
+                    //логика с графиком
+                }
             )
         }
-    )
+    ) {
+        padding ->
+        ResultStateHandler(
+            state = transactions,
+            onSuccess = { data ->
+                LazyList(
+                    topItem = {
+                        HistoryTopBlock(
+                            startData = startDate,
+                            endData = endDate,
+                            totalSum = totalSum,
+                            currency = data.firstOrNull()?.currency ?: "",
+                            startDataChange = {
+
+                                showDatePicker = DatePickerState.OPEN_START
+
+                            },
+                            endDataChange = {
+
+                                showDatePicker = DatePickerState.OPEN_END
+
+                            },
+                            modifier = Modifier.background(MaterialTheme.colorScheme.secondary)
+                        )
+                    },
+                    itemsList = data,
+                    itemTemplate = { item->
+
+                        ListItem(
+                            modifier = Modifier
+                                .clickable { },
+                            lead = { item.icon?.let { LeadIcon(label = it) } },
+                            content = {
+                                Column(
+                                    horizontalAlignment = Alignment.Start
+                                ) {
+                                    Text(
+                                        text = item.title,
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        color = MaterialTheme.colorScheme.onPrimary
+                                    )
+                                    if (item.subtitle != null) {
+                                        Text(
+                                            text = item.subtitle,
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = MaterialTheme.colorScheme.onSecondary
+                                        )
+                                    }
+                                }
+                            },
+                            trailingContent = {
+                                TrailingContent(
+                                    content = {
+
+                                        PriceWithDate(
+                                            date = item.transactionDate,
+                                            price = { PriceDisplay(
+                                                amount = item.amount,
+                                                currencySymbol = item.currency
+                                            ) }
+                                        )
+
+                                    },
+                                    icon = {
+                                        Icon(
+                                            painter = painterResource(R.drawable.drillin),
+                                            contentDescription = null,
+
+                                            )
+                                    }
+                                )
+                            }
+
+                        )
+                    },
+
+                    )
+            },
+            modifier = Modifier.padding(top = padding.calculateTopPadding())
+        )
+    }
+
+
 }
 
 @Composable

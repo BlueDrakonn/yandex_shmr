@@ -11,9 +11,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.bankapp.core.navigation.HistoryType
 import com.example.bankapp.core.navigation.Screen
-import com.example.bankapp.features.common.ui.AddButton
 import com.example.bankapp.features.account.AccountsScreen
 import com.example.bankapp.features.categories.CategoriesScreen
+import com.example.bankapp.features.common.ui.AddButton
 import com.example.bankapp.features.expenses.ExpensesScreen
 import com.example.bankapp.features.history.HistoryScreen
 import com.example.bankapp.features.income.IncomeScreen
@@ -31,36 +31,34 @@ fun AppNavigation() {
 
     Scaffold(
         bottomBar = {
-            BottomNavigationBar(navController) },
+            BottomNavigationBar(navController)
+        },
         topBar = {
 
-            TopAppBar(
-                navController = navController,
-                currentScreen = currentScreen
-            )
-
         },
-        floatingActionButton = {when (currentScreen) {
-            Screen.EXPENSES -> AddButton(onClick = {})
-            Screen.INCOME -> AddButton(onClick = {})
-            Screen.ACCOUNTS -> AddButton(onClick = {})
-            else -> Unit
-        }}
+        floatingActionButton = {
+            when (currentScreen) {
+                Screen.EXPENSES -> AddButton(onClick = {})
+                Screen.INCOME -> AddButton(onClick = {})
+                Screen.ACCOUNTS -> AddButton(onClick = {})
+                else -> Unit
+            }
+        }
     ) { padding ->
 
         NavHost(
             navController = navController,
             startDestination = Screen.EXPENSES.route,
-            modifier = Modifier.padding(padding)
+            modifier = Modifier.padding(bottom = padding.calculateBottomPadding())
         ) {
             composable(Screen.EXPENSES.route) {
-                ExpensesScreen()
+                ExpensesScreen(navController = navController)
             }
             composable(Screen.INCOME.route) {
-                IncomeScreen()
+                IncomeScreen(navController = navController)
             }
             composable(Screen.ACCOUNTS.route) {
-                AccountsScreen()
+                AccountsScreen(navController = navController)
             }
             composable(Screen.ARTICLES.route) {
                 CategoriesScreen()
@@ -69,10 +67,10 @@ fun AppNavigation() {
                 SettingsScreen()
             }
             composable(Screen.HISTORY_INCOME.route) {
-                HistoryScreen(type = HistoryType.INCOME)
+                HistoryScreen(type = HistoryType.INCOME, navController = navController)
             }
             composable(Screen.HISTORY_EXPENSES.route) {
-                HistoryScreen(type = HistoryType.EXPENSE)
+                HistoryScreen(type = HistoryType.EXPENSE, navController = navController)
             }
         }
     }
