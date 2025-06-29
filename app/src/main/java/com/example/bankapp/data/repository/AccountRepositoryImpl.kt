@@ -25,7 +25,14 @@ class AccountRepositoryImpl @Inject constructor(
      * ID текущего  аккаунта.
      */
     override var accountId: Int? = null
-
+    /**
+     * Currency текущего  аккаунта.
+     */
+    override var accountCurrency: String? = null
+    /**
+     * Error возникший при получение аккаунта, прокидывается на другие скрины.
+     */
+    override var accountError: String? = null
     /**
      * Загружает список аккаунтов пользователя с сервера(по умолчанию в списке один аккаунт).
      *
@@ -42,6 +49,10 @@ class AccountRepositoryImpl @Inject constructor(
         when (result) {
             is ResultState.Success -> {
                 accountId = result.data.firstOrNull()?.userId
+                return result
+            }
+            is ResultState.Error -> {
+                accountError = result.message
                 return result
             }
             else -> return result

@@ -7,6 +7,7 @@ import com.example.bankapp.domain.model.Account
 interface AccountRepository {
 
     var accountId:  Int?
-
+    var accountCurrency: String?
+    var accountError: String?
     suspend fun loadAccounts(): ResultState<List<Account>>
 }

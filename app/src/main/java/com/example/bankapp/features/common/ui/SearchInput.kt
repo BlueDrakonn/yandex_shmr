@@ -3,6 +3,7 @@ package com.example.bankapp.features.common.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
@@ -36,7 +37,9 @@ fun SearchInput(
             Text(
                 "Найти статью",
                 color = MaterialTheme.colorScheme.onSecondary,
-                style = MaterialTheme.typography.bodyLarge) },
+                style = MaterialTheme.typography.bodyLarge
+            )
+        },
         trailingIcon = {
             IconButton(onClick = onSearchClick) {
                 Icon(
@@ -46,6 +49,11 @@ fun SearchInput(
             }
         },
         singleLine = true,
+        keyboardActions = KeyboardActions(
+            onDone = {
+                onSearchClick()
+            }
+        ),
         colors = OutlinedTextFieldDefaults.colors(
             cursorColor = MaterialTheme.colorScheme.onSecondary,
             unfocusedBorderColor = MaterialTheme.colorScheme.surfaceContainer,
