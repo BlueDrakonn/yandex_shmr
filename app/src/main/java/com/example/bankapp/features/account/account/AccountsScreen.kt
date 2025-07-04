@@ -64,7 +64,7 @@ fun AccountsScreen(
                                 label = "💰"
                             )
                         }, content = {
-                            Text(stringResource(R.string.balance))
+                            Text(item.name)
                         }, trailingContent = {
                             TrailingContent(content = {
                                 PriceDisplay(
