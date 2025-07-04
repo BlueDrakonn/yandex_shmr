@@ -8,6 +8,7 @@ import com.example.bankapp.data.model.UpdateAccountRequest
 import com.example.bankapp.domain.model.Account
 import com.example.bankapp.domain.repository.AccountRepository
 import com.example.bankapp.features.account.accountEdit.models.AccountEditIntent
+import com.example.bankapp.features.account.accountEdit.utils.isValidNumberInput
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -44,6 +45,8 @@ class AccountEditViewModel @Inject constructor(
             is AccountEditIntent.OnAccountUpdate -> {
 
                 if (accountRepository.accountId == null) ResultState.Error(message = accountRepository.accountError)
+
+                if (!isValidNumberInput(intent.balance)) ResultState.Error(message = accountRepository.accountError)
 
                 accountUpdate(
                     name = intent.name,

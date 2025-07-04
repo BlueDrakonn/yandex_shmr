@@ -42,7 +42,6 @@ import com.example.bankapp.features.account.accountEdit.models.AccountEditIntent
 import com.example.bankapp.features.common.ui.CurrencyBottomSheet
 import com.example.bankapp.features.common.ui.ResultStateHandler
 import com.example.bankapp.features.common.ui.TrailingContent
-import com.example.bankapp.features.common.utlis.isValidNumberInput
 import com.example.bankapp.navigation.TopAppBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,11 +52,11 @@ fun AccountEditScreen(
     navController: NavHostController
 ) {
     val coroutineScope = rememberCoroutineScope()
-
-    val state by viewModel.accountState.collectAsStateWithLifecycle()
-    var showBottomSheet by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
+    val state by viewModel.accountState.collectAsStateWithLifecycle()
+
+    var showBottomSheet by remember { mutableStateOf(false) }
 
     var initialized by remember { mutableStateOf(false) }
     var editableName by remember { mutableStateOf("") }
@@ -81,33 +80,29 @@ fun AccountEditScreen(
             ) {
                 IconButton(onClick = {
 
-                    if (isValidNumberInput(editableBalance)) {
-                        coroutineScope.launch(Dispatchers.IO) {
-                            val result = viewModel.handleIntent(
-                                AccountEditIntent.OnAccountUpdate(
-                                    name = editableName,
-                                    balance = editableBalance,
-                                    currency = editableCurrency
-                                )
+
+                    coroutineScope.launch(Dispatchers.IO) {
+                        val result = viewModel.handleIntent(
+                            AccountEditIntent.OnAccountUpdate(
+                                name = editableName,
+                                balance = editableBalance,
+                                currency = editableCurrency
                             )
-                            when (result) {
-                                is ResultState.Success -> {
-                                    navController.popBackStack()
-                                }
-
-                                is ResultState.Error -> {
-                                    showToast(context, result.message)
-
-                                }
-
-                                else -> Unit
+                        )
+                        when (result) {
+                            is ResultState.Success -> {
+                                navController.popBackStack()
                             }
+
+                            is ResultState.Error -> {
+                                showToast(context, result.message)
+
+                            }
+
+                            else -> Unit
                         }
-
-                    } else {
-                        showToast(context, "неверный формат данных")
-
                     }
+
 
                 }) {
                     Icon(
@@ -133,7 +128,6 @@ fun AccountEditScreen(
                         { editableCurrency = it }
                     ) { showBottomSheet = false }
                 }
-
 
                 AccountEditForm(
                     editableName = editableName,

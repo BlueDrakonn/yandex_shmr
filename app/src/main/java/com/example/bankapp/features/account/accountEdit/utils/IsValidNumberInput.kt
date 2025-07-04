@@ -1,4 +1,4 @@
-package com.example.bankapp.features.common.utlis
+package com.example.bankapp.features.account.accountEdit.utils
 
 fun isValidNumberInput(input: String): Boolean {
     if (input.isEmpty()) return false
