@@ -164,14 +164,14 @@ fun AccountEditForm(
         OutlinedTextField(
             value = editableName,
             onValueChange = onNameChange,
-            label = { Text("Название счета") },
+            label = { Text(stringResource(R.string.account_edit_account_name)) },
             modifier = Modifier.fillMaxWidth()
         )
 
         OutlinedTextField(
             value = editableBalance,
             onValueChange = onBalanceChange,
-            label = { Text("Баланс") },
+            label = { Text(stringResource(R.string.account_edit_balance)) },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth()
         )

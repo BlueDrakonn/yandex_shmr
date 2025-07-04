@@ -47,5 +47,9 @@
     <string name="unknown_error">неизвестная ошибка</string>
     <string name="error_code">Код ошибки:</string>
 
+    <string name="account_edit_account_name">Название счета</string>
+    <string name="account_edit_balance">Баланс</string>
+    <string name="account_edit_invalid_balance_error">некорректный формат баланса</string>
+
 
 </resources>

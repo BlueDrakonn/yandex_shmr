@@ -46,7 +46,7 @@ class AccountEditViewModel @Inject constructor(
 
                 if (accountRepository.accountId == null) ResultState.Error(message = accountRepository.accountError)
 
-                if (!isValidNumberInput(intent.balance)) ResultState.Error(message = accountRepository.accountError)
+                if (!isValidNumberInput(intent.balance)) ResultState.Error(message = "некорректный формат баланса")
 
                 accountUpdate(
                     name = intent.name,
