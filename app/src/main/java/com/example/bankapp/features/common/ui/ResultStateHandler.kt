@@ -24,14 +24,18 @@ fun <T> ResultStateHandler(
             }
         }
         is ResultState.Success -> {
-            onSuccess(state.data)
+            Box(modifier = modifier.fillMaxSize()) {
+                onSuccess(state.data)
+            }
+
         }
         is ResultState.Error -> {
-
-            ErrorDialog(
-                errorMessage = state.message,
-                errorCode = state.code
-            )
+            Box(modifier = modifier.fillMaxSize()) {
+                ErrorDialog(
+                    errorMessage = state.message,
+                    errorCode = state.code
+                )
+            }
         }
     }
 }

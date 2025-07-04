@@ -1,6 +1,7 @@
 package com.example.bankapp.data.model
 
 import com.example.bankapp.data.utils.formatDate
+import com.example.bankapp.data.utils.getCurrencySymbol
 import com.example.bankapp.domain.model.Category
 import com.example.bankapp.domain.model.Transaction
 import com.example.bankapp.domain.model.TransactionDetailed
@@ -32,7 +33,7 @@ data class TransactionResponseDto(
             subtitle = comment,
             icon = category.emoji,
             amount = amount.toString(),
-            currency = account.currency,
+            currency = getCurrencySymbol(account.currency),
             isIncome = category.isIncome
         )
     }

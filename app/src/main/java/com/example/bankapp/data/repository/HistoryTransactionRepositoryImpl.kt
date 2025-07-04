@@ -5,7 +5,7 @@ import com.example.bankapp.core.ResultState
 import com.example.bankapp.data.network.api.ApiService
 import com.example.bankapp.domain.model.TransactionDetailed
 import com.example.bankapp.domain.repository.HistoryTransactionRepository
-import com.example.bankapp.data.utils.safeApiCall
+import com.example.bankapp.data.utils.safeApiCallList
 import javax.inject.Inject
 
 /**
@@ -38,7 +38,7 @@ class HistoryTransactionRepositoryImpl @Inject constructor(
 
 
 
-        return safeApiCall(
+        return safeApiCallList(
             mapper = {
                 it.toTransactionDetailed()
             },

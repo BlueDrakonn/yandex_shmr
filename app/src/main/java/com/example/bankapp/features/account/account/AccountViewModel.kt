@@ -1,4 +1,4 @@
-package com.example.bankapp.features.account
+package com.example.bankapp.features.account.account
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

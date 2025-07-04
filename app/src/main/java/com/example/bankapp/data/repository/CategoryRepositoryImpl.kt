@@ -5,7 +5,7 @@ import com.example.bankapp.core.ResultState
 import com.example.bankapp.data.network.api.ApiService
 import com.example.bankapp.domain.model.Category
 import com.example.bankapp.domain.repository.CategoryRepository
-import com.example.bankapp.data.utils.safeApiCall
+import com.example.bankapp.data.utils.safeApiCallList
 import javax.inject.Inject
 
 
@@ -29,7 +29,7 @@ class CategoryRepositoryImpl @Inject constructor(
      * @return [ResultState] с результатом запроса.
      */
     override suspend fun loadCategories(): ResultState<List<Category>> {
-        return safeApiCall(
+        return safeApiCallList(
             mapper = { it },
             block = { apiService.getCategories() }
         )
