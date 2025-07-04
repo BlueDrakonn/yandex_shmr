@@ -10,6 +10,9 @@ import com.example.bankapp.domain.repository.AccountRepository
 import com.example.bankapp.features.account.accountEdit.models.AccountEditIntent
 import com.example.bankapp.features.account.accountEdit.utils.isValidNumberInput
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
@@ -48,12 +51,16 @@ class AccountEditViewModel @Inject constructor(
 
                 if (!isValidNumberInput(intent.balance)) ResultState.Error(message = "некорректный формат баланса")
 
-                accountUpdate(
-                    name = intent.name,
-                    balance = intent.balance,
-                    currency = intent.currency,
-                )
+                val deferred: Deferred<ResultState<Account>> =
+                    viewModelScope.async(Dispatchers.IO) {
+                        accountUpdate(
+                            name = intent.name,
+                            balance = intent.balance,
+                            currency = intent.currency,
+                        )
+                    }
 
+                deferred.await()
 
             }
 

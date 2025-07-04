@@ -43,7 +43,6 @@ import com.example.bankapp.features.common.ui.CurrencyBottomSheet
 import com.example.bankapp.features.common.ui.ResultStateHandler
 import com.example.bankapp.features.common.ui.TrailingContent
 import com.example.bankapp.navigation.TopAppBar
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
@@ -80,8 +79,8 @@ fun AccountEditScreen(
             ) {
                 IconButton(onClick = {
 
+                    coroutineScope.launch {
 
-                    coroutineScope.launch(Dispatchers.IO) {
                         val result = viewModel.handleIntent(
                             AccountEditIntent.OnAccountUpdate(
                                 name = editableName,
