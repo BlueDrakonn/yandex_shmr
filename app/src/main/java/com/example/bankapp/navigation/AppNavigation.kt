@@ -11,6 +11,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.bankapp.core.navigation.HistoryType
 import com.example.bankapp.core.navigation.Screen
+import com.example.bankapp.features.account.AccountEditScreen
 import com.example.bankapp.features.account.AccountsScreen
 import com.example.bankapp.features.categories.CategoriesScreen
 import com.example.bankapp.features.common.ui.AddButton
@@ -40,7 +41,6 @@ fun AppNavigation() {
             when (currentScreen) {
                 Screen.EXPENSES -> AddButton(onClick = {})
                 Screen.INCOME -> AddButton(onClick = {})
-                Screen.ACCOUNTS -> AddButton(onClick = {})
                 else -> Unit
             }
         }
@@ -71,6 +71,9 @@ fun AppNavigation() {
             }
             composable(Screen.HISTORY_EXPENSES.route) {
                 HistoryScreen(type = HistoryType.EXPENSE, navController = navController)
+            }
+            composable(Screen.ACCOUNTS_EDIT.route) {
+                AccountEditScreen(navController = navController)
             }
         }
     }

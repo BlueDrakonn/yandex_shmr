@@ -3,12 +3,15 @@ package com.example.bankapp.data.network.api
 import com.example.bankapp.TOKEN
 import com.example.bankapp.data.model.AccountDto
 import com.example.bankapp.data.model.TransactionResponseDto
+import com.example.bankapp.data.model.UpdateAccountRequest
 import com.example.bankapp.domain.model.Category
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -18,6 +21,12 @@ interface ApiService {
     suspend fun getAccounts(
         //@Header("Authorization") auth: String = TOKEN
     ): Response<List<AccountDto>>
+
+    @PUT("api/v1/accounts/{id}")
+    suspend fun updateAccount(
+        @Path("id") accountId: Int,
+        @Body request: UpdateAccountRequest
+    ): Response<AccountDto>
 
     @GET("api/v1/categories")
     suspend fun getCategories(

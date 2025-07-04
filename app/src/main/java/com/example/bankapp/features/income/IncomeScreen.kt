@@ -75,7 +75,7 @@ fun IncomeScreen(
                             trailingContent = {
                                 PriceDisplay(
                                     amount = totalAmount.toString(),
-                                    currencySymbol = "₽" //пока мок версия
+                                    currencySymbol = viewModel.currentCurrency()
                                 )
                             },
                         )

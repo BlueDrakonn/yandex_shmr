@@ -39,14 +39,16 @@ fun AccountsScreen(
 ) {
 
     val state by viewModel.accountState.collectAsStateWithLifecycle()
-    var showBottomSheet by remember { mutableStateOf(false) }
+
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = stringResource(Screen.ACCOUNTS.titleRes)
             ) {
-                IconButton(onClick = {}) {
+                IconButton(onClick = {
+                    navController.navigate(Screen.ACCOUNTS_EDIT.route)
+                }) {
                     Icon(
                         painter = painterResource(R.drawable.edit), contentDescription = "edit"
                     )
@@ -55,9 +57,7 @@ fun AccountsScreen(
         }) { padding ->
         ResultStateHandler(
             state = state, onSuccess = { data ->
-                if (showBottomSheet) {
-                    CurrencyBottomSheet { showBottomSheet = false }
-                }
+
                 LazyList(itemsList = data, lastItemDivider = {}, itemTemplate = { item ->
                     ListItem(
                         modifier = Modifier
@@ -89,7 +89,7 @@ fun AccountsScreen(
                     ListItem(
                         modifier = Modifier
                             .background(MaterialTheme.colorScheme.secondary)
-                            .clickable { showBottomSheet = true }, content = {
+                            .clickable {}, content = {
                             Text(
                                 text = stringResource(R.string.currency),
                                 color = MaterialTheme.colorScheme.onPrimary,

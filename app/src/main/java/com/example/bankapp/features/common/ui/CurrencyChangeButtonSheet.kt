@@ -25,28 +25,28 @@ import com.example.bankapp.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CurrencyBottomSheet(onDismissRequest:() -> Unit ) {
+fun CurrencyBottomSheet(
+    onSelect: (String) -> Unit,
+    onDismissRequest:() -> Unit ) {
 
     val list = listOf(
-        Pair(R.drawable.rubble, R.string.bottom_sheet_rubble),
-        Pair(R.drawable.dollar, R.string.bottom_sheet_dollar),
-        Pair(R.drawable.euro, R.string.bottom_sheet_euro),
-        Pair(R.drawable.cancel, R.string.bottom_sheet_cancel),
+        Triple(R.drawable.rubble, R.string.bottom_sheet_rubble, "₽"),
+        Triple(R.drawable.dollar, R.string.bottom_sheet_dollar, "$"),
+        Triple(R.drawable.euro, R.string.bottom_sheet_euro, "€"),
+        Triple(R.drawable.cancel, R.string.bottom_sheet_cancel,""),
 
     )
 
     ModalBottomSheet(onDismissRequest) {
         Column(modifier = Modifier.padding(vertical = 16.dp)) {
 
-            list.forEachIndexed { index, (iconId,stringId) ->
+            list.forEachIndexed { index, (iconId,stringId, currency) ->
 
                 val modifier = if (index == list.lastIndex) {
                     Modifier.background(MaterialTheme.colorScheme.error)
                 } else {
                     Modifier
                 }
-
-
 
                 ListItem(
                     lead = {
@@ -74,10 +74,13 @@ fun CurrencyBottomSheet(onDismissRequest:() -> Unit ) {
                         )
                     },
                     modifier = modifier
-                        .clickable { onDismissRequest() }
+                        .clickable {
+                            onDismissRequest()
+                            if (index < list.lastIndex) onSelect(currency)
+                        }
                 )
 
-                if (index < list.lastIndex -1) {
+                if (index < list.lastIndex) {
                     HorizontalDivider()
                 }
 

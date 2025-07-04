@@ -61,5 +61,9 @@ class ExpensesViewModel @Inject constructor(
         }
 
     }
+
+    fun currentCurrency(): String {
+        return accountRepository.accountCurrency ?: "₽"
+    }
 }
 
