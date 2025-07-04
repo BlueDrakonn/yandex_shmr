@@ -1,17 +1,12 @@
 package com.example.bankapp.features.account.account
 
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.bankapp.MyApplication
 import com.example.bankapp.core.Constants.Delays
 import com.example.bankapp.core.ResultState
-import com.example.bankapp.data.model.UpdateAccountRequest
 import com.example.bankapp.domain.model.Account
 import com.example.bankapp.domain.repository.AccountRepository
-import com.example.bankapp.features.account.store.models.AccountIntent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart

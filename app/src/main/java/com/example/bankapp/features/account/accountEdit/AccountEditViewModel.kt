@@ -7,7 +7,7 @@ import com.example.bankapp.core.ResultState
 import com.example.bankapp.data.model.UpdateAccountRequest
 import com.example.bankapp.domain.model.Account
 import com.example.bankapp.domain.repository.AccountRepository
-import com.example.bankapp.features.account.store.models.AccountIntent
+import com.example.bankapp.features.account.accountEdit.models.AccountEditIntent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -39,9 +39,9 @@ class AccountEditViewModel @Inject constructor(
     }
 
 
-    suspend fun handleIntent(intent: AccountIntent): ResultState<Account> {
+    suspend fun handleIntent(intent: AccountEditIntent): ResultState<Account> {
         return when (intent) {
-            is AccountIntent.OnAccountUpdate -> {
+            is AccountEditIntent.OnAccountUpdate -> {
 
                 if (accountRepository.accountId == null) ResultState.Error(message = accountRepository.accountError)
 

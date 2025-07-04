@@ -38,7 +38,7 @@ import androidx.navigation.NavHostController
 import com.example.bankapp.R
 import com.example.bankapp.core.ResultState
 import com.example.bankapp.core.navigation.Screen
-import com.example.bankapp.features.account.store.models.AccountIntent
+import com.example.bankapp.features.account.accountEdit.models.AccountEditIntent
 import com.example.bankapp.features.common.ui.CurrencyBottomSheet
 import com.example.bankapp.features.common.ui.ResultStateHandler
 import com.example.bankapp.features.common.ui.TrailingContent
@@ -84,7 +84,7 @@ fun AccountEditScreen(
                     if (isValidNumberInput(editableBalance)) {
                         coroutineScope.launch(Dispatchers.IO) {
                             val result = viewModel.handleIntent(
-                                AccountIntent.OnAccountUpdate(
+                                AccountEditIntent.OnAccountUpdate(
                                     name = editableName,
                                     balance = editableBalance,
                                     currency = editableCurrency
