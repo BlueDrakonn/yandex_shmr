@@ -1,4 +1,4 @@
-package com.example.bankapp.features.account
+package com.example.bankapp.features.account.account
 
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
@@ -41,55 +41,7 @@ class AccountViewModel @Inject constructor(
         }
     }
 
-    fun handleIntent(intent: AccountIntent) {
-        when (intent) {
-            is AccountIntent.OnAccountUpdate -> {
-                accountRepository.accountId?.let {
-                    accountUpdate(
-                        name = intent.name,
-                        balance = intent.balance,
-                        currency = intent.currency,
-                    )
-                }
-            }
 
-
-        }
-    }
-
-
-    private fun accountUpdate(name: String, balance: String, currency: String) {
-
-        viewModelScope.launch(Dispatchers.IO) {
-            handleUpdateResult(
-                accountRepository.updateAccount(
-                    UpdateAccountRequest(
-                        name = name,
-                        balance = balance,
-                        currency = currency
-                    )
-                )
-            )
-        }
-    }
-
-    private fun handleUpdateResult(result: ResultState<Account>) {
-        when (result) {
-            is ResultState.Success -> {
-                accountRepository.accountCurrency = result.data.currency
-            }
-
-            is ResultState.Error -> {
-                Toast.makeText(
-                    MyApplication.context,
-                    result.message,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-
-            else -> Unit
-        }
-    }
 
 
 }

@@ -1,4 +1,4 @@
-package com.example.bankapp.features.account
+package com.example.bankapp.features.account.account
 
 import ListItem
 import androidx.compose.foundation.background
@@ -12,9 +12,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -23,7 +20,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.bankapp.R
 import com.example.bankapp.core.navigation.Screen
-import com.example.bankapp.features.common.ui.CurrencyBottomSheet
 import com.example.bankapp.features.common.ui.LazyList
 import com.example.bankapp.features.common.ui.LeadIcon
 import com.example.bankapp.features.common.ui.PriceDisplay

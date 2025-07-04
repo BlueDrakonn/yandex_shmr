@@ -11,8 +11,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.bankapp.core.navigation.HistoryType
 import com.example.bankapp.core.navigation.Screen
-import com.example.bankapp.features.account.AccountEditScreen
-import com.example.bankapp.features.account.AccountsScreen
+import com.example.bankapp.features.account.accountEdit.AccountEditScreen
+import com.example.bankapp.features.account.account.AccountsScreen
 import com.example.bankapp.features.categories.CategoriesScreen
 import com.example.bankapp.features.common.ui.AddButton
 import com.example.bankapp.features.expenses.ExpensesScreen

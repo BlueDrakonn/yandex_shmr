@@ -1,4 +1,4 @@
-package com.example.bankapp.features.account
+package com.example.bankapp.features.account.accountEdit
 
 import ListItem
 import android.content.Context
@@ -21,11 +21,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -39,20 +38,21 @@ import androidx.navigation.NavHostController
 import com.example.bankapp.R
 import com.example.bankapp.core.ResultState
 import com.example.bankapp.core.navigation.Screen
-import com.example.bankapp.domain.model.Account
 import com.example.bankapp.features.account.store.models.AccountIntent
 import com.example.bankapp.features.common.ui.CurrencyBottomSheet
 import com.example.bankapp.features.common.ui.ResultStateHandler
 import com.example.bankapp.features.common.ui.TrailingContent
 import com.example.bankapp.features.common.utlis.isValidNumberInput
 import com.example.bankapp.navigation.TopAppBar
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun AccountEditScreen(
-    viewModel: AccountViewModel = hiltViewModel(),
+    viewModel: AccountEditViewModel = hiltViewModel(),
     navController: NavHostController
 ) {
+    val coroutineScope = rememberCoroutineScope()
 
     val state by viewModel.accountState.collectAsStateWithLifecycle()
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -82,17 +82,32 @@ fun AccountEditScreen(
                 IconButton(onClick = {
 
                     if (isValidNumberInput(editableBalance)) {
-                        viewModel.handleIntent(AccountIntent.OnAccountUpdate(
-                            name = editableName,
-                            balance = editableBalance,
-                            currency = editableCurrency
-                        ))
-                        navController.popBackStack()
+                        coroutineScope.launch(Dispatchers.IO) {
+                            val result = viewModel.handleIntent(
+                                AccountIntent.OnAccountUpdate(
+                                    name = editableName,
+                                    balance = editableBalance,
+                                    currency = editableCurrency
+                                )
+                            )
+                            when (result) {
+                                is ResultState.Success -> {
+                                    navController.popBackStack()
+                                }
+
+                                is ResultState.Error -> {
+                                    showToast(context, result.message)
+
+                                }
+
+                                else -> Unit
+                            }
+                        }
+
                     } else {
-                        showToast(context,"неверный формат данных")
+                        showToast(context, "неверный формат данных")
 
                     }
-
 
                 }) {
                     Icon(
@@ -132,68 +147,10 @@ fun AccountEditScreen(
                         .padding(16.dp)
                 )
 
-//                Column(
-//                    modifier = Modifier
-//                        .fillMaxSize()
-//                        .padding(16.dp),
-//                    verticalArrangement = Arrangement.spacedBy(16.dp)
-//                ) {
-//
-//                    OutlinedTextField(
-//                        value = editableName,
-//                        onValueChange = { editableName = it },
-//                        label = { Text("Название счета") },
-//                        modifier = Modifier.fillMaxWidth()
-//                    )
-//
-//                    OutlinedTextField(
-//                        value = editableBalance,
-//                        onValueChange = { editableBalance = it },
-//                        label = { Text("Баланс") },
-//                        keyboardOptions = KeyboardOptions.Default.copy(
-//                            keyboardType = KeyboardType.Number
-//                        ),
-//                        modifier = Modifier.fillMaxWidth()
-//                    )
-//
-//                    ListItem(
-//                        modifier = Modifier
-//                            .background(MaterialTheme.colorScheme.secondary)
-//                            .clickable { showBottomSheet = true }, content = {
-//                            Text(
-//                                text = stringResource(R.string.currency),
-//                                color = MaterialTheme.colorScheme.onPrimary,
-//                                style = MaterialTheme.typography.bodyLarge
-//                            )
-//                        }, trailingContent = {
-//                            TrailingContent(
-//                                content = {
-//                                    Text(
-//                                        text = when (editableCurrency) {
-//                                            "RUB" -> "\u20BD" // ₽
-//                                            "USD" -> "\u0024" // $
-//                                            "EUR" -> "\u20AC" // €
-//                                            else -> editableCurrency
-//                                        },
-//                                        color = MaterialTheme.colorScheme.onPrimary,
-//                                        style = MaterialTheme.typography.bodyLarge
-//                                    )
-//                                },
-//                                icon = {
-//                                    Icon(
-//                                        painter = painterResource(R.drawable.drillin),
-//                                        contentDescription = null,
-//                                    )
-//                                },
-//                            )
-//                        })
-//
-//                }
             }, modifier = Modifier.padding(top = padding.calculateTopPadding())
 
         )
     }
-
 }
 
 @Composable
@@ -262,6 +219,6 @@ fun AccountEditForm(
     }
 }
 
-fun showToast(context: Context, message: String) {
+fun showToast(context: Context, message: String?) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
