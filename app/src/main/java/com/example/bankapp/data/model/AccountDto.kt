@@ -1,5 +1,6 @@
 package com.example.bankapp.data.model
 
+import com.example.bankapp.data.utils.getCurrencySymbol
 import com.example.bankapp.domain.model.Account
 
 data class AccountDto(
@@ -17,7 +18,7 @@ data class AccountDto(
             userId = userId,
             name = name,
             balance = balance,
-            currency = currency
+            currency = getCurrencySymbol(currency)
         )
     }
 }

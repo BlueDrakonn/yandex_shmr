@@ -191,12 +191,7 @@ fun AccountEditForm(
                 TrailingContent(
                     content = {
                         Text(
-                            text = when (editableCurrency) {
-                                "RUB" -> "\u20BD" // ₽
-                                "USD" -> "\u0024" // $
-                                "EUR" -> "\u20AC" // €
-                                else -> editableCurrency
-                            },
+                            text = editableCurrency,
                             color = MaterialTheme.colorScheme.onPrimary,
                             style = MaterialTheme.typography.bodyLarge
                         )

@@ -15,16 +15,11 @@ fun PriceDisplay(
 
 ) {
 
-    val currency = when (currencySymbol) {
-        "RUB" -> "\u20BD" // ₽
-        "USD" -> "\u0024" // $
-        "EUR" -> "\u20AC" // €
-        else -> currencySymbol
-    }
+
 
     Text(
         modifier = modifier,
-        text = "$amount $currency",
+        text = "$amount $currencySymbol",
         textAlign = TextAlign.Start,
         style = MaterialTheme.typography.bodyLarge,
         color = MaterialTheme.colorScheme.onPrimary

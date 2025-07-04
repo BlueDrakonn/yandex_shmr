@@ -4,13 +4,12 @@ import ListItem
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -27,20 +26,21 @@ import com.example.bankapp.R
 @Composable
 fun CurrencyBottomSheet(
     onSelect: (String) -> Unit,
-    onDismissRequest:() -> Unit ) {
+    onDismissRequest: () -> Unit
+) {
 
     val list = listOf(
         Triple(R.drawable.rubble, R.string.bottom_sheet_rubble, "₽"),
         Triple(R.drawable.dollar, R.string.bottom_sheet_dollar, "$"),
         Triple(R.drawable.euro, R.string.bottom_sheet_euro, "€"),
-        Triple(R.drawable.cancel, R.string.bottom_sheet_cancel,""),
+        Triple(R.drawable.cancel, R.string.bottom_sheet_cancel, ""),
 
-    )
+        )
 
     ModalBottomSheet(onDismissRequest) {
         Column(modifier = Modifier.padding(vertical = 16.dp)) {
 
-            list.forEachIndexed { index, (iconId,stringId, currency) ->
+            list.forEachIndexed { index, (iconId, stringId, currency) ->
 
                 val modifier = if (index == list.lastIndex) {
                     Modifier.background(MaterialTheme.colorScheme.error)
@@ -52,22 +52,23 @@ fun CurrencyBottomSheet(
                     lead = {
                         Box(
                             Modifier.size(24.dp),
-                            contentAlignment = Alignment.Center)
-                        {
-                        Icon(
-                            painterResource(iconId),
-                            contentDescription = null,
-                            tint =
-                                if(index == list.lastIndex) {
-                                    MaterialTheme.colorScheme.background
-                                } else MaterialTheme.colorScheme.onPrimary
+                            contentAlignment = Alignment.Center
                         )
+                        {
+                            Icon(
+                                painterResource(iconId),
+                                contentDescription = null,
+                                tint =
+                                    if (index == list.lastIndex) {
+                                        MaterialTheme.colorScheme.background
+                                    } else MaterialTheme.colorScheme.onPrimary
+                            )
                         }
-                           },
+                    },
                     content = {
                         Text(
                             text = stringResource(stringId),
-                            color = if(index == list.lastIndex) {
+                            color = if (index == list.lastIndex) {
                                 MaterialTheme.colorScheme.onError
                             } else MaterialTheme.colorScheme.onPrimary,
                             style = MaterialTheme.typography.bodyLarge,
