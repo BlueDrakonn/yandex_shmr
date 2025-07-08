@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.org.jetbrains.kotlin.kapt)
     alias(libs.plugins.hilt)
+
 }
 
 detekt {
@@ -77,6 +78,9 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.media3.common.ktx)
+
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
