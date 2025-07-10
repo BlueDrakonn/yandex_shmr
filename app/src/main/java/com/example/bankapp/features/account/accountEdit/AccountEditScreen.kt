@@ -32,12 +32,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.bankapp.R
 import com.example.bankapp.core.ResultState
 import com.example.bankapp.core.navigation.Screen
+import com.example.bankapp.di.LocalViewModelFactory
 import com.example.bankapp.features.account.accountEdit.models.AccountEditIntent
 import com.example.bankapp.features.common.ui.CurrencyBottomSheet
 import com.example.bankapp.features.common.ui.ResultStateHandler
@@ -47,9 +48,12 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun AccountEditScreen(
-    viewModel: AccountEditViewModel = hiltViewModel(),
+
     navController: NavHostController
 ) {
+
+    val viewModel: AccountEditViewModel = viewModel(factory = LocalViewModelFactory.current)
+
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 

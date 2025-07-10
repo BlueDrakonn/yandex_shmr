@@ -16,9 +16,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bankapp.core.navigation.Screen
+import com.example.bankapp.di.LocalViewModelFactory
 import com.example.bankapp.features.categories.store.models.CategoryIntent
 import com.example.bankapp.features.common.ui.LazyList
 import com.example.bankapp.features.common.ui.LeadIcon
@@ -29,8 +30,9 @@ import com.example.bankapp.navigation.TopAppBar
 
 @Composable
 fun CategoriesScreen(
-    viewModel: CategoriesViewModel = hiltViewModel()
+
 ) {
+    val viewModel: CategoriesViewModel = viewModel(factory = LocalViewModelFactory.current)
 
     val state by viewModel.categoryState.collectAsStateWithLifecycle()
     var searchQuery by remember { mutableStateOf("") }

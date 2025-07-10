@@ -10,7 +10,6 @@ import com.example.bankapp.domain.repository.HistoryTransactionRepository
 import com.example.bankapp.features.common.extensions.filterExpenses
 import com.example.bankapp.features.common.extensions.filterIncome
 import com.example.bankapp.features.history.models.DateMode
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +19,6 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 
-@HiltViewModel
 class HistoryViewModel @Inject constructor(
     private val accountRepository: AccountRepository,
     private val historyTransactionRepository: HistoryTransactionRepository

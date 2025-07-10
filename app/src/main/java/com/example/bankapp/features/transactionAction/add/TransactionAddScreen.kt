@@ -37,12 +37,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.bankapp.R
 import com.example.bankapp.core.ResultState
 import com.example.bankapp.core.navigation.Screen
+import com.example.bankapp.di.LocalViewModelFactory
 import com.example.bankapp.features.account.accountEdit.showToast
 import com.example.bankapp.features.common.ui.DatePickerModal
 import com.example.bankapp.features.common.ui.DialUseStateExample
@@ -57,10 +58,11 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun TransactionAddScreen(
-    viewModel: TransactionAddViewModel = hiltViewModel(),
+
     navController: NavHostController,
     type: Boolean,
 ) {
+    val viewModel: TransactionAddViewModel = viewModel(factory = LocalViewModelFactory.current)
 
     val state by viewModel.categoryState.collectAsStateWithLifecycle()
 

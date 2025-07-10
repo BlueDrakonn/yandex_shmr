@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bankapp.core.ResultState
 import com.example.bankapp.data.model.UpdateTransactionRequest
-import com.example.bankapp.domain.model.Category
 import com.example.bankapp.domain.model.Transaction
 import com.example.bankapp.domain.repository.AccountRepository
 import com.example.bankapp.domain.repository.CategoryRepository
@@ -13,7 +12,6 @@ import com.example.bankapp.domain.repository.TransactionActionRepository
 import com.example.bankapp.features.account.accountEdit.utils.isValidNumberInput
 import com.example.bankapp.features.transactionAction.add.models.TransactionAddIntent
 import com.example.bankapp.features.transactionAction.add.models.TransactionFormState
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -25,7 +23,7 @@ import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
 
-@HiltViewModel
+
 class TransactionAddViewModel @Inject constructor(
     private val categoryRepository: CategoryRepository,
     private val accountRepository: AccountRepository,
