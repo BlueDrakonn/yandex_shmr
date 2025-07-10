@@ -23,9 +23,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.bankapp.DI.LocalViewModelFactory
 import com.example.bankapp.R
 import com.example.bankapp.core.navigation.HistoryType
 import com.example.bankapp.core.navigation.Screen
@@ -44,10 +45,9 @@ import com.example.bankapp.navigation.TopAppBar
 @Composable
 fun HistoryScreen(
     type: HistoryType,
-    viewModel: HistoryViewModel = hiltViewModel(),
     navController: NavHostController
 ) {
-
+    val viewModel: HistoryViewModel = viewModel(factory = LocalViewModelFactory.current)
     val transactions by viewModel.transactionState.collectAsStateWithLifecycle()
     val totalSum by  viewModel.totalAmountState.collectAsStateWithLifecycle()
 
