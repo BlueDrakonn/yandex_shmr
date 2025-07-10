@@ -27,7 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.bankapp.R
-import com.example.bankapp.core.navigation.HistoryType
+import com.example.bankapp.core.navigation.TransactionType
 import com.example.bankapp.core.navigation.Screen
 import com.example.bankapp.features.common.ui.DatePickerModal
 import com.example.bankapp.features.common.ui.LazyList
@@ -43,7 +43,7 @@ import com.example.bankapp.navigation.TopAppBar
 
 @Composable
 fun HistoryScreen(
-    type: HistoryType,
+    type: TransactionType,
     viewModel: HistoryViewModel = hiltViewModel(),
     navController: NavHostController
 ) {
@@ -58,7 +58,7 @@ fun HistoryScreen(
 
     DisposableEffect(Unit) {
 
-        viewModel.setHistoryType(type == HistoryType.INCOME)
+        viewModel.setHistoryType(type == TransactionType.INCOME)
         onDispose {
             viewModel.cancelGettingHistoryTransactions()
             viewModel.defaultDate()

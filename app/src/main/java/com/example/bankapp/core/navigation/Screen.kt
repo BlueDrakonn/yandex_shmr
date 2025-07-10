@@ -52,6 +52,14 @@ enum class Screen(
         "HISTORY_INCOME",
         R.string.history_title,
     ),
+    TRANSACTION_ADD(
+        "TRANSACTION_ADD",
+        R.string.expenses_title
+    ),
+    TRANSACTION_EDIT(
+        "TRANSACTION_EDIT",
+        R.string.expenses_title
+    ),
     ;
 
     companion object {

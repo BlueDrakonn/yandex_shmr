@@ -64,86 +64,89 @@ fun AccountEditScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                navigationIcon = {
+
+                TopAppBar(
+                    navigationIcon = {
+                        IconButton(onClick = {
+                            navController.popBackStack()
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "back"
+                            )
+                        }
+                    },
+                    title = stringResource(Screen.ACCOUNTS_EDIT.titleRes)
+                ) {
                     IconButton(onClick = {
-                        navController.popBackStack()
+
+                        coroutineScope.launch {
+
+                            val result = viewModel.handleIntent(
+                                AccountEditIntent.OnAccountUpdate(
+                                    name = editableName,
+                                    balance = editableBalance,
+                                    currency = editableCurrency
+                                )
+                            )
+                            when (result) {
+                                is ResultState.Success -> {
+                                    navController.popBackStack()
+                                }
+
+                                is ResultState.Error -> {
+                                    showToast(context, result.message)
+
+                                }
+
+                                else -> Unit
+                            }
+                        }
+
+
                     }) {
                         Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = "back"
+                            imageVector = Icons.Default.Check,
+                            contentDescription = "confirm"
                         )
                     }
-                },
-                title = stringResource(Screen.ACCOUNTS_EDIT.titleRes)
-            ) {
-                IconButton(onClick = {
-
-                    coroutineScope.launch {
-
-                        val result = viewModel.handleIntent(
-                            AccountEditIntent.OnAccountUpdate(
-                                name = editableName,
-                                balance = editableBalance,
-                                currency = editableCurrency
-                            )
-                        )
-                        when (result) {
-                            is ResultState.Success -> {
-                                navController.popBackStack()
-                            }
-
-                            is ResultState.Error -> {
-                                showToast(context, result.message)
-
-                            }
-
-                            else -> Unit
-                        }
-                    }
-
-
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.Check,
-                        contentDescription = "confirm"
-                    )
                 }
             }
-        }) { padding ->
-        ResultStateHandler(
-            state = state,
-            onSuccess = { data ->
+        ) {
+    padding ->
+    ResultStateHandler(
+        state = state,
+        onSuccess = { data ->
 
-                if (!initialized) {
-                    editableName = data.firstOrNull()?.name ?: ""
-                    editableBalance = data.firstOrNull()?.balance ?: ""
-                    editableCurrency = data.firstOrNull()?.currency ?: ""
-                    initialized = true
-                }
+            if (!initialized) {
+                editableName = data.firstOrNull()?.name ?: ""
+                editableBalance = data.firstOrNull()?.balance ?: ""
+                editableCurrency = data.firstOrNull()?.currency ?: ""
+                initialized = true
+            }
 
-                if (showBottomSheet) {
-                    CurrencyBottomSheet(
-                        { editableCurrency = it }
-                    ) { showBottomSheet = false }
-                }
+            if (showBottomSheet) {
+                CurrencyBottomSheet(
+                    { editableCurrency = it }
+                ) { showBottomSheet = false }
+            }
 
-                AccountEditForm(
-                    editableName = editableName,
-                    onNameChange = { editableName = it },
-                    editableBalance = editableBalance,
-                    onBalanceChange = { editableBalance = it },
-                    editableCurrency = editableCurrency,
-                    onCurrencyClick = { showBottomSheet = true },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                )
+            AccountEditForm(
+                editableName = editableName,
+                onNameChange = { editableName = it },
+                editableBalance = editableBalance,
+                onBalanceChange = { editableBalance = it },
+                editableCurrency = editableCurrency,
+                onCurrencyClick = { showBottomSheet = true },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            )
 
-            }, modifier = Modifier.padding(top = padding.calculateTopPadding())
+        }, modifier = Modifier.padding(top = padding.calculateTopPadding())
 
-        )
-    }
+    )
+}
 }
 
 @Composable

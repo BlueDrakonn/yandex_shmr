@@ -1,5 +1,5 @@
 package com.example.bankapp.core.navigation
 
-enum class HistoryType {
+enum class TransactionType {
     INCOME, EXPENSE
 }

@@ -14,12 +14,14 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.Binds
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 interface RepositoryModule {
 
     @Binds
+    @Singleton
     fun bindAccountRepository(
         impl: AccountRepositoryImpl
     ): AccountRepository

@@ -23,6 +23,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.bankapp.R
 import com.example.bankapp.core.navigation.Screen
+import com.example.bankapp.core.navigation.TransactionType
+import com.example.bankapp.features.common.ui.AddButton
 import com.example.bankapp.features.common.ui.LazyList
 import com.example.bankapp.features.common.ui.PriceDisplay
 import com.example.bankapp.features.common.ui.ResultStateHandler
@@ -55,6 +57,11 @@ fun IncomeScreen(
                     }
                 }
             )
+        },
+        floatingActionButton = {
+            AddButton(onClick = {
+                navController.navigate("${Screen.TRANSACTION_ADD.route}?type=${true}")
+            })
         }
     ) { padding ->
         ResultStateHandler(

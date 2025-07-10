@@ -51,5 +51,13 @@
     <string name="account_edit_balance">Баланс</string>
     <string name="account_edit_invalid_balance_error">некорректный формат баланса</string>
 
+    <string name="transaction_action_category">Статья</string>
+    <string name="transaction_action_amount">Сумма</string>
+    <string name="transaction_action_date">Дата</string>
+    <string name="transaction_action_time">Время</string>
+
+    <string name="transaction_action_comment">Комментарий</string>
+
+
 
 </resources>

@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -23,6 +24,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.bankapp.R
 import com.example.bankapp.core.navigation.Screen
+import com.example.bankapp.core.navigation.TransactionType
+import com.example.bankapp.features.common.ui.AddButton
 import com.example.bankapp.features.common.ui.LazyList
 import com.example.bankapp.features.common.ui.LeadIcon
 import com.example.bankapp.features.common.ui.PriceDisplay
@@ -54,8 +57,14 @@ fun ExpensesScreen(
                             contentDescription = "history"
                         )
                     }
-                }
+                },
             )
+        },
+        floatingActionButton = {
+            AddButton(onClick = {navController.navigate("${Screen.TRANSACTION_ADD.route}?type=${false}")
+            })
+            //navController.navigate("${Screen.TRANSACTION_ADD.route}?type=${TransactionType.EXPENSE.name}")
+            //navController.navigate("TRANSACTION_ADD?type=${TransactionType.EXPENSE.name}")
         }
     ) { padding ->
         ResultStateHandler(
