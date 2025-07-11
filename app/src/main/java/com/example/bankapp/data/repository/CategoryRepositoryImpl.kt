@@ -34,4 +34,13 @@ class CategoryRepositoryImpl @Inject constructor(
             block = { apiService.getCategories() }
         )
     }
+
+    override suspend fun loadCategoriesByType(isIncome: Boolean): ResultState<List<Category>> {
+        return safeApiCallList(
+            mapper = { it },
+            block = { apiService.getCategoriesByType(isIncome = isIncome) }
+        )
+    }
+
+
 }

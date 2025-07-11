@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.org.jetbrains.kotlin.kapt)
-    alias(libs.plugins.hilt)
+
 }
 
 detekt {
@@ -78,9 +78,12 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.media3.common.ktx)
 
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)
+    implementation("com.google.dagger:dagger:2.51")
+    kapt("com.google.dagger:dagger-compiler:2.51")
+
+    implementation("com.google.dagger:dagger-android:2.40.5")
+    implementation ("com.google.dagger:dagger-android-support:2.40.5")
+    kapt ("com.google.dagger:dagger-android-processor:2.40.5")
 
 
     testImplementation(libs.junit)

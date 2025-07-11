@@ -13,10 +13,13 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun TrailingContent(
     content: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
     icon: (@Composable () -> Unit)? = null,
+
 ) {
     Row(
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
     ) {
         Box(contentAlignment = Alignment.Center) {
             content()

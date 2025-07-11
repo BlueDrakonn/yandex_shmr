@@ -8,7 +8,6 @@ import com.example.bankapp.core.ResultState
 import com.example.bankapp.domain.model.Category
 import com.example.bankapp.domain.repository.CategoryRepository
 import com.example.bankapp.features.categories.store.models.CategoryIntent
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
@@ -16,7 +15,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
+
 class CategoriesViewModel @Inject constructor(
     private val categoryRepository: CategoryRepository
 ) : ViewModel() {

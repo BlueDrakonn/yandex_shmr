@@ -1,4 +1,4 @@
-package com.example.bankapp.data.utils
+package com.example.bankapp.features.common.utlis
 
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter

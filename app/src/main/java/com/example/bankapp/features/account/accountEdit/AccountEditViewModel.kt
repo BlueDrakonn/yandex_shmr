@@ -9,7 +9,6 @@ import com.example.bankapp.domain.model.Account
 import com.example.bankapp.domain.repository.AccountRepository
 import com.example.bankapp.features.account.accountEdit.models.AccountEditIntent
 import com.example.bankapp.features.account.accountEdit.utils.isValidNumberInput
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -20,7 +19,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
+
 class AccountEditViewModel @Inject constructor(
     private val accountRepository: AccountRepository
 ) : ViewModel() {

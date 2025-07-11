@@ -23,12 +23,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.bankapp.R
-import com.example.bankapp.core.navigation.HistoryType
 import com.example.bankapp.core.navigation.Screen
+import com.example.bankapp.core.navigation.TransactionType
+
+import com.example.bankapp.di.LocalViewModelFactory
 import com.example.bankapp.features.common.ui.DatePickerModal
 import com.example.bankapp.features.common.ui.LazyList
 import com.example.bankapp.features.common.ui.LeadIcon
@@ -36,6 +38,7 @@ import com.example.bankapp.features.common.ui.PriceDisplay
 import com.example.bankapp.features.common.ui.PriceWithDate
 import com.example.bankapp.features.common.ui.ResultStateHandler
 import com.example.bankapp.features.common.ui.TrailingContent
+import com.example.bankapp.features.common.utlis.formatDate
 import com.example.bankapp.features.history.models.DateMode
 import com.example.bankapp.features.history.models.DatePickerState
 import com.example.bankapp.navigation.TopAppBar
@@ -43,13 +46,14 @@ import com.example.bankapp.navigation.TopAppBar
 
 @Composable
 fun HistoryScreen(
-    type: HistoryType,
-    viewModel: HistoryViewModel = hiltViewModel(),
+    type: TransactionType,
     navController: NavHostController
 ) {
+    val viewModel: HistoryViewModel = viewModel(factory = LocalViewModelFactory.current)
+
 
     val transactions by viewModel.transactionState.collectAsStateWithLifecycle()
-    val totalSum by  viewModel.totalAmountState.collectAsStateWithLifecycle()
+    val totalSum by viewModel.totalAmountState.collectAsStateWithLifecycle()
 
     val startDate by viewModel.startDate.collectAsStateWithLifecycle()
     val endDate by viewModel.endDate.collectAsStateWithLifecycle()
@@ -58,21 +62,22 @@ fun HistoryScreen(
 
     DisposableEffect(Unit) {
 
-        viewModel.setHistoryType(type == HistoryType.INCOME)
+        viewModel.setHistoryType(type == TransactionType.INCOME)
         onDispose {
             viewModel.cancelGettingHistoryTransactions()
             viewModel.defaultDate()
         }
     }
 
-    when(showDatePicker) {
+    when (showDatePicker) {
 
         DatePickerState.CLOSED -> {}
         else -> DatePickerModal(
             onDateSelected = { date ->
                 viewModel.updateDate(
-                    if(showDatePicker == DatePickerState.OPEN_START) DateMode.START else DateMode.END,
-                    date)
+                    if (showDatePicker == DatePickerState.OPEN_START) DateMode.START else DateMode.END,
+                    date
+                )
             },
             onDismiss = {
                 showDatePicker = DatePickerState.CLOSED
@@ -86,10 +91,11 @@ fun HistoryScreen(
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = {navController.popBackStack()}) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "navigate to previous screen")
+                            contentDescription = "navigate to previous screen"
+                        )
                     }
                 },
                 title = stringResource(Screen.HISTORY_INCOME.titleRes),
@@ -98,8 +104,7 @@ fun HistoryScreen(
                 }
             )
         }
-    ) {
-        padding ->
+    ) { padding ->
         ResultStateHandler(
             state = transactions,
             onSuccess = { data ->
@@ -124,18 +129,18 @@ fun HistoryScreen(
                         )
                     },
                     itemsList = data,
-                    itemTemplate = { item->
+                    itemTemplate = { item ->
 
                         ListItem(
                             modifier = Modifier
-                                .clickable { },
+                                .clickable { navController.navigate("${Screen.TRANSACTION_EDIT.route}?type=${if (type == TransactionType.EXPENSE) false else true}?transactionId=${item.id}") },
                             lead = { item.icon?.let { LeadIcon(label = it) } },
                             content = {
                                 Column(
                                     horizontalAlignment = Alignment.Start
                                 ) {
                                     Text(
-                                        text = item.title,
+                                        text = item.category.name,
                                         style = MaterialTheme.typography.bodyLarge,
                                         color = MaterialTheme.colorScheme.onPrimary
                                     )
@@ -153,11 +158,13 @@ fun HistoryScreen(
                                     content = {
 
                                         PriceWithDate(
-                                            date = item.transactionDate,
-                                            price = { PriceDisplay(
-                                                amount = item.amount,
-                                                currencySymbol = item.currency
-                                            ) }
+                                            date = formatDate(item.transactionDate),
+                                            price = {
+                                                PriceDisplay(
+                                                    amount = item.amount,
+                                                    currencySymbol = item.currency
+                                                )
+                                            }
                                         )
 
                                     },
@@ -192,7 +199,7 @@ fun HistoryTopBlock(
     startDataChange: () -> Unit,
     endDataChange: () -> Unit,
     modifier: Modifier = Modifier
-){
+) {
     Column {
 
         ListItem(

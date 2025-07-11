@@ -18,11 +18,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.bankapp.R
 import com.example.bankapp.core.navigation.Screen
+import com.example.bankapp.di.LocalViewModelFactory
+import com.example.bankapp.features.common.ui.AddButton
 import com.example.bankapp.features.common.ui.LazyList
 import com.example.bankapp.features.common.ui.LeadIcon
 import com.example.bankapp.features.common.ui.PriceDisplay
@@ -32,9 +34,10 @@ import com.example.bankapp.navigation.TopAppBar
 
 @Composable
 fun ExpensesScreen(
-    viewModel: ExpensesViewModel = hiltViewModel(),
+
     navController: NavHostController
 ) {
+    val viewModel: ExpensesViewModel = viewModel(factory = LocalViewModelFactory.current)
 
     val state by viewModel.transactionState.collectAsStateWithLifecycle()
 
@@ -54,8 +57,14 @@ fun ExpensesScreen(
                             contentDescription = "history"
                         )
                     }
-                }
+                },
             )
+        },
+        floatingActionButton = {
+            AddButton(onClick = {navController.navigate("${Screen.TRANSACTION_ADD.route}?type=${false}")
+            })
+            //navController.navigate("${Screen.TRANSACTION_ADD.route}?type=${TransactionType.EXPENSE.name}")
+            //navController.navigate("TRANSACTION_ADD?type=${TransactionType.EXPENSE.name}")
         }
     ) { padding ->
         ResultStateHandler(
@@ -87,14 +96,14 @@ fun ExpensesScreen(
                         ListItem(
                             modifier = Modifier
                                 .height(68.dp)
-                                .clickable { },
+                                .clickable { navController.navigate("${Screen.TRANSACTION_EDIT.route}?type=${false}?transactionId=${item.id}") },
                             lead = { item.icon?.let { LeadIcon(label = it) } },
                             content = {
                                 Column(
                                     horizontalAlignment = Alignment.Start
                                 ) {
                                     Text(
-                                        text = item.title,
+                                        text = item.category.name,
                                         style = MaterialTheme.typography.bodyLarge,
                                         color = MaterialTheme.colorScheme.onPrimary
                                     )

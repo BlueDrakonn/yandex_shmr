@@ -1,13 +1,12 @@
-package com.example.bankapp.data.network.di
+package com.example.bankapp.di
 
-import com.example.bankapp.MyApplication
+import android.content.Context
 import com.example.bankapp.TOKEN
 import com.example.bankapp.data.network.api.ApiService
 import com.example.bankapp.data.utils.isInternetAvailable
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -17,15 +16,14 @@ import java.io.IOException
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
 object NetworkModule {
 
 
     @Provides
     @Singleton
-    fun provideAuthInterceptor(): Interceptor = Interceptor { chain ->
+    fun provideAuthInterceptor(context: Context): Interceptor = Interceptor { chain ->
 
-        if (!isInternetAvailable(MyApplication.context)) {
+        if (!isInternetAvailable(context)) {
             throw IOException("No network connection")
         }
 
@@ -41,22 +39,25 @@ object NetworkModule {
     @Singleton
     fun provideHttpClient(
         authInterceptor: Interceptor
-    ): OkHttpClient {
+    ): OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(authInterceptor)
+        .build()
 
-        return OkHttpClient.Builder()
-            .addInterceptor(authInterceptor)
-            .build()
-    }
 
 
     @Provides
     fun provideRetrofit(
         okHttpClient: OkHttpClient
-    ): Retrofit = Retrofit.Builder()
-        .client(okHttpClient)
-        .baseUrl("https://shmr-finance.ru/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
+    ): Retrofit {
+
+        val gson = GsonBuilder().serializeNulls().create()
+
+        return Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl("https://shmr-finance.ru/")
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+    }
 
     @Provides
     fun provideApiService(retrofit: Retrofit): ApiService =

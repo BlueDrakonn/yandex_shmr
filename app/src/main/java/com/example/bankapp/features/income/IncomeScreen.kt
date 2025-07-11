@@ -18,11 +18,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.bankapp.R
 import com.example.bankapp.core.navigation.Screen
+import com.example.bankapp.di.LocalViewModelFactory
+import com.example.bankapp.features.common.ui.AddButton
 import com.example.bankapp.features.common.ui.LazyList
 import com.example.bankapp.features.common.ui.PriceDisplay
 import com.example.bankapp.features.common.ui.ResultStateHandler
@@ -31,9 +33,10 @@ import com.example.bankapp.navigation.TopAppBar
 
 @Composable
 fun IncomeScreen(
-    viewModel: IncomeViewModel = hiltViewModel(),
+
     navController: NavHostController
 ) {
+    val viewModel: IncomeViewModel = viewModel(factory = LocalViewModelFactory.current)
 
     val resultState by viewModel.transactionState.collectAsStateWithLifecycle()
 
@@ -55,6 +58,11 @@ fun IncomeScreen(
                     }
                 }
             )
+        },
+        floatingActionButton = {
+            AddButton(onClick = {
+                navController.navigate("${Screen.TRANSACTION_ADD.route}?type=${true}")
+            })
         }
     ) { padding ->
         ResultStateHandler(
@@ -85,13 +93,13 @@ fun IncomeScreen(
                         ListItem(
                             modifier = Modifier
                                 .height(68.dp)
-                                .clickable { },
+                                .clickable { navController.navigate("${Screen.TRANSACTION_EDIT.route}?type=${true}?transactionId=${item.id}")},
                             content = {
                                 Column(
                                     horizontalAlignment = Alignment.Start
                                 ) {
                                     Text(
-                                        text = item.title,
+                                        text = item.category.name,
                                         style = MaterialTheme.typography.bodyLarge,
                                         color = MaterialTheme.colorScheme.onPrimary
                                     )

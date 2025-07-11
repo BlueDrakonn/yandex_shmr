@@ -1,6 +1,7 @@
 package com.example.bankapp.data.repository
 
 
+import android.util.Log
 import com.example.bankapp.core.ResultState
 import com.example.bankapp.data.model.UpdateAccountRequest
 import com.example.bankapp.data.network.api.ApiService
@@ -22,6 +23,7 @@ import javax.inject.Inject
 class AccountRepositoryImpl @Inject constructor(
     private val apiService: ApiService
 ) : AccountRepository {
+
 
     /**
      * ID текущего  аккаунта.

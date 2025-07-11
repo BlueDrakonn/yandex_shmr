@@ -15,11 +15,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.bankapp.R
 import com.example.bankapp.core.navigation.Screen
+import com.example.bankapp.di.LocalViewModelFactory
 import com.example.bankapp.features.common.ui.LazyList
 import com.example.bankapp.features.common.ui.LeadIcon
 import com.example.bankapp.features.common.ui.PriceDisplay
@@ -30,9 +31,10 @@ import com.example.bankapp.navigation.TopAppBar
 
 @Composable
 fun AccountsScreen(
-    viewModel: AccountViewModel = hiltViewModel(),
+
     navController: NavHostController
 ) {
+    val viewModel: AccountViewModel = viewModel(factory = LocalViewModelFactory.current)
 
     val state by viewModel.accountState.collectAsStateWithLifecycle()
 
