@@ -59,6 +59,8 @@
     <string name="transaction_action_comment">Комментарий</string>
     <string name="transaction_added_successful">Транзакция добавлена</string>
     <string name="transaction_edited_successful">Транзакция обновлена</string>
+    <string name="transaction_deleted_successful">Транзакция удалена</string>
+    <string name="transaction_delete">Удалить транзакцию</string>
 
 
 

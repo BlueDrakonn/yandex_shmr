@@ -26,6 +26,7 @@ suspend fun <T, R> safeApiCallList(
         try {
             val response = block()
 
+
             if (response.isSuccessful) {
                 return ResultState.Success(data = response.body()?.map { mapper(it) }
                     ?: emptyList())
@@ -63,11 +64,20 @@ suspend fun <T, R> safeApiCall(
     while (currentRetry <= SafeApiCallConstants.MAX_RETRY) {
         try {
             val response = block()
-            Log.d("RESPONCE", "${response.body()}")
+            Log.d("RESPONCE", "${response.body()} ${response.code()}")
             if (response.isSuccessful) {
-                val mappedData = response.body()?.let { mapper(it) }
-                    ?: return ResultState.Error(message = "empty response body")
-                return ResultState.Success(data = mappedData)
+                val body = response.body()
+                if (body != null) {
+                    return ResultState.Success(mapper(body))
+                } else if (response.code() == 204) {
+
+                    @Suppress("UNCHECKED_CAST")
+                    return ResultState.Success(Unit as R)
+                } else {
+
+                    return ResultState.Error("empty response body")
+                }
+
             } else {
                 if (response.code() == SafeApiCallConstants.ERROR_CODE_500 && currentRetry < SafeApiCallConstants.MAX_RETRY) {
                     currentRetry++

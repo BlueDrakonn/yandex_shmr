@@ -1,6 +1,5 @@
 package com.example.bankapp.features.transactionAction.edit
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bankapp.core.ResultState
@@ -145,7 +144,7 @@ class TransactionEditViewModel @Inject constructor(
                 _requestState.value = RequestState.Loading
 
                 viewModelScope.launch(Dispatchers.IO) {
-                    Log.d("REQUEST_STATE","${currentState.data}")
+
                     val result = transactionActionRepository.editTransaction(
                         transactionId = transactionId,
                         request = UpdateTransactionRequest(
@@ -179,6 +178,26 @@ class TransactionEditViewModel @Inject constructor(
 
             else -> {}
         }
+    }
+
+    fun deleteTransaction(transactionId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result =  transactionActionRepository.deleteTransactionById(transactionId = transactionId)
+
+            when (result) {
+                is ResultState.Error -> {
+                    _requestState.value =
+                        RequestState.Error(result.message ?: "Неизвестная ошибка")
+                }
+
+                else -> {
+                    _requestState.value = RequestState.Success
+                }
+            }
+
+        }
+
+
     }
 
     fun requestDialogDismiss() {
