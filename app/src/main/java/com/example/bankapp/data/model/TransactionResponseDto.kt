@@ -1,13 +1,11 @@
 package com.example.bankapp.data.model
 
-import com.example.bankapp.data.utils.formatDate
 import com.example.bankapp.data.utils.getCurrencySymbol
+import com.example.bankapp.data.utils.parseIsoDateTime
 import com.example.bankapp.domain.model.Category
 import com.example.bankapp.domain.model.Transaction
 import com.example.bankapp.domain.model.TransactionDetailed
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-import java.util.Locale
+import com.example.bankapp.domain.model.TransactionEdit
 
 data class AccountBrief(
     val id: Int,
@@ -29,7 +27,7 @@ data class TransactionResponseDto(
     fun toTransaction(): Transaction {
         return Transaction(
             id = id,
-            title = category.name,
+            category = category,
             subtitle = comment,
             icon = category.emoji,
             amount = amount.toString(),
@@ -40,19 +38,33 @@ data class TransactionResponseDto(
     fun toTransactionDetailed(): TransactionDetailed {
         return TransactionDetailed(
             id = id,
-            title = category.name,
+            category = category,
             subtitle = comment,
             icon = category.emoji,
             amount = amount.toString(),
             currency = account.currency,
-            createdAt = formatDate(createdAt),
-            updatedAt = formatDate(updatedAt),
-            transactionDate= formatDate(transactionDate),
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+            transactionDate= transactionDate,
             isIncome = category.isIncome
+        )
+    }
+    fun toTransactionEdit(): TransactionEdit {
+
+        val result = parseIsoDateTime(transactionDate)
+
+        return TransactionEdit(
+            id = id,
+            category = category,
+            comment = comment,
+            amount = amount.toString(),
+            time = result.second,
+            date = result.first
         )
     }
 
 
 }
+
 
 

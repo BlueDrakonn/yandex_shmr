@@ -59,7 +59,6 @@ interface ViewModelModule{
      fun bindIncomeViewModel(viewModel: IncomeViewModel): ViewModel
 
     @Binds
-    @Singleton
     @IntoMap
     @ViewModelKey(HistoryViewModel::class) //LoginViewModel::class
      fun bindHistoryViewModel(viewModel: HistoryViewModel): ViewModel

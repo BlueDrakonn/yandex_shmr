@@ -1,13 +1,13 @@
 package com.example.bankapp.data.network.api
 
 import com.example.bankapp.data.model.AccountDto
-import com.example.bankapp.data.model.TransactionDto
 import com.example.bankapp.data.model.TransactionResponseDto
 import com.example.bankapp.data.model.UpdateAccountRequest
 import com.example.bankapp.data.model.UpdateTransactionRequest
 import com.example.bankapp.domain.model.Category
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -43,16 +43,26 @@ interface ApiService {
         @Query("endDate") endDate: String? = null,
     ): Response<List<TransactionResponseDto>>
 
-    @PUT("api/v1/transactions/{id}")
-    suspend fun updateTransaction(
-        @Path("id") transactionId: Int,
-        @Body request: UpdateTransactionRequest
+    @GET("api/v1/transactions/{id}")
+    suspend fun getTransactionById(
+        @Path("id") transactionId: Int
     ): Response<TransactionResponseDto>
 
-    @POST("api/v1/transactions")
-    suspend fun addTransaction(
+    @PUT("api/v1/transactions/{id}")
+    suspend fun updateTransactionById(
+        @Path("id") transactionId: Int,
         @Body request: UpdateTransactionRequest
-    ): Response<TransactionDto>
+    ): Response<Unit>
+
+    @DELETE("api/v1/transactions/{id}")
+    suspend fun deleteTransactionById(
+        @Path("id") transactionId: Int,
+    ): Response<Unit>
+
+    @POST("api/v1/transactions")
+    suspend fun addTransactionById(
+        @Body request: UpdateTransactionRequest
+    ): Response<Unit>
 
 
 

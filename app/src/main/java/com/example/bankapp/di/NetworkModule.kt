@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.bankapp.TOKEN
 import com.example.bankapp.data.network.api.ApiService
 import com.example.bankapp.data.utils.isInternetAvailable
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
@@ -47,11 +48,16 @@ object NetworkModule {
     @Provides
     fun provideRetrofit(
         okHttpClient: OkHttpClient
-    ): Retrofit = Retrofit.Builder()
-        .client(okHttpClient)
-        .baseUrl("https://shmr-finance.ru/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
+    ): Retrofit {
+
+        val gson = GsonBuilder().serializeNulls().create()
+
+        return Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl("https://shmr-finance.ru/")
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+    }
 
     @Provides
     fun provideApiService(retrofit: Retrofit): ApiService =

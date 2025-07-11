@@ -2,7 +2,7 @@ package com.example.bankapp.domain.model
 
 data class TransactionDetailed(
     val id: Int,
-    val title: String,
+    val category: Category,
     val subtitle: String? = null,
     val icon: String? = null,
     val amount: String,

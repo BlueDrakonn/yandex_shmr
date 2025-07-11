@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bankapp.core.ResultState
 import com.example.bankapp.data.model.UpdateTransactionRequest
-import com.example.bankapp.domain.model.Transaction
 import com.example.bankapp.domain.repository.AccountRepository
 import com.example.bankapp.domain.repository.CategoryRepository
 import com.example.bankapp.domain.repository.TransactionActionRepository
@@ -12,9 +11,7 @@ import com.example.bankapp.features.account.accountEdit.utils.isValidNumberInput
 import com.example.bankapp.features.transactionAction.add.models.TransactionAddIntent
 import com.example.bankapp.features.transactionAction.add.models.TransactionFormState
 import com.example.bankapp.features.transactionAction.models.RequestState
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -32,7 +29,7 @@ class TransactionAddViewModel @Inject constructor(
 
 
     private val _state = MutableStateFlow<ResultState<TransactionFormState>>(ResultState.Loading)
-    val categoryState = _state
+    val state = _state
 
     private val _requestState = MutableStateFlow<RequestState>(RequestState.Idle)
     val requestState = _requestState
@@ -60,7 +57,7 @@ class TransactionAddViewModel @Inject constructor(
                                     categoryList = result.data,
                                     selectedCategory = result.data.firstOrNull()!!,
                                     date = SimpleDateFormat(
-                                        "dd-MM-yyyy",
+                                        "yyyy-MM-dd",
                                         Locale.getDefault()
                                     ).format(
                                         Date()
@@ -119,74 +116,66 @@ class TransactionAddViewModel @Inject constructor(
     }
 
 
-    suspend fun addTransaction(
+    fun addTransaction(
 
     ) {
 
         val currentState = _state.value
 
-        when(currentState)  {
+        when (currentState) {
             is ResultState.Success -> {
 
-                if (accountRepository.accountId == null){
-                    _requestState.value = RequestState.Error(accountRepository.accountError ?: "Неизвестная ошибка")
+                if (accountRepository.accountId == null) {
+                    _requestState.value =
+                        RequestState.Error(accountRepository.accountError ?: "Неизвестная ошибка")
                     return
                 }
 
-                if (!isValidNumberInput(currentState.data.amount)){
+                if (!isValidNumberInput(currentState.data.amount)) {
                     _requestState.value = RequestState.Error("неверный формат баланса")
                     return
                 }
 
-                val deferred: Deferred<ResultState<Transaction>> =
-                    viewModelScope.async(Dispatchers.IO) {
-                        _requestState.value = RequestState.Loading
-                        transactionActionRepository.addTransaction(
-                            request = UpdateTransactionRequest(
-                                accountId = accountRepository.accountId!! ,
-                                categoryId = currentState.data.selectedCategory.id,
-                                amount = currentState.data.amount,
-                                transactionDate = "${reformatDate(currentState.data.date)}T${currentState.data.time}:00.000Z",
-                                comment = currentState.data.comment
-                            )
+                _requestState.value = RequestState.Loading
+
+                viewModelScope.launch(Dispatchers.IO) {
+
+                    val result = transactionActionRepository.addTransaction(
+
+                        request = UpdateTransactionRequest(
+                            accountId = accountRepository.accountId!!,
+                            categoryId = currentState.data.selectedCategory.id,
+                            amount = currentState.data.amount,
+                            transactionDate = "${currentState.data.date}T${currentState.data.time}:00.000Z",
+                            comment = if (currentState.data.comment == "") null else currentState.data.comment
                         )
-                    }
-                val result = deferred.await()
+                    )
+                    when (result) {
+                        is ResultState.Error -> {
+                            _requestState.value =
+                                RequestState.Error(result.message ?: "Неизвестная ошибка")
+                        }
 
-                when (result) {
-                    is ResultState.Error -> {
-                        _requestState.value = RequestState.Error(result.message ?: "Неизвестная ошибка")
-                    }
-
-                    else -> {
-                        _requestState.value = RequestState.Success
+                        else -> {
+                            _requestState.value = RequestState.Success
+                        }
                     }
                 }
+
+
             }
 
             is ResultState.Error -> {
-                _requestState.value = RequestState.Error(message = currentState.message ?: "Неизвестная ошибка")
+                _requestState.value =
+                    RequestState.Error(message = currentState.message ?: "Неизвестная ошибка")
 
             }
+
             else -> {}
         }
 
 
-
-
     }
 
 }
 
-fun reformatDate(dateString: String): String {
-    val inputFormat = java.text.SimpleDateFormat("dd-MM-yyyy", java.util.Locale.getDefault())
-    val outputFormat = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
-
-    return try {
-        val date = inputFormat.parse(dateString)
-        outputFormat.format(date!!)
-    } catch (e: Exception) {
-
-        dateString
-    }
-}

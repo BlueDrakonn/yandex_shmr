@@ -96,14 +96,14 @@ fun ExpensesScreen(
                         ListItem(
                             modifier = Modifier
                                 .height(68.dp)
-                                .clickable { },
+                                .clickable { navController.navigate("${Screen.TRANSACTION_EDIT.route}?type=${false}?transactionId=${item.id}") },
                             lead = { item.icon?.let { LeadIcon(label = it) } },
                             content = {
                                 Column(
                                     horizontalAlignment = Alignment.Start
                                 ) {
                                     Text(
-                                        text = item.title,
+                                        text = item.category.name,
                                         style = MaterialTheme.typography.bodyLarge,
                                         color = MaterialTheme.colorScheme.onPrimary
                                     )

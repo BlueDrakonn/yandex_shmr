@@ -29,8 +29,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -38,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -55,7 +56,6 @@ import com.example.bankapp.features.transactionAction.models.RequestState
 import com.example.bankapp.features.transactionAction.ui.ErrorDialog
 import com.example.bankapp.features.transactionAction.utils.formatTimePicker
 import com.example.bankapp.navigation.TopAppBar
-import kotlinx.coroutines.launch
 
 
 @Composable
@@ -66,9 +66,9 @@ fun TransactionAddScreen(
 ) {
     val viewModel: TransactionAddViewModel = viewModel(factory = LocalViewModelFactory.current)
     val context = LocalContext.current
-    val state by viewModel.categoryState.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
-    val coroutineScope = rememberCoroutineScope()
+
     val requestState by viewModel.requestState.collectAsStateWithLifecycle()
 
 
@@ -76,23 +76,29 @@ fun TransactionAddScreen(
         is RequestState.Error -> {
 
             val errorMessage = (requestState as RequestState.Error).message
-            Log.d("ERROR_TRANS",errorMessage)
+            Log.d("ERROR_TRANS", errorMessage)
             ErrorDialog(
                 message = errorMessage,
                 onRetry = {
-                    coroutineScope.launch {
-                        val result = viewModel.addTransaction()
-                    }
+                    viewModel.addTransaction()
                 },
                 onCancel = {
                     viewModel.requestDialogDismiss()
                 },
             )
         }
+
         RequestState.Idle -> {}
-        RequestState.Loading -> CircularProgressIndicator()
-        RequestState.Success -> {showToast(context, context.getString(R.string.transaction_added_successful))
-            navController.popBackStack()}
+        RequestState.Loading -> {
+            Popup(alignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+        }
+
+        RequestState.Success -> {
+            showToast(context, context.getString(R.string.transaction_added_successful))
+            navController.popBackStack()
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -116,10 +122,7 @@ fun TransactionAddScreen(
                 title = stringResource(if (type) Screen.INCOME.titleRes else Screen.EXPENSES.titleRes)
             ) {
                 IconButton(onClick = {
-                    coroutineScope.launch {
-                        val result = viewModel.addTransaction()
-
-                    }
+                    viewModel.addTransaction()
 
                 }) {
                     Icon(
@@ -134,9 +137,10 @@ fun TransactionAddScreen(
         ResultStateHandler(
             state = state,
             onSuccess = { data ->
-                TransactionAddForm(
+                TransactionForm(
                     transactionFormState = data,
-                    viewModel = viewModel,
+                    handleIntent = viewModel::handleIntent,
+                    currency = viewModel.currency()
                 )
             },
             modifier = Modifier.padding(top = padding.calculateTopPadding())
@@ -150,10 +154,12 @@ fun TransactionAddScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TransactionAddForm(
+fun TransactionForm(
     transactionFormState: TransactionFormState,
-    viewModel: TransactionAddViewModel,
-) {
+    currency: String,
+    handleIntent: (TransactionAddIntent) -> Unit,
+
+    ) {
 
     var expanded by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
@@ -165,7 +171,7 @@ fun TransactionAddForm(
         DatePickerModal(
             onDateSelected = { date ->
 
-                viewModel.handleIntent(TransactionAddIntent.onDateChanged(date))
+                handleIntent(TransactionAddIntent.onDateChanged(date))
                 showDatePicker = false
             },
             onDismiss = {
@@ -178,7 +184,7 @@ fun TransactionAddForm(
         DialUseStateExample(
             onConfirm = { time ->
 
-                viewModel.handleIntent(TransactionAddIntent.onTimeChanged(formatTimePicker(time)))
+                handleIntent(TransactionAddIntent.onTimeChanged(formatTimePicker(time)))
                 showTimePicker = false
             },
             onDismiss = { showTimePicker = false }
@@ -209,7 +215,7 @@ fun TransactionAddForm(
                                 transactionFormState.categoryList.forEach {
                                     DropdownMenuItem(
                                         onClick = {
-                                            viewModel.handleIntent(
+                                            handleIntent(
                                                 TransactionAddIntent.onCategoryChanged(
                                                     it
                                                 )
@@ -248,7 +254,7 @@ fun TransactionAddForm(
                         BasicTextField(
                             value = transactionFormState.amount,
                             onValueChange = {
-                                viewModel.handleIntent(
+                                handleIntent(
                                     TransactionAddIntent.onAmountChanged(
                                         it
                                     )
@@ -262,7 +268,7 @@ fun TransactionAddForm(
 
                         )
                     },
-                    icon = { Text(text = viewModel.currency()) }
+                    icon = { Text(text = currency) }
 
                 )
 
@@ -304,9 +310,9 @@ fun TransactionAddForm(
             },
             content = {
                 BasicTextField(
-                    value = transactionFormState.comment,
+                    value = transactionFormState.comment ?: "",
                     onValueChange = {
-                        viewModel.handleIntent(
+                        handleIntent(
                             TransactionAddIntent.onCommentChanged(
                                 it
                             )

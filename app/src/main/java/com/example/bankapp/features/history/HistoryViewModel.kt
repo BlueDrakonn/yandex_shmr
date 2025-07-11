@@ -14,6 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -76,11 +77,14 @@ class HistoryViewModel @Inject constructor(
                 when (result) {
                     is ResultState.Success -> {
                         _totalAmountState.value = result.data.sumOf { it.amount.toDouble() }
+                        _transactionState.value = ResultState.Success(data = result.data.sortedByDescending  { transaction ->
+                            Instant.parse(transaction.transactionDate)
+                        })
                     }
 
-                    else -> {}
+                    else -> {_transactionState.value = result}
                 }
-                _transactionState.value = result
+
             }
 
 

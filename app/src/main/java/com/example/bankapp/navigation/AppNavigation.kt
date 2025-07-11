@@ -8,15 +8,13 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.bankapp.core.navigation.TransactionType
 import com.example.bankapp.core.navigation.Screen
-import com.example.bankapp.features.account.accountEdit.AccountEditScreen
+import com.example.bankapp.core.navigation.TransactionType
 import com.example.bankapp.features.account.account.AccountsScreen
+import com.example.bankapp.features.account.accountEdit.AccountEditScreen
 import com.example.bankapp.features.categories.CategoriesScreen
-import com.example.bankapp.features.common.ui.AddButton
 import com.example.bankapp.features.expenses.ExpensesScreen
 import com.example.bankapp.features.history.HistoryScreen
 import com.example.bankapp.features.income.IncomeScreen
@@ -73,29 +71,40 @@ fun AppNavigation() {
                 AccountEditScreen(navController = navController)
             }
             //${Screen.TRANSACTION_ADD.route}
-            composable("${Screen.TRANSACTION_ADD.route}?type={type}",
+            composable(
+                "${Screen.TRANSACTION_ADD.route}?type={type}",
                 arguments = listOf(
                     navArgument("type") {
                         type = NavType.BoolType
                         defaultValue = false
-                    })) { backStackEntry ->
+                    })
+            ) { backStackEntry ->
 
 
-                    TransactionAddScreen(navController = navController,
-                        type = backStackEntry.arguments?.getBoolean("type") ?: false
-                    )
+                TransactionAddScreen(
+                    navController = navController,
+                    type = backStackEntry.arguments?.getBoolean("type") ?: false
+                )
 
             }
             //${Screen.TRANSACTION_EDIT.route}
-            composable("${Screen.TRANSACTION_EDIT.route}?type={type}",
+            composable(
+                "${Screen.TRANSACTION_EDIT.route}?type={type}?transactionId={transactionId}",
                 arguments = listOf(
                     navArgument("type") {
                         type = NavType.BoolType
                         defaultValue = false
-                    })) { backStackEntry ->
+                    },
+                    navArgument("transactionId") {
+                        type = NavType.IntType
+                        defaultValue = 1
+                    })
+            ) { backStackEntry ->
 
-                TransactionEditScreen(navController = navController,
-                    type = backStackEntry.arguments?.getBoolean("type") ?: false
+                TransactionEditScreen(
+                    navController = navController,
+                    type = backStackEntry.arguments?.getBoolean("type") ?: false,
+                    transactionId = backStackEntry.arguments?.getInt("transactionId") ?: 1
                 )
             }
 

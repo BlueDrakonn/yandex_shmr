@@ -5,5 +5,5 @@ data class UpdateTransactionRequest(
     val categoryId: Int,
     val amount: String,
     val transactionDate: String,
-    val comment: String?
+    val comment: String? = null
 )

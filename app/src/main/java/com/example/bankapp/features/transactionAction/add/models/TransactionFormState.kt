@@ -7,6 +7,6 @@ data class TransactionFormState(
     var selectedCategory: Category,
     var date: String = "",
     var time: String = "",
-    var comment: String = "",
+    var comment: String? = null,
     var amount: String = ""
 )
