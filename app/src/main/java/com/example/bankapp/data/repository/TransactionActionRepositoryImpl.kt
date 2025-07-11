@@ -29,7 +29,7 @@ class TransactionActionRepositoryImpl @Inject constructor(private val apiService
             mapper = {
                 val transaction = it.toTransaction()
                 transaction
-            },
+                },
             block = {
                 apiService.updateTransaction(
                     transactionId=transactionId,

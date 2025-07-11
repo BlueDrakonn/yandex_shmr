@@ -65,13 +65,11 @@ interface ViewModelModule{
      fun bindHistoryViewModel(viewModel: HistoryViewModel): ViewModel
 
     @Binds
-    @Singleton
     @IntoMap
     @ViewModelKey(TransactionAddViewModel::class) //LoginViewModel::class
     fun bindTransactionAddViewModel(viewModel: TransactionAddViewModel): ViewModel
 
     @Binds
-    @Singleton
     @IntoMap
     @ViewModelKey(TransactionEditViewModel::class) //LoginViewModel::class
     fun bindTransactionEditViewModel(viewModel: TransactionEditViewModel): ViewModel

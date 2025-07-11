@@ -1,6 +1,7 @@
 package com.example.bankapp.data.utils
 
 
+import android.util.Log
 import com.example.bankapp.core.Constants.Delays
 import com.example.bankapp.core.ResultState
 import com.example.bankapp.data.model.parseError
@@ -62,7 +63,7 @@ suspend fun <T, R> safeApiCall(
     while (currentRetry <= SafeApiCallConstants.MAX_RETRY) {
         try {
             val response = block()
-
+            Log.d("RESPONCE", "${response.body()}")
             if (response.isSuccessful) {
                 val mappedData = response.body()?.let { mapper(it) }
                     ?: return ResultState.Error(message = "empty response body")

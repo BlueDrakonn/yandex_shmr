@@ -1,17 +1,14 @@
 package com.example.bankapp.data.network.api
 
-import com.example.bankapp.TOKEN
 import com.example.bankapp.data.model.AccountDto
+import com.example.bankapp.data.model.TransactionDto
 import com.example.bankapp.data.model.TransactionResponseDto
 import com.example.bankapp.data.model.UpdateAccountRequest
 import com.example.bankapp.data.model.UpdateTransactionRequest
 import com.example.bankapp.domain.model.Category
-import okhttp3.ResponseBody
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -55,7 +52,7 @@ interface ApiService {
     @POST("api/v1/transactions")
     suspend fun addTransaction(
         @Body request: UpdateTransactionRequest
-    ): Response<TransactionResponseDto>
+    ): Response<TransactionDto>
 
 
 

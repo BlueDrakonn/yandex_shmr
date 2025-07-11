@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.example.bankapp.R
 
 @Composable
-fun ErrorDialog(
+fun ErrorScreen(
     errorMessage: String? = stringResource(R.string.unknown_error),
     errorCode: Int? = null
 ) {

@@ -1,6 +1,5 @@
 package com.example.bankapp.features.expenses
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bankapp.core.Constants.Delays
@@ -22,9 +21,7 @@ class ExpensesViewModel @Inject constructor(
     private val accountRepository: AccountRepository
 ) : ViewModel() {
 
-    init {
-        Log.d("EXPENSES_VIEWMODEL","start")
-    }
+
 
     private val _transactionState =
         MutableStateFlow<ResultState<List<Transaction>>>(ResultState.Loading)

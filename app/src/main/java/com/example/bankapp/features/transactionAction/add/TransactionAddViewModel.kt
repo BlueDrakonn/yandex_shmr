@@ -1,6 +1,5 @@
 package com.example.bankapp.features.transactionAction.add
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bankapp.core.ResultState
@@ -12,6 +11,7 @@ import com.example.bankapp.domain.repository.TransactionActionRepository
 import com.example.bankapp.features.account.accountEdit.utils.isValidNumberInput
 import com.example.bankapp.features.transactionAction.add.models.TransactionAddIntent
 import com.example.bankapp.features.transactionAction.add.models.TransactionFormState
+import com.example.bankapp.features.transactionAction.models.RequestState
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -33,6 +33,13 @@ class TransactionAddViewModel @Inject constructor(
 
     private val _state = MutableStateFlow<ResultState<TransactionFormState>>(ResultState.Loading)
     val categoryState = _state
+
+    private val _requestState = MutableStateFlow<RequestState>(RequestState.Idle)
+    val requestState = _requestState
+
+    fun requestDialogDismiss() {
+        _requestState.value = RequestState.Idle
+    }
 
     fun currency(): String {
         return accountRepository.accountCurrency ?: "₽"
@@ -114,45 +121,72 @@ class TransactionAddViewModel @Inject constructor(
 
     suspend fun addTransaction(
 
-    ): ResultState<TransactionFormState> {
+    ) {
 
         val currentState = _state.value
-        Log.d("ERROR_TRANS","$currentState")
 
-        if (currentState is ResultState.Success) {
-            if (accountRepository.accountId == null) return ResultState.Error(message = accountRepository.accountError)
+        when(currentState)  {
+            is ResultState.Success -> {
 
-            if (!isValidNumberInput(currentState.data.amount)) return ResultState.Error(message = "некорректный формат баланса")
+                if (accountRepository.accountId == null){
+                    _requestState.value = RequestState.Error(accountRepository.accountError ?: "Неизвестная ошибка")
+                    return
+                }
 
-            val deferred: Deferred<ResultState<Transaction>> =
-                viewModelScope.async(Dispatchers.IO) {
-                    transactionActionRepository.addTransaction(
-                        request = UpdateTransactionRequest(
-                            accountId = accountRepository.accountId ?:28 , //исправить!!
-                            categoryId = currentState.data.selectedCategory.id,
-                            amount = currentState.data.amount,
-                            transactionDate = "2025-07-10T11:44:22.776Z",//"${currentState.data.date}T${currentState.data.time}",
-                            comment = currentState.data.comment
+                if (!isValidNumberInput(currentState.data.amount)){
+                    _requestState.value = RequestState.Error("неверный формат баланса")
+                    return
+                }
+
+                val deferred: Deferred<ResultState<Transaction>> =
+                    viewModelScope.async(Dispatchers.IO) {
+                        _requestState.value = RequestState.Loading
+                        transactionActionRepository.addTransaction(
+                            request = UpdateTransactionRequest(
+                                accountId = accountRepository.accountId!! ,
+                                categoryId = currentState.data.selectedCategory.id,
+                                amount = currentState.data.amount,
+                                transactionDate = "${reformatDate(currentState.data.date)}T${currentState.data.time}:00.000Z",
+                                comment = currentState.data.comment
+                            )
                         )
-                    )
-                }
-            val result = deferred.await()
+                    }
+                val result = deferred.await()
 
-            return when (result) {
-                is ResultState.Error -> {
-                    Log.d("ERROR_TRANS", "${result.message}")
-                    ResultState.Error(message = result.message, code = result.code)
-                }
+                when (result) {
+                    is ResultState.Error -> {
+                        _requestState.value = RequestState.Error(result.message ?: "Неизвестная ошибка")
+                    }
 
-                else -> {
-                    ResultState.Success(data = currentState.data)
+                    else -> {
+                        _requestState.value = RequestState.Success
+                    }
                 }
             }
 
-        } else {
-            return currentState
+            is ResultState.Error -> {
+                _requestState.value = RequestState.Error(message = currentState.message ?: "Неизвестная ошибка")
+
+            }
+            else -> {}
         }
+
+
+
 
     }
 
+}
+
+fun reformatDate(dateString: String): String {
+    val inputFormat = java.text.SimpleDateFormat("dd-MM-yyyy", java.util.Locale.getDefault())
+    val outputFormat = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+
+    return try {
+        val date = inputFormat.parse(dateString)
+        outputFormat.format(date!!)
+    } catch (e: Exception) {
+
+        dateString
+    }
 }

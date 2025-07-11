@@ -1,10 +1,10 @@
 package com.example.bankapp.features.transactionAction.add
 
 import ListItem
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -14,6 +14,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -41,7 +42,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.bankapp.R
-import com.example.bankapp.core.ResultState
 import com.example.bankapp.core.navigation.Screen
 import com.example.bankapp.di.LocalViewModelFactory
 import com.example.bankapp.features.account.accountEdit.showToast
@@ -51,6 +51,8 @@ import com.example.bankapp.features.common.ui.ResultStateHandler
 import com.example.bankapp.features.common.ui.TrailingContent
 import com.example.bankapp.features.transactionAction.add.models.TransactionAddIntent
 import com.example.bankapp.features.transactionAction.add.models.TransactionFormState
+import com.example.bankapp.features.transactionAction.models.RequestState
+import com.example.bankapp.features.transactionAction.ui.ErrorDialog
 import com.example.bankapp.features.transactionAction.utils.formatTimePicker
 import com.example.bankapp.navigation.TopAppBar
 import kotlinx.coroutines.launch
@@ -63,11 +65,35 @@ fun TransactionAddScreen(
     type: Boolean,
 ) {
     val viewModel: TransactionAddViewModel = viewModel(factory = LocalViewModelFactory.current)
-
+    val context = LocalContext.current
     val state by viewModel.categoryState.collectAsStateWithLifecycle()
 
     val coroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current
+    val requestState by viewModel.requestState.collectAsStateWithLifecycle()
+
+
+    when (requestState) {
+        is RequestState.Error -> {
+
+            val errorMessage = (requestState as RequestState.Error).message
+            Log.d("ERROR_TRANS",errorMessage)
+            ErrorDialog(
+                message = errorMessage,
+                onRetry = {
+                    coroutineScope.launch {
+                        val result = viewModel.addTransaction()
+                    }
+                },
+                onCancel = {
+                    viewModel.requestDialogDismiss()
+                },
+            )
+        }
+        RequestState.Idle -> {}
+        RequestState.Loading -> CircularProgressIndicator()
+        RequestState.Success -> {showToast(context, context.getString(R.string.transaction_added_successful))
+            navController.popBackStack()}
+    }
 
     LaunchedEffect(Unit) {
         viewModel.loadCategories(type)
@@ -93,15 +119,6 @@ fun TransactionAddScreen(
                     coroutineScope.launch {
                         val result = viewModel.addTransaction()
 
-                        when (result) {
-                            is ResultState.Success -> {
-                                navController.popBackStack()
-                            }
-                            is ResultState.Error -> {
-                                showToast(context = context, message = result.message)
-                            }
-                            else ->  {}
-                        }
                     }
 
                 }) {
@@ -120,9 +137,6 @@ fun TransactionAddScreen(
                 TransactionAddForm(
                     transactionFormState = data,
                     viewModel = viewModel,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
                 )
             },
             modifier = Modifier.padding(top = padding.calculateTopPadding())
@@ -139,7 +153,6 @@ fun TransactionAddScreen(
 fun TransactionAddForm(
     transactionFormState: TransactionFormState,
     viewModel: TransactionAddViewModel,
-    modifier: Modifier = Modifier
 ) {
 
     var expanded by remember { mutableStateOf(false) }

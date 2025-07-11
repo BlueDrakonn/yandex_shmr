@@ -31,7 +31,7 @@ fun <T> ResultStateHandler(
         }
         is ResultState.Error -> {
             Box(modifier = modifier.fillMaxSize()) {
-                ErrorDialog(
+                ErrorScreen(
                     errorMessage = state.message,
                     errorCode = state.code
                 )
