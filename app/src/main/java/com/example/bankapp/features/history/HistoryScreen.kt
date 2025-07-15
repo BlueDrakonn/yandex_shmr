@@ -104,7 +104,7 @@ fun HistoryScreen(
                         onClick = { navController.navigate("${Screen.ANALYSIS.route}?type=${type == TransactionType.INCOME}") }
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.history),
+                            painter = painterResource(R.drawable.state_layer),
                             contentDescription = "history"
                         )
                     }

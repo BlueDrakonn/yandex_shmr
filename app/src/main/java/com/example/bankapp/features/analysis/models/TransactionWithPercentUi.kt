@@ -1,8 +1,9 @@
 package com.example.bankapp.features.analysis.models
 
-import com.example.bankapp.domain.model.TransactionDetailed
+import com.example.bankapp.domain.model.Category
 
-data class TransactionWithPercentUi(
-    val transactionDetailed: TransactionDetailed,
+data class AnalysisCategoryUi(
+    val category: Category,
+    val amount: Double,
     val percent: Float
 )

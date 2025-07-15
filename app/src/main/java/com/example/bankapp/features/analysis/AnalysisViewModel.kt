@@ -32,6 +32,10 @@ class AnalysisViewModel @Inject constructor(
     val analysisFormState = _analysisFormState
 
 
+    fun getCurrency(): String{
+        return accountRepository.accountCurrency ?: ""
+    }
+
     private fun startGettingHistoryTransactions() {
 
         if (analysisTransactionResponseJob?.isActive == true) {
@@ -60,11 +64,11 @@ class AnalysisViewModel @Inject constructor(
                 }
                 when (result) {
                     is ResultState.Success -> {
-                        Log.d("SUCCESS RESULT 123", "$result")
+
                         _analysisFormState.value = _analysisFormState.value.copy(
                             totalAmount =
                                 result.data.sumOf { it.amount.toDouble() })
-                        //тут надо распарсить стрингу наверное
+
                         _analysisFormState.value =
                             _analysisFormState.value.copy(
                                 transactionRequestState =

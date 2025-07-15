@@ -63,6 +63,12 @@
     <string name="transaction_deleted_successful">Транзакция удалена</string>
     <string name="transaction_delete">Удалить транзакцию</string>
 
+    <string name="analysis_empty_transaction_list">Нет транзакций за выбранный период</string>
+
+    <string name="analysis_start">Период: начало</string>
+    <string name="analysis_end">Период: конец</string>
+    <string name="analysis_sum">Сумма</string>
+
 
 
 </resources>
