@@ -14,6 +14,7 @@ import com.example.bankapp.core.navigation.Screen
 import com.example.bankapp.core.navigation.TransactionType
 import com.example.bankapp.features.account.account.AccountsScreen
 import com.example.bankapp.features.account.accountEdit.AccountEditScreen
+import com.example.bankapp.features.analysis.AnalysisScreen
 import com.example.bankapp.features.categories.CategoriesScreen
 import com.example.bankapp.features.expenses.ExpensesScreen
 import com.example.bankapp.features.history.HistoryScreen
@@ -28,9 +29,6 @@ fun AppNavigation() {
 
     val navController = rememberNavController()
 
-//    val currentScreen = Screen.valueOf(
-//        navController.currentBackStackEntryAsState().value?.destination?.route ?: "EXPENSES"
-//    )
 
     Scaffold(
         bottomBar = {
@@ -70,7 +68,7 @@ fun AppNavigation() {
             composable(Screen.ACCOUNTS_EDIT.route) {
                 AccountEditScreen(navController = navController)
             }
-            //${Screen.TRANSACTION_ADD.route}
+
             composable(
                 "${Screen.TRANSACTION_ADD.route}?type={type}",
                 arguments = listOf(
@@ -87,7 +85,7 @@ fun AppNavigation() {
                 )
 
             }
-            //${Screen.TRANSACTION_EDIT.route}
+
             composable(
                 "${Screen.TRANSACTION_EDIT.route}?type={type}?transactionId={transactionId}",
                 arguments = listOf(
@@ -106,6 +104,23 @@ fun AppNavigation() {
                     type = backStackEntry.arguments?.getBoolean("type") ?: false,
                     transactionId = backStackEntry.arguments?.getInt("transactionId") ?: 1
                 )
+            }
+
+            composable(
+                "${Screen.ANALYSIS.route}?type={type}",
+                arguments = listOf(
+                    navArgument("type") {
+                        type = NavType.BoolType
+                        defaultValue = false
+                    })
+            ) { backStackEntry ->
+
+
+                AnalysisScreen(
+                    navController = navController,
+                    isIncomeTransactions = backStackEntry.arguments?.getBoolean("type") ?: false
+                )
+
             }
 
 

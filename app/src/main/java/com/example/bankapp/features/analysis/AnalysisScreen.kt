@@ -1,4 +1,4 @@
-package com.example.bankapp.features.history
+package com.example.bankapp.features.analysis
 
 import ListItem
 import androidx.compose.foundation.background
@@ -15,6 +15,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,14 +24,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.bankapp.R
 import com.example.bankapp.core.navigation.Screen
 import com.example.bankapp.core.navigation.TransactionType
-
 import com.example.bankapp.di.LocalViewModelFactory
+import com.example.bankapp.features.analysis.models.AnalysisIntent
 import com.example.bankapp.features.common.ui.DatePickerModal
 import com.example.bankapp.features.common.ui.LazyList
 import com.example.bankapp.features.common.ui.LeadIcon
@@ -39,33 +39,30 @@ import com.example.bankapp.features.common.ui.PriceWithDate
 import com.example.bankapp.features.common.ui.ResultStateHandler
 import com.example.bankapp.features.common.ui.TrailingContent
 import com.example.bankapp.features.common.utlis.formatDate
+import com.example.bankapp.features.history.HistoryTopBlock
+import com.example.bankapp.features.history.HistoryViewModel
 import com.example.bankapp.features.history.models.DateMode
 import com.example.bankapp.features.history.models.DatePickerState
 import com.example.bankapp.navigation.TopAppBar
 
 
 @Composable
-fun HistoryScreen(
-    type: TransactionType,
-    navController: NavHostController
-) {
-    val viewModel: HistoryViewModel = viewModel(factory = LocalViewModelFactory.current)
+fun AnalysisScreen(
+    navController: NavHostController,
+    isIncomeTransactions: Boolean){
 
-
-    val transactions by viewModel.transactionState.collectAsStateWithLifecycle()
-    val totalSum by viewModel.totalAmountState.collectAsStateWithLifecycle()
-
-    val startDate by viewModel.startDate.collectAsStateWithLifecycle()
-    val endDate by viewModel.endDate.collectAsStateWithLifecycle()
+    val viewModel: AnalysisViewModel = viewModel(factory = LocalViewModelFactory.current)
 
     var showDatePicker by remember { mutableStateOf(DatePickerState.CLOSED) }
 
+    val formState by viewModel.analysisFormState.collectAsState()
+    
+
     DisposableEffect(Unit) {
 
-        viewModel.setHistoryType(type == TransactionType.INCOME)
+        viewModel.analysisIntentHandler(analysisIntent =  AnalysisIntent.setAnalysisType(analysisType = isIncomeTransactions))
         onDispose {
-            viewModel.cancelGettingHistoryTransactions()
-            viewModel.defaultDate()
+            viewModel.analysisIntentHandler(analysisIntent = AnalysisIntent.onDismiss)
         }
     }
 
@@ -74,18 +71,18 @@ fun HistoryScreen(
         DatePickerState.CLOSED -> {}
         else -> DatePickerModal(
             onDateSelected = { date ->
-                viewModel.updateDate(
-                    if (showDatePicker == DatePickerState.OPEN_START) DateMode.START else DateMode.END,
-                    date
-                )
+                viewModel.analysisIntentHandler(analysisIntent = AnalysisIntent.onUpdateDate(
+                    mode = if (showDatePicker == DatePickerState.OPEN_START) DateMode.START else DateMode.END,
+                    date = date
+                ))
+                showDatePicker = DatePickerState.CLOSED
+
             },
             onDismiss = {
                 showDatePicker = DatePickerState.CLOSED
             }
         )
     }
-
-
 
     Scaffold(
         topBar = {
@@ -100,28 +97,21 @@ fun HistoryScreen(
                 },
                 title = stringResource(Screen.HISTORY_INCOME.titleRes),
                 action = {
-                    IconButton(
-                        onClick = { navController.navigate("${Screen.ANALYSIS.route}?type=${type == TransactionType.INCOME}") }
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.history),
-                            contentDescription = "history"
-                        )
-                    }
+                    //логика с графиком
                 }
             )
         }
     ) { padding ->
         ResultStateHandler(
-            state = transactions,
+            state = formState.transactionRequestState,
             onSuccess = { data ->
                 LazyList(
                     topItem = {
-                        HistoryTopBlock(
-                            startData = startDate,
-                            endData = endDate,
-                            totalSum = totalSum,
-                            currency = data.firstOrNull()?.currency ?: "",
+                        AnalysisTopBlock(
+                            startData = formState.startDate,
+                            endData = formState.endDate,
+                            totalSum = formState.totalAmount,
+                            currency = data.firstOrNull()?.transactionDetailed?.currency ?: "",
                             startDataChange = {
 
                                 showDatePicker = DatePickerState.OPEN_START
@@ -137,23 +127,25 @@ fun HistoryScreen(
                     },
                     itemsList = data,
                     itemTemplate = { item ->
+                        val transaction = item.transactionDetailed
+                        val percent = item.percent
 
                         ListItem(
                             modifier = Modifier
-                                .clickable { navController.navigate("${Screen.TRANSACTION_EDIT.route}?type=${if (type == TransactionType.EXPENSE) false else true}?transactionId=${item.id}") },
-                            lead = { item.icon?.let { LeadIcon(label = it) } },
+                                .clickable {  },
+                            lead = { transaction.icon?.let { LeadIcon(label = it) } },
                             content = {
                                 Column(
                                     horizontalAlignment = Alignment.Start
                                 ) {
                                     Text(
-                                        text = item.category.name,
+                                        text = transaction.category.name,
                                         style = MaterialTheme.typography.bodyLarge,
                                         color = MaterialTheme.colorScheme.onPrimary
                                     )
-                                    if (item.subtitle != null) {
+                                    if (transaction.subtitle != null) {
                                         Text(
-                                            text = item.subtitle,
+                                            text = transaction.subtitle,
                                             style = MaterialTheme.typography.bodyMedium,
                                             color = MaterialTheme.colorScheme.onSecondary
                                         )
@@ -163,16 +155,20 @@ fun HistoryScreen(
                             trailingContent = {
                                 TrailingContent(
                                     content = {
+                                        Column(horizontalAlignment = Alignment.End) {
 
-                                        PriceWithDate(
-                                            date = formatDate(item.transactionDate),
-                                            price = {
-                                                PriceDisplay(
-                                                    amount = item.amount,
-                                                    currencySymbol = item.currency
-                                                )
-                                            }
-                                        )
+                                            Text("$percent %")
+                                            PriceWithDate(
+                                                date = formatDate(transaction.transactionDate),
+                                                price = {
+                                                    PriceDisplay(
+                                                        amount = transaction.amount,
+                                                        currencySymbol = transaction.currency
+                                                    )
+                                                }
+                                            )
+                                        }
+
 
                                     },
                                     icon = {
@@ -194,11 +190,11 @@ fun HistoryScreen(
         )
     }
 
-
 }
 
+
 @Composable
-fun HistoryTopBlock(
+fun AnalysisTopBlock(
     startData: String,
     endData: String,
     totalSum: Double,

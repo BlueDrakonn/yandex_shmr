@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.bankapp.features.account.account.AccountViewModel
 import com.example.bankapp.features.account.accountEdit.AccountEditViewModel
+import com.example.bankapp.features.analysis.AnalysisViewModel
 import com.example.bankapp.features.categories.CategoriesViewModel
 import com.example.bankapp.features.expenses.ExpensesViewModel
 import com.example.bankapp.features.history.HistoryViewModel
@@ -72,6 +73,11 @@ interface ViewModelModule{
     @IntoMap
     @ViewModelKey(TransactionEditViewModel::class) //LoginViewModel::class
     fun bindTransactionEditViewModel(viewModel: TransactionEditViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AnalysisViewModel::class) //LoginViewModel::class
+    fun bindAnalysisViewModel(viewModel: AnalysisViewModel): ViewModel
 
     //сюда новые viewModel
 

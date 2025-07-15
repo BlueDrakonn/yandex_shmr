@@ -60,6 +60,10 @@ enum class Screen(
         "TRANSACTION_EDIT",
         R.string.expenses_title
     ),
+    ANALYSIS(
+        "ANALYSIS",
+        R.string.analysis_title
+    )
     ;
 
     companion object {

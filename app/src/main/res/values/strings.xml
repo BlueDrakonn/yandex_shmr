@@ -6,6 +6,7 @@
     <string name="articles_title">Мои статьи</string>
     <string name="settings_title">Настройки</string>
     <string name="history_title">Моя история</string>
+    <string name="analysis_title">Анализ</string>
     <string name="expenses_add_title">Мои расходы</string>
     <string name="income_add_title">Мои доходы</string>
 
