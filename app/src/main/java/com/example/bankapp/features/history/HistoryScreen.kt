@@ -121,7 +121,7 @@ fun HistoryScreen(
                             startData = startDate,
                             endData = endDate,
                             totalSum = totalSum,
-                            currency = data.firstOrNull()?.currency ?: "",
+                            currency = viewModel.currentCurrency(),
                             startDataChange = {
 
                                 showDatePicker = DatePickerState.OPEN_START
@@ -169,7 +169,7 @@ fun HistoryScreen(
                                             price = {
                                                 PriceDisplay(
                                                     amount = item.amount,
-                                                    currencySymbol = item.currency
+                                                    currencySymbol = viewModel.currentCurrency()
                                                 )
                                             }
                                         )

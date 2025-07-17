@@ -18,7 +18,8 @@ data class AccountDto(
             userId = userId,
             name = name,
             balance = balance,
-            currency = getCurrencySymbol(currency)
+            currency = getCurrencySymbol(currency),
+            updatedAt = updatedAt
         )
     }
 }

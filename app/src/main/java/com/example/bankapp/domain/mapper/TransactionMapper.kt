@@ -9,7 +9,6 @@ fun TransactionWithCategory.toTransaction(): Transaction {
         category = category.toDomain(),
         subtitle = transaction.subtitle,
         amount = transaction.amount,
-        currency = transaction.currency,
         isIncome = transaction.isIncome
     )
 }

@@ -5,7 +5,8 @@ import com.example.bankapp.core.ResultState
 import com.example.bankapp.data.remote.api.ApiService
 import com.example.bankapp.data.remote.utils.safeApiCallList
 import com.example.bankapp.domain.model.Transaction
-import com.example.bankapp.domain.repository.TodayTransactionRepository
+import com.example.bankapp.domain.model.TransactionDetailed
+import com.example.bankapp.domain.repository.TransactionRepository
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -17,9 +18,9 @@ import javax.inject.Inject
  *
  * @property apiService Сервис для выполнения сетевых запросов.
  */
-class TodayTransactionRepositoryImpl @Inject constructor(
+class RemoteTransactionRepositoryImpl @Inject constructor(
     private val apiService: ApiService
-) : TodayTransactionRepository {
+) : TransactionRepository {
 
     /**
      * Загружает список транзакций за сегодня для указанного id аккаунта.
@@ -44,6 +45,27 @@ class TodayTransactionRepositoryImpl @Inject constructor(
                     startDate = LocalDate.now().format(DateTimeFormatter.ISO_DATE),
                     endDate = LocalDate.now().format(DateTimeFormatter.ISO_DATE)
                 )
+            }
+        )
+    }
+
+    override suspend fun loadHistoryTransaction(
+        accountId: Int?,
+        startDate: String,
+        endDate: String
+    ): ResultState<List<TransactionDetailed>> {
+
+
+
+        return safeApiCallList(
+            mapper = {
+                it.toTransactionDetailed()
+            },
+            block = {apiService.getTransactions(
+                accountId = accountId!!,
+                startDate = startDate,
+                endDate = endDate
+            )
             }
         )
     }

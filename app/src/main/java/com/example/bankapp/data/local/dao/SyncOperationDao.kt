@@ -27,7 +27,7 @@ interface SyncOperationDao {
     LIMIT 1
 """
     )
-    suspend fun findExistingOperation(type: OperationType, targetId: Long): SyncOperationEntity?
+    suspend fun findExistingOperation(type: OperationType, targetId: Int): SyncOperationEntity?
 
     @Query("""
     DELETE FROM sync_operations

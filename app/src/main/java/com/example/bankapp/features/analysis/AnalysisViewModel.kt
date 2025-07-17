@@ -1,11 +1,10 @@
 package com.example.bankapp.features.analysis
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bankapp.core.ResultState
 import com.example.bankapp.domain.repository.AccountRepository
-import com.example.bankapp.domain.repository.HistoryTransactionRepository
+import com.example.bankapp.domain.repository.TransactionRepository
 import com.example.bankapp.features.analysis.models.AnalysisFormState
 import com.example.bankapp.features.analysis.models.AnalysisIntent
 import com.example.bankapp.features.analysis.models.utils.toUiModel
@@ -21,14 +20,14 @@ import javax.inject.Inject
 
 class AnalysisViewModel @Inject constructor(
     private val accountRepository: AccountRepository,
-    private val transactionRepository: HistoryTransactionRepository
+    private val transactionRepository: TransactionRepository
 ) : ViewModel() {
     private var isIncome = false
     private var analysisTransactionResponseJob: Job? = null
 
 
     private val _analysisFormState =
-        MutableStateFlow(AnalysisFormState())//transactionRequestState = ResultState.Loading))
+        MutableStateFlow(AnalysisFormState())
     val analysisFormState = _analysisFormState
 
 

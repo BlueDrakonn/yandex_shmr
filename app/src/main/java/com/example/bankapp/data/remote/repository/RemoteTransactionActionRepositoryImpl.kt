@@ -8,7 +8,7 @@ import com.example.bankapp.domain.model.TransactionEdit
 import com.example.bankapp.domain.repository.TransactionActionRepository
 import javax.inject.Inject
 
-class TransactionActionRepositoryImpl @Inject constructor(private val apiService: ApiService) :
+class RemoteTransactionActionRepositoryImpl @Inject constructor(private val apiService: ApiService) :
     TransactionActionRepository {
     override suspend fun addTransaction(request: UpdateTransactionRequest): ResultState<Unit> {
         return safeApiCall(

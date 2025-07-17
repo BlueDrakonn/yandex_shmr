@@ -19,7 +19,7 @@ import javax.inject.Inject
  *
  * @property apiService Сервис для сетевых запросов.
  */
-class AccountRepositoryImpl @Inject constructor(
+class RemoteAccountRepositoryImpl @Inject constructor(
     private val apiService: ApiService
 ) : AccountRepository {
 

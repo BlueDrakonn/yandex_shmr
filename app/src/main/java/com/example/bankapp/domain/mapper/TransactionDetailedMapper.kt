@@ -10,7 +10,6 @@ fun TransactionWithCategory.toTransactionDetailed(): TransactionDetailed {
         subtitle = transaction.subtitle,
         icon = category.emoji,
         amount = transaction.amount,
-        currency = transaction.currency,
         createdAt = transaction.transactionDate,
         updatedAt = transaction.transactionDate,
         transactionDate = transaction.transactionDate,

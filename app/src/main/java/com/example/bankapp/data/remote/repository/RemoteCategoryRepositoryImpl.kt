@@ -16,7 +16,7 @@ import javax.inject.Inject
  *
  * @property apiService Сервис для сетевых запросов.
  */
-class CategoryRepositoryImpl @Inject constructor(
+class RemoteCategoryRepositoryImpl @Inject constructor(
     private val apiService: ApiService
 ) : CategoryRepository {
 

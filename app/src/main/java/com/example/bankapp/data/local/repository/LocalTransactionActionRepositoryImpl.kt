@@ -9,8 +9,6 @@ import com.example.bankapp.data.local.dao.TransactionDao
 import com.example.bankapp.data.local.entity.OperationType
 import com.example.bankapp.data.local.entity.SyncOperationEntity
 import com.example.bankapp.data.remote.model.UpdateTransactionRequest
-import com.example.bankapp.data.remote.utils.safeApiCall
-import com.example.bankapp.domain.mapper.toTransactionDetailed
 import com.example.bankapp.domain.mapper.toTransactionEdit
 import com.example.bankapp.domain.mapper.toTransactionEntity
 import com.example.bankapp.domain.model.TransactionEdit
@@ -20,7 +18,7 @@ import kotlinx.serialization.json.Json
 import java.time.Instant
 import javax.inject.Inject
 
-class TransactionLocalActionRepositoryImpl @Inject constructor(
+class LocalTransactionActionRepositoryImpl @Inject constructor(
     private val syncOperationDao: SyncOperationDao,
     private val transactionDao: TransactionDao,
     private val accountDao: AccountDao,

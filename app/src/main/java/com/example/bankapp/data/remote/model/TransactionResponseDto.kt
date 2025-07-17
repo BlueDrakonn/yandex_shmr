@@ -1,6 +1,5 @@
 package com.example.bankapp.data.remote.model
 
-import com.example.bankapp.data.remote.utils.getCurrencySymbol
 import com.example.bankapp.data.remote.utils.parseIsoDateTime
 import com.example.bankapp.domain.model.Category
 import com.example.bankapp.domain.model.Transaction
@@ -30,7 +29,7 @@ data class TransactionResponseDto(
             category = category,
             subtitle = comment,
             amount = amount.toString(),
-            currency = getCurrencySymbol(account.currency),
+            //currency = getCurrencySymbol(account.currency),
             isIncome = category.isIncome
         )
     }
@@ -42,7 +41,7 @@ data class TransactionResponseDto(
             subtitle = comment,
             icon = category.emoji,
             amount = amount.toString(),
-            currency = account.currency,
+            //currency = account.currency,
             createdAt = createdAt,
             updatedAt = updatedAt,
             transactionDate = transactionDate,

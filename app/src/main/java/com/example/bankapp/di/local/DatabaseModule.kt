@@ -1,4 +1,4 @@
-package com.example.bankapp.di
+package com.example.bankapp.di.local
 
 import android.content.Context
 import androidx.room.Room

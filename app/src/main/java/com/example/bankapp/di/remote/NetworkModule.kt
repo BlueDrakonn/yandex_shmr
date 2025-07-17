@@ -1,9 +1,11 @@
-package com.example.bankapp.di
+package com.example.bankapp.di.remote
 
 import android.content.Context
 import com.example.bankapp.TOKEN
 import com.example.bankapp.data.remote.api.ApiService
 import com.example.bankapp.data.remote.utils.isInternetAvailable
+import com.example.bankapp.di.DefaultNetworkChecker
+import com.example.bankapp.di.NetworkChecker
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -62,4 +64,9 @@ object NetworkModule {
     @Provides
     fun provideApiService(retrofit: Retrofit): ApiService =
         retrofit.create(ApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideNetworkChecker(defaultNetworkChecker: DefaultNetworkChecker): NetworkChecker = defaultNetworkChecker
+
 }

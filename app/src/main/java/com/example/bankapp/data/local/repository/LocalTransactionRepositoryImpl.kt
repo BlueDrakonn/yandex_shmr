@@ -7,16 +7,15 @@ import com.example.bankapp.domain.mapper.toTransaction
 import com.example.bankapp.domain.mapper.toTransactionDetailed
 import com.example.bankapp.domain.model.Transaction
 import com.example.bankapp.domain.model.TransactionDetailed
-import com.example.bankapp.domain.repository.HistoryTransactionRepository
-import com.example.bankapp.domain.repository.TodayTransactionRepository
+import com.example.bankapp.domain.repository.TransactionRepository
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
-class TransactionLocalRepositoryImpl @Inject constructor(
+class LocalTransactionRepositoryImpl @Inject constructor(
     private val transactionDao: TransactionDao
-) : HistoryTransactionRepository, TodayTransactionRepository {
+) :  TransactionRepository {
 
 
     override suspend fun loadHistoryTransaction(
@@ -34,6 +33,7 @@ class TransactionLocalRepositoryImpl @Inject constructor(
             return ResultState.Success(data = result.map { it.toTransactionDetailed() })
 
         } catch (e: SQLiteConstraintException) {
+
             return ResultState.Error(message = e.message)
         }
 
@@ -59,4 +59,6 @@ class TransactionLocalRepositoryImpl @Inject constructor(
         }
 
     }
+
+
 }

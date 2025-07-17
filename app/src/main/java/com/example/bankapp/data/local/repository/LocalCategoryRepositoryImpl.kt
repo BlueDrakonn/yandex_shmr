@@ -3,14 +3,16 @@ package com.example.bankapp.data.local.repository
 import android.database.sqlite.SQLiteConstraintException
 import com.example.bankapp.core.ResultState
 import com.example.bankapp.data.local.dao.CategoryDao
+import com.example.bankapp.data.local.mappers.toEntity
 import com.example.bankapp.domain.mapper.toDomain
 import com.example.bankapp.domain.model.Category
 import com.example.bankapp.domain.repository.CategoryRepository
+import com.example.bankapp.domain.repository.WriteRepository
 import javax.inject.Inject
 
-class CategoryLocalRepositoryImpl @Inject constructor(
+class LocalCategoryRepositoryImpl @Inject constructor(
     private val categoryDao: CategoryDao
-) : CategoryRepository {
+) : CategoryRepository, WriteRepository<Category> {
 
 
     override suspend fun loadCategories(): ResultState<List<Category>> {
@@ -37,5 +39,8 @@ class CategoryLocalRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun addDb(entity: Category) {
+        categoryDao.insertAccount(entity.toEntity())
+    }
 
 }

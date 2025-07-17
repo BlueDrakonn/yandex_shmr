@@ -8,6 +8,4 @@ data class TransactionDto(
     val transactionDate: String,
     val createdAt: String,
     val updatedAt: String
-) {
-
-}
+)

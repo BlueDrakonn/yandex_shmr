@@ -121,7 +121,7 @@ fun ExpensesScreen(
                                     content = {
                                         PriceDisplay(
                                             amount = item.amount,
-                                            currencySymbol = item.currency
+                                            currencySymbol = viewModel.currentCurrency()
                                         )
                                     },
                                     icon = {
