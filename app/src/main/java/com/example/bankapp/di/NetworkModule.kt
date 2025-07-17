@@ -2,8 +2,8 @@ package com.example.bankapp.di
 
 import android.content.Context
 import com.example.bankapp.TOKEN
-import com.example.bankapp.data.network.api.ApiService
-import com.example.bankapp.data.utils.isInternetAvailable
+import com.example.bankapp.data.remote.api.ApiService
+import com.example.bankapp.data.remote.utils.isInternetAvailable
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides

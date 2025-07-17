@@ -1,7 +1,7 @@
 package com.example.bankapp.domain.repository
 
 import com.example.bankapp.core.ResultState
-import com.example.bankapp.data.model.UpdateTransactionRequest
+import com.example.bankapp.data.remote.model.UpdateTransactionRequest
 import com.example.bankapp.domain.model.TransactionEdit
 
 interface TransactionActionRepository {

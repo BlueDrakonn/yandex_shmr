@@ -3,7 +3,7 @@ package com.example.bankapp.features.transactionAction.add
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bankapp.core.ResultState
-import com.example.bankapp.data.model.UpdateTransactionRequest
+import com.example.bankapp.data.remote.model.UpdateTransactionRequest
 import com.example.bankapp.domain.repository.AccountRepository
 import com.example.bankapp.domain.repository.CategoryRepository
 import com.example.bankapp.domain.repository.TransactionActionRepository

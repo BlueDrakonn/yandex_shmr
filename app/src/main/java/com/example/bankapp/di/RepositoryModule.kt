@@ -1,10 +1,10 @@
 package com.example.bankapp.di
 
-import com.example.bankapp.data.repository.AccountRepositoryImpl
-import com.example.bankapp.data.repository.CategoryRepositoryImpl
-import com.example.bankapp.data.repository.HistoryTransactionRepositoryImpl
-import com.example.bankapp.data.repository.TodayTransactionRepositoryImpl
-import com.example.bankapp.data.repository.TransactionActionRepositoryImpl
+import com.example.bankapp.data.remote.repository.AccountRepositoryImpl
+import com.example.bankapp.data.remote.repository.CategoryRepositoryImpl
+import com.example.bankapp.data.remote.repository.HistoryTransactionRepositoryImpl
+import com.example.bankapp.data.remote.repository.TodayTransactionRepositoryImpl
+import com.example.bankapp.data.remote.repository.TransactionActionRepositoryImpl
 import com.example.bankapp.domain.repository.AccountRepository
 import com.example.bankapp.domain.repository.CategoryRepository
 import com.example.bankapp.domain.repository.HistoryTransactionRepository

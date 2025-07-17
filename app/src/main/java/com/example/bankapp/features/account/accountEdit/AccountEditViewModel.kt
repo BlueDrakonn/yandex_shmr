@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bankapp.core.Constants.Delays
 import com.example.bankapp.core.ResultState
-import com.example.bankapp.data.model.UpdateAccountRequest
+import com.example.bankapp.data.remote.model.UpdateAccountRequest
 import com.example.bankapp.domain.model.Account
 import com.example.bankapp.domain.repository.AccountRepository
 import com.example.bankapp.features.account.accountEdit.models.AccountEditIntent
