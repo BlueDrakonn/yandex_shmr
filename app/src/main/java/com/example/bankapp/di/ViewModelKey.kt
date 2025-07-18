@@ -48,13 +48,11 @@ interface ViewModelModule{
      fun bindCategoriesViewModel(viewModel: CategoriesViewModel): ViewModel
 
     @Binds
-    @Singleton
     @IntoMap
     @ViewModelKey(ExpensesViewModel::class)
      fun bindExpensesViewModel(viewModel: ExpensesViewModel): ViewModel
 
     @Binds
-    @Singleton
     @IntoMap
     @ViewModelKey(IncomeViewModel::class)
      fun bindIncomeViewModel(viewModel: IncomeViewModel): ViewModel

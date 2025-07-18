@@ -3,6 +3,7 @@ package com.example.bankapp.data.repository
 import com.example.bankapp.core.ResultState
 import com.example.bankapp.data.local.entity.OperationType
 import com.example.bankapp.data.local.entity.TransactionEntity
+import com.example.bankapp.data.local.mappers.toEntity
 import com.example.bankapp.data.remote.model.UpdateTransactionRequest
 import com.example.bankapp.di.Local
 import com.example.bankapp.di.NetworkChecker
@@ -134,11 +135,26 @@ class TransactionRepositoryImpl @Inject constructor( //тут по идее пе
                     }
 
                     OperationType.UPDATE_TRANSACTION -> {
+                        val remoteResult =
+                            remoteTransactionActionRepositoryImpl.getTransactionById(transactionId = operation.targetId!!)
 
-                        //здесь добавить проверку на какие изменения позже были
-                        remoteTransactionActionRepositoryImpl.editTransaction(
-                            transactionId = operation.targetId!!,
-                            request = Json.decodeFromString<UpdateTransactionRequest>(operation.payload)
+                        if (remoteResult is ResultState.Success) {
+
+                            if (operation.createdAt > remoteResult.data.updatedAt) {
+                                remoteTransactionActionRepositoryImpl.editTransaction(
+                                    transactionId = operation.targetId!!,
+                                    request = Json.decodeFromString<UpdateTransactionRequest>(
+                                        operation.payload
+                                    )
+                                )
+                            } else {
+                                writeRepository.addDb(remoteResult.data.toEntity())
+                            }
+                        }
+
+                        syncOperationRepositoryImpl.removeOperation(
+                            listOf(operation.type),
+                            targetId = operation.targetId
                         )
                     }
 

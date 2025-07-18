@@ -11,10 +11,10 @@ import com.example.bankapp.data.local.entity.TransactionEntity
 import com.example.bankapp.data.remote.model.TransactionDto
 import com.example.bankapp.data.remote.model.UpdateTransactionRequest
 import com.example.bankapp.di.DefaultNetworkChecker
-import com.example.bankapp.domain.mapper.toTransactionEdit
+import com.example.bankapp.domain.mapper.toTransactionDetailed
 import com.example.bankapp.domain.mapper.toTransactionEntity
 import com.example.bankapp.domain.model.Transaction
-import com.example.bankapp.domain.model.TransactionEdit
+import com.example.bankapp.domain.model.TransactionDetailed
 import com.example.bankapp.domain.repository.TransactionActionRepository
 import com.example.bankapp.domain.repository.WriteRepository
 import kotlinx.serialization.encodeToString
@@ -133,13 +133,13 @@ class LocalTransactionActionRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getTransactionById(transactionId: Int): ResultState<TransactionEdit> {
+    override suspend fun getTransactionById(transactionId: Int): ResultState<TransactionDetailed> {
         try {
 
             val result = transactionDao.getTransactionById(id = transactionId)
 
             if (result != null) {
-                return ResultState.Success(result.toTransactionEdit())
+                return ResultState.Success(result.toTransactionDetailed())
             } else {
                 return ResultState.Error(message = "не найдена транзакция")
             }

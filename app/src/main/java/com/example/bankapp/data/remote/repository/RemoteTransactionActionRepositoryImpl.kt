@@ -6,7 +6,7 @@ import com.example.bankapp.data.remote.model.TransactionDto
 import com.example.bankapp.data.remote.model.UpdateTransactionRequest
 import com.example.bankapp.data.remote.utils.safeApiCall
 import com.example.bankapp.domain.model.Transaction
-import com.example.bankapp.domain.model.TransactionEdit
+import com.example.bankapp.domain.model.TransactionDetailed
 import com.example.bankapp.domain.repository.TransactionActionRepository
 import javax.inject.Inject
 
@@ -37,10 +37,10 @@ class RemoteTransactionActionRepositoryImpl @Inject constructor(private val apiS
         )
     }
 
-    override suspend fun getTransactionById(transactionId: Int): ResultState<TransactionEdit> {
+    override suspend fun getTransactionById(transactionId: Int): ResultState<TransactionDetailed> {
         return safeApiCall(
             mapper = {
-                val transaction = it.toTransactionEdit()
+                val transaction = it.toTransactionDetailed()
                 transaction
             },
             block = {

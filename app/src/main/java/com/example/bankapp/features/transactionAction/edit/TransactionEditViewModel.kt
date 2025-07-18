@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bankapp.core.ResultState
 import com.example.bankapp.data.remote.model.UpdateTransactionRequest
+import com.example.bankapp.data.remote.utils.parseIsoDateTime
 import com.example.bankapp.domain.repository.AccountRepository
 import com.example.bankapp.domain.repository.CategoryRepository
 import com.example.bankapp.domain.repository.TransactionActionRepository
@@ -55,18 +56,18 @@ class TransactionEditViewModel @Inject constructor(
 
 
                         if (transactionResult is ResultState.Success && categoryResult is ResultState.Success) {
-                            val transactionEdit = transactionResult.data
+                            val transactionDetailed = transactionResult.data
                             val category = categoryResult.data
 
-
+                            val dateTime = parseIsoDateTime(transactionDetailed.transactionDate)
                             _formState.value = ResultState.Success(
                                 TransactionFormState(
                                     categoryList = category,
-                                    selectedCategory = transactionEdit.category,
-                                    date = transactionEdit.date,
-                                    time = transactionEdit.time,
-                                    comment = transactionEdit.comment,
-                                    amount = transactionEdit.amount
+                                    selectedCategory = transactionDetailed.category,
+                                    date = dateTime.first,
+                                    time = dateTime.second,
+                                    comment = transactionDetailed.subtitle,
+                                    amount = transactionDetailed.amount
                             )
                             )
                         } else {

@@ -4,7 +4,7 @@ import com.example.bankapp.core.ResultState
 import com.example.bankapp.data.remote.model.TransactionDto
 import com.example.bankapp.data.remote.model.UpdateTransactionRequest
 import com.example.bankapp.domain.model.Transaction
-import com.example.bankapp.domain.model.TransactionEdit
+import com.example.bankapp.domain.model.TransactionDetailed
 
 interface TransactionActionRepository {
     suspend fun addTransaction(
@@ -18,7 +18,7 @@ interface TransactionActionRepository {
 
     suspend fun getTransactionById(
         transactionId : Int
-    ): ResultState<TransactionEdit>
+    ): ResultState<TransactionDetailed>
 
     suspend fun deleteTransactionById(
         transactionId : Int

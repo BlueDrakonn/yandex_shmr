@@ -8,7 +8,7 @@ import com.example.bankapp.di.Local
 import com.example.bankapp.di.NetworkChecker
 import com.example.bankapp.di.Remote
 import com.example.bankapp.domain.model.Transaction
-import com.example.bankapp.domain.model.TransactionEdit
+import com.example.bankapp.domain.model.TransactionDetailed
 import com.example.bankapp.domain.repository.TransactionActionRepository
 import com.example.bankapp.domain.repository.WriteRepository
 import javax.inject.Inject
@@ -25,15 +25,17 @@ class TransactionActionRepositoryImpl @Inject constructor(
 
             val result = remoteTransactionActionRepositoryImpl.addTransaction(request)
             if (result is ResultState.Success) {
-                val transactionDto =result.data!!
-                writeCategoryRepositoryImpl.addDb(entity = TransactionEntity(
-                    id = transactionDto.id,
-                    categoryId = transactionDto.categoryId,
-                    subtitle = transactionDto.comment,
-                    amount = transactionDto.amount,
-                    transactionDate = transactionDto.transactionDate,
-                    isIncome = true //костыль внутри addDb isIncome сам выставляется
-                ))
+                val transactionDto = result.data!!
+                writeCategoryRepositoryImpl.addDb(
+                    entity = TransactionEntity(
+                        id = transactionDto.id,
+                        categoryId = transactionDto.categoryId,
+                        subtitle = transactionDto.comment,
+                        amount = transactionDto.amount,
+                        transactionDate = transactionDto.transactionDate,
+                        isIncome = true
+                    )
+                )
             }
             ResultState.Success(null)
         } else {
@@ -51,7 +53,7 @@ class TransactionActionRepositoryImpl @Inject constructor(
                 request = request
             )
             if (result is ResultState.Success) {
-                localTransactionActionRepositoryImpl.editTransaction( //тут по идее можем редактировать транзу которой нет в бд или нет?
+                localTransactionActionRepositoryImpl.editTransaction(
                     transactionId = transactionId,
                     request = request
                 )
@@ -67,7 +69,7 @@ class TransactionActionRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getTransactionById(transactionId: Int): ResultState<TransactionEdit> {
+    override suspend fun getTransactionById(transactionId: Int): ResultState<TransactionDetailed> {
         return if (networkChecker.isOnline()) {
             remoteTransactionActionRepositoryImpl.getTransactionById(transactionId = transactionId)
         } else {
