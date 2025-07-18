@@ -7,6 +7,7 @@ import com.example.bankapp.features.account.accountEdit.AccountEditViewModel
 import com.example.bankapp.features.analysis.AnalysisViewModel
 import com.example.bankapp.features.categories.CategoriesViewModel
 import com.example.bankapp.features.expenses.ExpensesViewModel
+import com.example.bankapp.features.firstLaunch.MainViewModel
 import com.example.bankapp.features.history.HistoryViewModel
 import com.example.bankapp.features.income.IncomeViewModel
 import com.example.bankapp.features.transactionAction.add.TransactionAddViewModel
@@ -32,53 +33,58 @@ interface ViewModelModule{
     @Binds
     @Singleton
     @IntoMap
-    @ViewModelKey(AccountViewModel::class) //LoginViewModel::class
+    @ViewModelKey(AccountViewModel::class)
      fun bindAccountViewModel(viewModel: AccountViewModel): ViewModel
 
     @Binds
     @IntoMap
-    @ViewModelKey(AccountEditViewModel::class) //LoginViewModel222::class
+    @ViewModelKey(AccountEditViewModel::class)
      fun bindAccountEditViewModel(viewModel: AccountEditViewModel): ViewModel
 
     @Binds
     @Singleton
     @IntoMap
-    @ViewModelKey(CategoriesViewModel::class) //LoginViewModel222::class
+    @ViewModelKey(CategoriesViewModel::class)
      fun bindCategoriesViewModel(viewModel: CategoriesViewModel): ViewModel
 
     @Binds
     @Singleton
     @IntoMap
-    @ViewModelKey(ExpensesViewModel::class) //LoginViewModel::class
+    @ViewModelKey(ExpensesViewModel::class)
      fun bindExpensesViewModel(viewModel: ExpensesViewModel): ViewModel
 
     @Binds
     @Singleton
     @IntoMap
-    @ViewModelKey(IncomeViewModel::class) //LoginViewModel::class
+    @ViewModelKey(IncomeViewModel::class)
      fun bindIncomeViewModel(viewModel: IncomeViewModel): ViewModel
 
     @Binds
     @IntoMap
-    @ViewModelKey(HistoryViewModel::class) //LoginViewModel::class
+    @ViewModelKey(HistoryViewModel::class)
      fun bindHistoryViewModel(viewModel: HistoryViewModel): ViewModel
 
     @Binds
     @IntoMap
-    @ViewModelKey(TransactionAddViewModel::class) //LoginViewModel::class
+    @ViewModelKey(TransactionAddViewModel::class)
     fun bindTransactionAddViewModel(viewModel: TransactionAddViewModel): ViewModel
 
     @Binds
     @IntoMap
-    @ViewModelKey(TransactionEditViewModel::class) //LoginViewModel::class
+    @ViewModelKey(TransactionEditViewModel::class)
     fun bindTransactionEditViewModel(viewModel: TransactionEditViewModel): ViewModel
 
     @Binds
     @IntoMap
-    @ViewModelKey(AnalysisViewModel::class) //LoginViewModel::class
+    @ViewModelKey(AnalysisViewModel::class)
     fun bindAnalysisViewModel(viewModel: AnalysisViewModel): ViewModel
 
-    //сюда новые viewModel
+    @Binds
+    @IntoMap
+    @ViewModelKey(MainViewModel::class)
+    fun bindMainViewModel(viewModel: MainViewModel): ViewModel
+
+
 
     @Binds
     fun bindsDaggerViewModelFactory(daggerViewModelFactory: DaggerViewModelFactory): ViewModelProvider.Factory

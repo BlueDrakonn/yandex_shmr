@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,11 +13,13 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.bankapp.core.navigation.Screen
 import com.example.bankapp.core.navigation.TransactionType
+import com.example.bankapp.di.LocalViewModelFactory
 import com.example.bankapp.features.account.account.AccountsScreen
 import com.example.bankapp.features.account.accountEdit.AccountEditScreen
 import com.example.bankapp.features.analysis.AnalysisScreen
 import com.example.bankapp.features.categories.CategoriesScreen
 import com.example.bankapp.features.expenses.ExpensesScreen
+import com.example.bankapp.features.firstLaunch.MainViewModel
 import com.example.bankapp.features.history.HistoryScreen
 import com.example.bankapp.features.income.IncomeScreen
 import com.example.bankapp.features.settings.SettingsScreen
@@ -26,7 +29,8 @@ import com.example.bankapp.features.transactionAction.edit.TransactionEditScreen
 
 @Composable
 fun AppNavigation() {
-
+    val viewModel: MainViewModel = viewModel(factory = LocalViewModelFactory.current)
+    viewModel.start()
     val navController = rememberNavController()
 
 
