@@ -1,6 +1,7 @@
 package com.example.bankapp.data.repository
 
 import com.example.bankapp.core.ResultState
+import com.example.bankapp.data.local.entity.TransactionEntity
 import com.example.bankapp.data.remote.model.TransactionDto
 import com.example.bankapp.data.remote.model.UpdateTransactionRequest
 import com.example.bankapp.di.Local
@@ -15,7 +16,7 @@ import javax.inject.Inject
 class TransactionActionRepositoryImpl @Inject constructor(
     @Remote private val remoteTransactionActionRepositoryImpl: TransactionActionRepository,
     @Local private val localTransactionActionRepositoryImpl: TransactionActionRepository,
-    private val writeCategoryRepositoryImpl: WriteRepository<TransactionDto>,
+    private val writeCategoryRepositoryImpl: WriteRepository<TransactionEntity>,
     private val networkChecker: NetworkChecker
 ) : TransactionActionRepository {
 
@@ -24,8 +25,15 @@ class TransactionActionRepositoryImpl @Inject constructor(
 
             val result = remoteTransactionActionRepositoryImpl.addTransaction(request)
             if (result is ResultState.Success) {
-
-                writeCategoryRepositoryImpl.addDb(entity = result.data!!)
+                val transactionDto =result.data!!
+                writeCategoryRepositoryImpl.addDb(entity = TransactionEntity(
+                    id = transactionDto.id,
+                    categoryId = transactionDto.categoryId,
+                    subtitle = transactionDto.comment,
+                    amount = transactionDto.amount,
+                    transactionDate = transactionDto.transactionDate,
+                    isIncome = true //костыль внутри addDb isIncome сам выставляется
+                ))
             }
             ResultState.Success(null)
         } else {

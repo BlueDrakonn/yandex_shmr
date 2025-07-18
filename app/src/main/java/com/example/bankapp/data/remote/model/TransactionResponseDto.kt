@@ -29,7 +29,7 @@ data class TransactionResponseDto(
             category = category,
             subtitle = comment,
             amount = amount.toString(),
-            //currency = getCurrencySymbol(account.currency),
+            transactionDate = transactionDate,
             isIncome = category.isIncome
         )
     }

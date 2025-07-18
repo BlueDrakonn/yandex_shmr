@@ -7,7 +7,7 @@ import com.example.bankapp.data.local.dao.SyncOperationDao
 import com.example.bankapp.data.local.dao.TransactionDao
 import com.example.bankapp.data.local.entity.OperationType
 import com.example.bankapp.data.local.entity.SyncOperationEntity
-import com.example.bankapp.data.local.mappers.toEntity
+import com.example.bankapp.data.local.entity.TransactionEntity
 import com.example.bankapp.data.remote.model.TransactionDto
 import com.example.bankapp.data.remote.model.UpdateTransactionRequest
 import com.example.bankapp.di.DefaultNetworkChecker
@@ -28,7 +28,7 @@ class LocalTransactionActionRepositoryImpl @Inject constructor(
     private val categoryDao: CategoryDao,
     private val networkChecker: DefaultNetworkChecker
 ) :
-    TransactionActionRepository, WriteRepository<TransactionDto> {
+    TransactionActionRepository, WriteRepository<TransactionEntity> {
     override suspend fun addTransaction(request: UpdateTransactionRequest): ResultState<TransactionDto?> {
 
         try {
@@ -85,7 +85,31 @@ class LocalTransactionActionRepositoryImpl @Inject constructor(
 
 
             if (!networkChecker.isOnline()) {
-                syncOperationDao.deleteTransactionOperations( //удаляем прошлые ее обновления
+                // надо проверить по идее можно не удалять обновления/добавления тк за счет replace будет работать все
+                if (syncOperationDao.findExistingOperation( //если эту транзакцию добавили локально то не будем записывать апдейт а просто создадим обновленную транзакцию
+                        OperationType.ADD_TRANSACTION,
+                        targetId = transactionId
+                    ) != null
+                ) {
+                    syncOperationDao.deleteTransactionOperations(
+                        transactionId = transactionId,
+                        types = listOf(
+                            OperationType.ADD_TRANSACTION
+                        )
+                    )
+
+                    syncOperationDao.insertOperation(
+                        operation = SyncOperationEntity(
+                            type = OperationType.ADD_TRANSACTION,
+                            payload = Json.encodeToString(request),
+                            createdAt = Instant.now().toString(),
+                            targetId = transactionId
+                        )
+                    )
+                    return ResultState.Success(null)
+                }
+
+                syncOperationDao.deleteTransactionOperations( //если транзакция создана не локально то заменяем прошлое обновление на новое
                     transactionId = transactionId,
                     types = listOf(
                         OperationType.UPDATE_TRANSACTION
@@ -145,6 +169,7 @@ class LocalTransactionActionRepositoryImpl @Inject constructor(
                         type = OperationType.DELETE_TRANSACTION,
                         payload = transactionId.toString(),
                         createdAt = Instant.now().toString(),
+                        targetId = transactionId
                     )
                 )
             }
@@ -155,13 +180,20 @@ class LocalTransactionActionRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun addDb(entity: TransactionDto) {
+    override suspend fun addDb(entity: TransactionEntity) {
 
         val isIncome = categoryDao.getCategoryById(
             id = entity.categoryId
         ).isIncome
 
-        val transactionEntity = entity.toEntity(isIncome = isIncome)
+        val transactionEntity = TransactionEntity(
+            id = entity.id,
+            categoryId = entity.categoryId,
+            subtitle = entity.subtitle,
+            amount = entity.amount,
+            transactionDate = entity.transactionDate,
+            isIncome = isIncome
+        )
 
         transactionDao.insertTransaction(transaction = transactionEntity)
     }

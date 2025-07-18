@@ -9,6 +9,7 @@ fun TransactionWithCategory.toTransaction(): Transaction {
         category = category.toDomain(),
         subtitle = transaction.subtitle,
         amount = transaction.amount,
-        isIncome = transaction.isIncome
+        isIncome = transaction.isIncome,
+        transactionDate = transaction.transactionDate
     )
 }

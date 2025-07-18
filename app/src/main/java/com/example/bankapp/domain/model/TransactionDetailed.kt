@@ -6,7 +6,6 @@ data class TransactionDetailed(
     val subtitle: String? = null,
     val icon: String? = null,
     val amount: String,
-    //val currency: String,
     val createdAt: String,
     val updatedAt: String,
     val transactionDate: String,

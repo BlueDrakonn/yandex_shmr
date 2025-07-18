@@ -1,11 +1,11 @@
 package com.example.bankapp.di.local
 
+import com.example.bankapp.data.local.entity.TransactionEntity
 import com.example.bankapp.data.local.repository.LocalAccountRepositoryImpl
 import com.example.bankapp.data.local.repository.LocalCategoryRepositoryImpl
 import com.example.bankapp.data.local.repository.LocalTransactionActionRepositoryImpl
 import com.example.bankapp.data.local.repository.LocalTransactionRepositoryImpl
 import com.example.bankapp.data.local.repository.SyncOperationRepositoryImpl
-import com.example.bankapp.data.remote.model.TransactionDto
 import com.example.bankapp.di.Local
 import com.example.bankapp.domain.model.Account
 import com.example.bankapp.domain.model.Category
@@ -77,5 +77,5 @@ abstract class LocalRepositoryModule {
     @Singleton
     abstract fun bindTransactionActionWriteRepository(
         impl: LocalTransactionActionRepositoryImpl
-    ): WriteRepository<TransactionDto>
+    ): WriteRepository<TransactionEntity>
 }

@@ -5,7 +5,8 @@ data class Transaction (
     val category: Category,
     val subtitle: String? = null,
     val amount: String,
-    //val currency: String,
+    val transactionDate: String,
     override val isIncome: Boolean
 
 ): IncomeInfo
+
