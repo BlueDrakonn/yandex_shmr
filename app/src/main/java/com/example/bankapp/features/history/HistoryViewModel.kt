@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.bankapp.core.ResultState
 import com.example.bankapp.domain.model.TransactionDetailed
 import com.example.bankapp.domain.repository.AccountRepository
-import com.example.bankapp.domain.repository.HistoryTransactionRepository
+import com.example.bankapp.domain.repository.TransactionRepository
 import com.example.bankapp.features.common.extensions.filterExpenses
 import com.example.bankapp.features.common.extensions.filterIncome
 import com.example.bankapp.features.history.models.DateMode
@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 class HistoryViewModel @Inject constructor(
     private val accountRepository: AccountRepository,
-    private val historyTransactionRepository: HistoryTransactionRepository
+    private val historyTransactionRepository: TransactionRepository
 ) : ViewModel() {
 
     private var historyTransactionResponseJob: Job? = null
@@ -115,5 +115,9 @@ class HistoryViewModel @Inject constructor(
         isIncomeHistory = isIncome
         cancelGettingHistoryTransactions()
         startGettingHistoryTransactions()
+    }
+
+    fun currentCurrency(): String {
+        return accountRepository.accountCurrency ?: "₽"
     }
 }

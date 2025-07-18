@@ -97,7 +97,7 @@ fun ExpensesScreen(
                             modifier = Modifier
                                 .height(68.dp)
                                 .clickable { navController.navigate("${Screen.TRANSACTION_EDIT.route}?type=${false}?transactionId=${item.id}") },
-                            lead = { item.icon?.let { LeadIcon(label = it) } },
+                            lead = { item.category.emoji.let { LeadIcon(label = it) } },
                             content = {
                                 Column(
                                     horizontalAlignment = Alignment.Start
@@ -121,7 +121,7 @@ fun ExpensesScreen(
                                     content = {
                                         PriceDisplay(
                                             amount = item.amount,
-                                            currencySymbol = item.currency
+                                            currencySymbol = viewModel.currentCurrency()
                                         )
                                     },
                                     icon = {

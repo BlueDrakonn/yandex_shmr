@@ -100,7 +100,14 @@ fun HistoryScreen(
                 },
                 title = stringResource(Screen.HISTORY_INCOME.titleRes),
                 action = {
-                    //логика с графиком
+                    IconButton(
+                        onClick = { navController.navigate("${Screen.ANALYSIS.route}?type=${type == TransactionType.INCOME}") }
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.state_layer),
+                            contentDescription = "history"
+                        )
+                    }
                 }
             )
         }
@@ -114,7 +121,7 @@ fun HistoryScreen(
                             startData = startDate,
                             endData = endDate,
                             totalSum = totalSum,
-                            currency = data.firstOrNull()?.currency ?: "",
+                            currency = viewModel.currentCurrency(),
                             startDataChange = {
 
                                 showDatePicker = DatePickerState.OPEN_START
@@ -162,7 +169,7 @@ fun HistoryScreen(
                                             price = {
                                                 PriceDisplay(
                                                     amount = item.amount,
-                                                    currencySymbol = item.currency
+                                                    currencySymbol = viewModel.currentCurrency()
                                                 )
                                             }
                                         )

@@ -1,29 +1,25 @@
 package com.example.bankapp.data.repository
 
-
-import android.util.Log
 import com.example.bankapp.core.ResultState
-import com.example.bankapp.data.model.UpdateAccountRequest
-import com.example.bankapp.data.network.api.ApiService
-import com.example.bankapp.data.utils.safeApiCall
-import com.example.bankapp.data.utils.safeApiCallList
+import com.example.bankapp.data.local.entity.OperationType
+import com.example.bankapp.data.remote.model.UpdateAccountRequest
+import com.example.bankapp.di.Local
+import com.example.bankapp.di.NetworkChecker
+import com.example.bankapp.di.Remote
 import com.example.bankapp.domain.model.Account
 import com.example.bankapp.domain.repository.AccountRepository
+import com.example.bankapp.domain.repository.SyncOperationRepository
+import com.example.bankapp.domain.repository.WriteRepository
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
-
-/**
- * Реализация репозитория аккаунтов.
- *
- * Получает данные о счете пользователя через [ApiService].
- * Хранит id аккаунта в [accountId].
- *
- * @property apiService Сервис для сетевых запросов.
- */
 class AccountRepositoryImpl @Inject constructor(
-    private val apiService: ApiService
+    @Local private val localAccountRepositoryImpl: AccountRepository,
+    @Remote private val remoteAccountRepositoryImpl: AccountRepository,
+    private val writeAccountRepositoryImpl: WriteRepository<Account>,
+    private val syncOperationRepositoryImpl: SyncOperationRepository,
+    private val networkChecker: NetworkChecker
 ) : AccountRepository {
-
 
     /**
      * ID текущего  аккаунта.
@@ -40,50 +36,78 @@ class AccountRepositoryImpl @Inject constructor(
      */
     override var accountError: String? = null
 
-    /**
-     * Загружает список аккаунтов пользователя с сервера(по умолчанию в списке один аккаунт).
-     *
-     * Выполняет запрос через [ApiService.getAccounts], преобразует
-     * данные и сохраняет ID первого аккаунта, если он есть.
-     *
-     * @return [ResultState] с результатом запроса.
-     */
     override suspend fun loadAccounts(): ResultState<List<Account>> {
-        val result = safeApiCallList(
-            mapper = { it.toAccount() },
-            block = { apiService.getAccounts() }
-        )
-        when (result) {
-            is ResultState.Success -> {
-                accountId = result.data.firstOrNull()?.userId
-                accountCurrency = result.data.firstOrNull()?.currency
-                return result
-            }
 
-            is ResultState.Error -> {
-                accountError = result.message
-                return result
-            }
+        if (networkChecker.isOnline()) {
+            var remoteResult = remoteAccountRepositoryImpl.loadAccounts()
 
-            else -> return result
-        }
-    }
-
-    override suspend fun updateAccount(
-        request: UpdateAccountRequest
-    ): ResultState<Account> {
-        return if (accountId != null) {
-            safeApiCall(
-                mapper = { it.toAccount() },
-                block = {
-                    apiService.updateAccount(
-                        accountId = accountId!!,
-                        request = request
+            when (remoteResult) {
+                is ResultState.Success -> {
+                    val localResult = syncOperationRepositoryImpl.getPendingOperationsByType(
+                        OperationType.UPDATE_ACCOUNT,
+                        targetId = remoteResult.data.firstOrNull()?.id ?: 28
                     )
-                })
+
+                    if (localResult != null) {
+
+                        if (localResult.createdAt > remoteResult.data.firstOrNull()!!.updatedAt!!) {
+                            val request: UpdateAccountRequest =
+                                Json.decodeFromString(localResult.payload)
+                            remoteAccountRepositoryImpl.updateAccount(request = request)
+                            syncOperationRepositoryImpl.removeOperation(
+                                listOf(OperationType.UPDATE_ACCOUNT),
+                                targetId = remoteResult.data.firstOrNull()?.id ?: 28
+                            )
+                            remoteResult = remoteAccountRepositoryImpl.loadAccounts()
+
+
+
+                        } else {
+                            syncOperationRepositoryImpl.removeOperation(
+                                listOf(OperationType.UPDATE_ACCOUNT),
+                                targetId = remoteResult.data.firstOrNull()?.id ?: 28
+                            )
+                            writeAccountRepositoryImpl.addDb(remoteResult.data.firstOrNull()!!)
+                        }
+
+
+                    } else {
+                        writeAccountRepositoryImpl.addDb(remoteResult.data.firstOrNull()!!)
+                    }
+
+                }
+
+                else -> {}
+            }
+
+
+            accountCurrency = remoteAccountRepositoryImpl.accountCurrency
+            accountId = remoteAccountRepositoryImpl.accountId
+            accountError = remoteAccountRepositoryImpl.accountError
+            return remoteResult
         } else {
-            ResultState.Error(message = accountError)
+
+            val result = localAccountRepositoryImpl.loadAccounts()
+            accountCurrency = localAccountRepositoryImpl.accountCurrency
+            accountId = localAccountRepositoryImpl.accountId
+            accountError = localAccountRepositoryImpl.accountError
+            return result
         }
+
     }
+
+    override suspend fun updateAccount(request: UpdateAccountRequest): ResultState<Account> {
+
+        return if (networkChecker.isOnline()) {
+
+            remoteAccountRepositoryImpl.updateAccount(request=request)
+
+
+        } else {
+            localAccountRepositoryImpl.updateAccount(request = request)
+        }
+
+    }
+
 
 }

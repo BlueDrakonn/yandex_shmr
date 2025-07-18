@@ -110,7 +110,7 @@ fun IncomeScreen(
                                     content = {
                                         PriceDisplay(
                                             amount = item.amount,
-                                            currencySymbol = item.currency
+                                            currencySymbol = viewModel.currentCurrency()
                                         )
                                     },
                                     icon = {

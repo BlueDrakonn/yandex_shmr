@@ -1,45 +1,47 @@
 package com.example.bankapp.data.repository
 
-
+import android.util.Log
 import com.example.bankapp.core.ResultState
-import com.example.bankapp.data.network.api.ApiService
+import com.example.bankapp.di.Local
+import com.example.bankapp.di.NetworkChecker
+import com.example.bankapp.di.Remote
 import com.example.bankapp.domain.model.Category
 import com.example.bankapp.domain.repository.CategoryRepository
-import com.example.bankapp.data.utils.safeApiCallList
+import com.example.bankapp.domain.repository.WriteRepository
 import javax.inject.Inject
 
-
-/**
- * Реализация репозитория категорий.
- *
- * Отвечает за загрузку категорий из сети через [ApiService].
- *
- * @property apiService Сервис для сетевых запросов.
- */
 class CategoryRepositoryImpl @Inject constructor(
-    private val apiService: ApiService
+    @Local private val localCategoryLocalRepositoryImpl: CategoryRepository,
+    @Remote private val remoteCategoryRepositoryImpl: CategoryRepository,
+    private val writeCategoryRepositoryImpl: WriteRepository<Category>,
+    private val networkChecker: NetworkChecker
 ) : CategoryRepository {
-
-    /**
-     * Загружает список категорий с сервера.
-     *
-     * Выполняет запрос через [ApiService.getCategories] и возвращает
-     * результат, обернутый в [ResultState].
-     *
-     * @return [ResultState] с результатом запроса.
-     */
     override suspend fun loadCategories(): ResultState<List<Category>> {
-        return safeApiCallList(
-            mapper = { it },
-            block = { apiService.getCategories() }
-        )
+        if (networkChecker.isOnline()) {
+
+            val result = remoteCategoryRepositoryImpl.loadCategories()
+
+            if (result is ResultState.Success) {
+                result.data.forEach { category ->
+                    writeCategoryRepositoryImpl.addDb(category)
+                }
+            }
+            return result
+
+
+        } else {
+            Log.d("CATEGORY_OFFLINE", "start")
+
+            return localCategoryLocalRepositoryImpl.loadCategories()
+        }
     }
 
     override suspend fun loadCategoriesByType(isIncome: Boolean): ResultState<List<Category>> {
-        return safeApiCallList(
-            mapper = { it },
-            block = { apiService.getCategoriesByType(isIncome = isIncome) }
-        )
+        return if (networkChecker.isOnline()) {
+            remoteCategoryRepositoryImpl.loadCategoriesByType(isIncome = isIncome)
+        } else {
+            localCategoryLocalRepositoryImpl.loadCategoriesByType(isIncome = isIncome)
+        }
     }
 
 

@@ -7,7 +7,7 @@ import com.example.bankapp.core.Constants.Delays
 import com.example.bankapp.core.ResultState
 import com.example.bankapp.domain.model.Transaction
 import com.example.bankapp.domain.repository.AccountRepository
-import com.example.bankapp.domain.repository.TodayTransactionRepository
+import com.example.bankapp.domain.repository.TransactionRepository
 import com.example.bankapp.features.common.extensions.filterIncome
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 
 class IncomeViewModel @Inject constructor(
-    private val transactionRepository: TodayTransactionRepository,
+    private val transactionRepository: TransactionRepository,
     private val accountRepository: AccountRepository
 ) : ViewModel() {
 
