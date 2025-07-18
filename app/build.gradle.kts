@@ -80,16 +80,23 @@ dependencies {
     implementation(libs.androidx.media3.common.ktx)
 
     implementation("com.google.dagger:dagger:2.51.1")
+    implementation(libs.androidx.work.runtime.ktx)
     kapt("com.google.dagger:dagger-compiler:2.51.1")
 
     implementation("com.google.dagger:dagger-android:2.51.1")
     implementation("com.google.dagger:dagger-android-support:2.51.1")
     kapt("com.google.dagger:dagger-android-processor:2.51.1")
 
+
+
+    
     implementation("androidx.room:room-runtime:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+
+
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
