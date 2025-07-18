@@ -20,7 +20,6 @@ data class TransactionEntity(
     val categoryId: Int,
     val subtitle: String? = null,
     val amount: String,
-    val currency: String,
     val transactionDate: String,
     val isIncome: Boolean
 )

@@ -2,17 +2,21 @@ package com.example.bankapp.data.local.repository
 
 import android.database.sqlite.SQLiteConstraintException
 import com.example.bankapp.core.ResultState
-import com.example.bankapp.data.local.dao.AccountDao
 import com.example.bankapp.data.local.dao.CategoryDao
 import com.example.bankapp.data.local.dao.SyncOperationDao
 import com.example.bankapp.data.local.dao.TransactionDao
 import com.example.bankapp.data.local.entity.OperationType
 import com.example.bankapp.data.local.entity.SyncOperationEntity
+import com.example.bankapp.data.local.mappers.toEntity
+import com.example.bankapp.data.remote.model.TransactionDto
 import com.example.bankapp.data.remote.model.UpdateTransactionRequest
+import com.example.bankapp.di.DefaultNetworkChecker
 import com.example.bankapp.domain.mapper.toTransactionEdit
 import com.example.bankapp.domain.mapper.toTransactionEntity
+import com.example.bankapp.domain.model.Transaction
 import com.example.bankapp.domain.model.TransactionEdit
 import com.example.bankapp.domain.repository.TransactionActionRepository
+import com.example.bankapp.domain.repository.WriteRepository
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.time.Instant
@@ -21,47 +25,49 @@ import javax.inject.Inject
 class LocalTransactionActionRepositoryImpl @Inject constructor(
     private val syncOperationDao: SyncOperationDao,
     private val transactionDao: TransactionDao,
-    private val accountDao: AccountDao,
     private val categoryDao: CategoryDao,
-    ) :
-    TransactionActionRepository {
-    override suspend fun addTransaction(request: UpdateTransactionRequest): ResultState<Unit> {
+    private val networkChecker: DefaultNetworkChecker
+) :
+    TransactionActionRepository, WriteRepository<TransactionDto> {
+    override suspend fun addTransaction(request: UpdateTransactionRequest): ResultState<TransactionDto?> {
 
         try {
             val isIncome = categoryDao.getCategoryById(
                 id = request.categoryId
             ).isIncome
 
-            val currency = accountDao.getAllAccounts().first().currency
 
-            val transactionLocalId = (transactionDao.getMinTransactionId()   ?: 0 ) -1
-
+            val transactionLocalId = (transactionDao.getMinTransactionId() ?: 0) - 1
 
 
             val transactionEntity = request.toTransactionEntity(
                 id = transactionLocalId,
-                currency = currency,
                 isIncome = isIncome
             )
             transactionDao.insertTransaction(transaction = transactionEntity)
 
-            syncOperationDao.insertOperation(
-                operation = SyncOperationEntity(
-                    type = OperationType.ADD_TRANSACTION,
-                    payload = Json.encodeToString(request),
-                    createdAt = Instant.now().toString(),
-                    targetId = transactionLocalId
+            if (!networkChecker.isOnline()) {
+                syncOperationDao.insertOperation(
+                    operation = SyncOperationEntity(
+                        type = OperationType.ADD_TRANSACTION,
+                        payload = Json.encodeToString(request),
+                        createdAt = Instant.now().toString(),
+                        targetId = transactionLocalId
+                    )
                 )
-            )
+            }
 
-            return ResultState.Success(Unit)
+            return ResultState.Success(null)
 
         } catch (e: SQLiteConstraintException) {
             return ResultState.Error(message = e.message)
         }
     }
 
-    override suspend fun editTransaction(transactionId: Int,request: UpdateTransactionRequest): ResultState<Unit> {
+    override suspend fun editTransaction(
+        transactionId: Int,
+        request: UpdateTransactionRequest
+    ): ResultState<Transaction?> {
         try {
 
 
@@ -69,34 +75,34 @@ class LocalTransactionActionRepositoryImpl @Inject constructor(
                 id = request.categoryId
             ).isIncome
 
-            val currency = accountDao.getAllAccounts().first().currency
-
 
             val transactionEntity = request.toTransactionEntity(
                 id = transactionId,
-                currency = currency,
+
                 isIncome = isIncome
             )
             transactionDao.updateTransaction(transaction = transactionEntity)
 
 
-            syncOperationDao.deleteTransactionOperations( //удаляем прошлые ее обновления
-                transactionId = transactionId,
-                types = listOf(
-                    OperationType.UPDATE_TRANSACTION
+            if (!networkChecker.isOnline()) {
+                syncOperationDao.deleteTransactionOperations( //удаляем прошлые ее обновления
+                    transactionId = transactionId,
+                    types = listOf(
+                        OperationType.UPDATE_TRANSACTION
+                    )
                 )
-            )
 
-            syncOperationDao.insertOperation(
-                operation = SyncOperationEntity(
-                    type = OperationType.UPDATE_TRANSACTION,
-                    payload = Json.encodeToString(request),
-                    createdAt = Instant.now().toString(),
-                    targetId = transactionId
+                syncOperationDao.insertOperation(
+                    operation = SyncOperationEntity(
+                        type = OperationType.UPDATE_TRANSACTION,
+                        payload = Json.encodeToString(request),
+                        createdAt = Instant.now().toString(),
+                        targetId = transactionId
+                    )
                 )
-            )
+            }
 
-            return ResultState.Success(Unit)
+            return ResultState.Success(null)
 
         } catch (e: SQLiteConstraintException) {
             return ResultState.Error(message = e.message)
@@ -147,5 +153,16 @@ class LocalTransactionActionRepositoryImpl @Inject constructor(
         } catch (e: SQLiteConstraintException) {
             return ResultState.Error(message = e.message)
         }
+    }
+
+    override suspend fun addDb(entity: TransactionDto) {
+
+        val isIncome = categoryDao.getCategoryById(
+            id = entity.categoryId
+        ).isIncome
+
+        val transactionEntity = entity.toEntity(isIncome = isIncome)
+
+        transactionDao.insertTransaction(transaction = transactionEntity)
     }
 }

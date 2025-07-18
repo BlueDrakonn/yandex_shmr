@@ -36,7 +36,6 @@ interface ViewModelModule{
      fun bindAccountViewModel(viewModel: AccountViewModel): ViewModel
 
     @Binds
-    @Singleton
     @IntoMap
     @ViewModelKey(AccountEditViewModel::class) //LoginViewModel222::class
      fun bindAccountEditViewModel(viewModel: AccountEditViewModel): ViewModel

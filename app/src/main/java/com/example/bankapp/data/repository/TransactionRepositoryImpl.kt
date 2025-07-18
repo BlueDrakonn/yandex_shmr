@@ -10,7 +10,7 @@ import com.example.bankapp.domain.model.TransactionDetailed
 import com.example.bankapp.domain.repository.TransactionRepository
 import javax.inject.Inject
 
-class TransactionRepositoryImpl @Inject constructor(
+class TransactionRepositoryImpl @Inject constructor( //тут по идее перед загрузкой сначала впихнуть все что у насв sync и после этого получить транзы и добавить тех что нет, а те что есть сравнить мб надо апгрейд (всегда надо тк только что из sync свои апргреды влили)
     @Local private val localTransactionRepositoryImpl: TransactionRepository,
     @Remote private val remoteTransactionRepositoryImpl: TransactionRepository,
     private val networkChecker: NetworkChecker
@@ -38,6 +38,11 @@ class TransactionRepositoryImpl @Inject constructor(
 
     override suspend fun loadTodayTransaction(accountId: Int?): ResultState<List<Transaction>> {
         return if (networkChecker.isOnline()) {
+
+
+
+
+
             remoteTransactionRepositoryImpl.loadTodayTransaction(
                 accountId = accountId,
             )

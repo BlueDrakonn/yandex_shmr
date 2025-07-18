@@ -1,6 +1,7 @@
 package com.example.bankapp.data.remote.api
 
 import com.example.bankapp.data.remote.model.AccountDto
+import com.example.bankapp.data.remote.model.TransactionDto
 import com.example.bankapp.data.remote.model.TransactionResponseDto
 import com.example.bankapp.data.remote.model.UpdateAccountRequest
 import com.example.bankapp.data.remote.model.UpdateTransactionRequest
@@ -52,7 +53,7 @@ interface ApiService {
     suspend fun updateTransactionById(
         @Path("id") transactionId: Int,
         @Body request: UpdateTransactionRequest
-    ): Response<Unit>
+    ): Response<TransactionResponseDto>
 
     @DELETE("api/v1/transactions/{id}")
     suspend fun deleteTransactionById(
@@ -62,7 +63,7 @@ interface ApiService {
     @POST("api/v1/transactions")
     suspend fun addTransactionById(
         @Body request: UpdateTransactionRequest
-    ): Response<Unit>
+    ): Response<TransactionDto>
 
 
 }

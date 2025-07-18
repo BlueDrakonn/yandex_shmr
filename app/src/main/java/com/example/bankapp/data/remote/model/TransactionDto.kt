@@ -6,6 +6,7 @@ data class TransactionDto(
     val categoryId: Int,
     val amount: String,
     val transactionDate: String,
+    val comment: String?,
     val createdAt: String,
     val updatedAt: String
 )

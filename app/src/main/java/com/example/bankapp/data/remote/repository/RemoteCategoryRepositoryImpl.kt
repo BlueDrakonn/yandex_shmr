@@ -29,6 +29,7 @@ class RemoteCategoryRepositoryImpl @Inject constructor(
         )
     }
 
+
     override suspend fun loadCategoriesByType(isIncome: Boolean): ResultState<List<Category>> {
 
         return safeApiCallList(

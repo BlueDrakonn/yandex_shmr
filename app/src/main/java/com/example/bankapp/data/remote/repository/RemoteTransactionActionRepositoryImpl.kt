@@ -2,17 +2,19 @@ package com.example.bankapp.data.remote.repository
 
 import com.example.bankapp.core.ResultState
 import com.example.bankapp.data.remote.api.ApiService
+import com.example.bankapp.data.remote.model.TransactionDto
 import com.example.bankapp.data.remote.model.UpdateTransactionRequest
 import com.example.bankapp.data.remote.utils.safeApiCall
+import com.example.bankapp.domain.model.Transaction
 import com.example.bankapp.domain.model.TransactionEdit
 import com.example.bankapp.domain.repository.TransactionActionRepository
 import javax.inject.Inject
 
 class RemoteTransactionActionRepositoryImpl @Inject constructor(private val apiService: ApiService) :
     TransactionActionRepository {
-    override suspend fun addTransaction(request: UpdateTransactionRequest): ResultState<Unit> {
+    override suspend fun addTransaction(request: UpdateTransactionRequest): ResultState<TransactionDto> {
         return safeApiCall(
-            mapper = {
+            mapper = { it
             },
             block = {
                 apiService.addTransactionById(
@@ -22,9 +24,9 @@ class RemoteTransactionActionRepositoryImpl @Inject constructor(private val apiS
         )
     }
 
-    override suspend fun editTransaction(transactionId: Int,request: UpdateTransactionRequest ): ResultState<Unit> {
+    override suspend fun editTransaction(transactionId: Int,request: UpdateTransactionRequest ): ResultState<Transaction> {
         return safeApiCall(
-            mapper = {
+            mapper = { it.toTransaction()
             },
             block = {
                 apiService.updateTransactionById(

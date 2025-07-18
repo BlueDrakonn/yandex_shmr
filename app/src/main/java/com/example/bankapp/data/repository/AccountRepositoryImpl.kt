@@ -39,7 +39,7 @@ class AccountRepositoryImpl @Inject constructor(
     override suspend fun loadAccounts(): ResultState<List<Account>> {
 
         if (networkChecker.isOnline()) {
-            val remoteResult = remoteAccountRepositoryImpl.loadAccounts()
+            var remoteResult = remoteAccountRepositoryImpl.loadAccounts()
 
             when (remoteResult) {
                 is ResultState.Success -> {
@@ -49,6 +49,7 @@ class AccountRepositoryImpl @Inject constructor(
                     )
 
                     if (localResult != null) {
+
                         if (localResult.createdAt > remoteResult.data.firstOrNull()!!.updatedAt!!) {
                             val request: UpdateAccountRequest =
                                 Json.decodeFromString(localResult.payload)
@@ -57,6 +58,8 @@ class AccountRepositoryImpl @Inject constructor(
                                 listOf(OperationType.UPDATE_ACCOUNT),
                                 targetId = remoteResult.data.firstOrNull()?.id ?: 28
                             )
+                            remoteResult = remoteAccountRepositoryImpl.loadAccounts()
+
 
 
                         } else {

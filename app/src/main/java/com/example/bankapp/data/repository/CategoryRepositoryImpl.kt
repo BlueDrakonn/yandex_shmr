@@ -1,5 +1,6 @@
 package com.example.bankapp.data.repository
 
+import android.util.Log
 import com.example.bankapp.core.ResultState
 import com.example.bankapp.di.Local
 import com.example.bankapp.di.NetworkChecker
@@ -29,6 +30,7 @@ class CategoryRepositoryImpl @Inject constructor(
 
 
         } else {
+            Log.d("CATEGORY_OFFLINE", "start")
 
             return localCategoryLocalRepositoryImpl.loadCategories()
         }

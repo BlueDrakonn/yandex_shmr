@@ -7,5 +7,6 @@ interface CategoryRepository {
 
     suspend fun loadCategories(): ResultState<List<Category>>
 
+
     suspend fun loadCategoriesByType(isIncome: Boolean): ResultState<List<Category>>
 }

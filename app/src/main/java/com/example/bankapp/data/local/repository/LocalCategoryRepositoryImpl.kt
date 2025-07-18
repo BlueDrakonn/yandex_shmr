@@ -28,6 +28,7 @@ class LocalCategoryRepositoryImpl @Inject constructor(
         }
     }
 
+
     override suspend fun loadCategoriesByType(isIncome: Boolean): ResultState<List<Category>> {
         try {
             val result = categoryDao.getCategoryByType(isIncome = isIncome).map { it.toDomain() }

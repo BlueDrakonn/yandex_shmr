@@ -1,13 +1,9 @@
-package com.example.bankapp.domain.mapper
+package com.example.bankapp.data.local.mappers
 
 import com.example.bankapp.data.local.entity.TransactionEntity
-import com.example.bankapp.data.remote.model.UpdateTransactionRequest
+import com.example.bankapp.data.remote.model.TransactionDto
 
-fun UpdateTransactionRequest.toTransactionEntity(
-    id: Int,
-    isIncome: Boolean
-): TransactionEntity {
-
+fun TransactionDto.toEntity(isIncome: Boolean): TransactionEntity {
     return TransactionEntity(
         id = id,
         categoryId = categoryId,
@@ -17,4 +13,3 @@ fun UpdateTransactionRequest.toTransactionEntity(
         isIncome = isIncome
     )
 }
-

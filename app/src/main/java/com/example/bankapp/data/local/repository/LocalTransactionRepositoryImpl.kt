@@ -8,14 +8,13 @@ import com.example.bankapp.domain.mapper.toTransactionDetailed
 import com.example.bankapp.domain.model.Transaction
 import com.example.bankapp.domain.model.TransactionDetailed
 import com.example.bankapp.domain.repository.TransactionRepository
-import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class LocalTransactionRepositoryImpl @Inject constructor(
     private val transactionDao: TransactionDao
-) :  TransactionRepository {
+) : TransactionRepository {
 
 
     override suspend fun loadHistoryTransaction(
@@ -44,12 +43,15 @@ class LocalTransactionRepositoryImpl @Inject constructor(
 
         try {
             val result = transactionDao.getTransactionsBetweenDates(
-                startDate = Instant.now()
+                startDate = LocalDate.now(ZoneOffset.UTC)
+                    .atStartOfDay()
                     .atOffset(ZoneOffset.UTC)
-                    .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
-                endDate = Instant.now()
+                    .toInstant()
+                    .toString(),
+                endDate = LocalDate.now(ZoneOffset.UTC).atTime(23, 59, 59, 999_000_000)
                     .atOffset(ZoneOffset.UTC)
-                    .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+                    .toInstant()
+                    .toString()
             )
 
             return ResultState.Success(data = result.map { it.toTransaction() })

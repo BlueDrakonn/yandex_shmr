@@ -9,6 +9,10 @@ import javax.inject.Inject
 class SyncOperationRepositoryImpl @Inject constructor(
     private val syncOperationDao: SyncOperationDao
 ): SyncOperationRepository {
+    override suspend fun getPendingOperations(): List<SyncOperationEntity> {
+        return syncOperationDao.getPendingOperations()
+    }
+
     override suspend fun getPendingOperationsByType(type: OperationType, targetId: Int): SyncOperationEntity? {
         return syncOperationDao.findExistingOperation(type=type, targetId = targetId)
     }
