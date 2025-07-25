@@ -10,6 +10,7 @@ import com.example.bankapp.features.expenses.ExpensesViewModel
 import com.example.bankapp.features.firstLaunch.MainViewModel
 import com.example.bankapp.features.history.HistoryViewModel
 import com.example.bankapp.features.income.IncomeViewModel
+import com.example.bankapp.features.settings.SettingsViewModel
 import com.example.bankapp.features.transactionAction.add.TransactionAddViewModel
 import com.example.bankapp.features.transactionAction.edit.TransactionEditViewModel
 import dagger.Binds
@@ -79,6 +80,13 @@ interface ViewModelModule{
 
     @Binds
     @IntoMap
+    @Singleton
+    @ViewModelKey(SettingsViewModel::class)
+    fun bindSettingsViewModel(viewModel: SettingsViewModel): ViewModel
+
+
+    @Binds
+    @IntoMap
     @ViewModelKey(MainViewModel::class)
     fun bindMainViewModel(viewModel: MainViewModel): ViewModel
 
@@ -86,6 +94,7 @@ interface ViewModelModule{
 
     @Binds
     fun bindsDaggerViewModelFactory(daggerViewModelFactory: DaggerViewModelFactory): ViewModelProvider.Factory
+
 
 
 }

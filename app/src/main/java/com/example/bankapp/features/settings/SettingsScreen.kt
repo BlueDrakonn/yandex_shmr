@@ -14,16 +14,16 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bankapp.R
 import com.example.bankapp.core.navigation.Screen
+import com.example.bankapp.di.LocalViewModelFactory
 import com.example.bankapp.features.common.ui.LazyList
 import com.example.bankapp.features.settings.utils.SettingsItems
 import com.example.bankapp.navigation.TopAppBar
@@ -33,42 +33,49 @@ import com.example.bankapp.navigation.TopAppBar
 fun SettingsScreen() {
     val settingsItems = SettingsItems.items
 
-    var isDarkTheme by remember { mutableStateOf(false) }
 
+    val settingsViewModel: SettingsViewModel = viewModel(factory = LocalViewModelFactory.current)
+    val isDarkTheme by settingsViewModel.isDarkTheme.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title =  stringResource(Screen.SETTINGS.titleRes),
+                title = stringResource(Screen.SETTINGS.titleRes),
             )
         }
 
-    ) {
-        padding ->
+    ) { padding ->
         LazyList(
             itemsList = settingsItems,
             itemTemplate = { item ->
 
-                val clickableModifier  = when(item) {
+                val clickableModifier = when (item) {
                     R.string.settings_dark_theme -> Modifier
-                    else -> Modifier.clickable {  }
+                    else -> Modifier.clickable { }
                 }
 
                 ListItem(
                     modifier = clickableModifier
                         .height(55.dp),
-                    content = {Text(
-                        text = stringResource(item),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )},
+                    content = {
+                        Text(
+                            text = stringResource(item),
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    },
                     trailingContent = {
 
                         if (item == R.string.settings_dark_theme) {
+
                             Box {
+
                                 Switch(
                                     checked = isDarkTheme,
-                                    onCheckedChange = { isDarkTheme = it },
+                                    onCheckedChange = {
+                                        settingsViewModel.setDarkTheme(!isDarkTheme)
+
+                                    },
                                     colors = SwitchDefaults.colors(
                                         checkedThumbColor = MaterialTheme.colorScheme.primary,
                                         checkedTrackColor = MaterialTheme.colorScheme.secondary,
@@ -80,7 +87,8 @@ fun SettingsScreen() {
                         } else {
                             Box(
                                 modifier = Modifier.size(24.dp),
-                                contentAlignment = Alignment.Center) {
+                                contentAlignment = Alignment.Center
+                            ) {
                                 Icon(
                                     painter = painterResource(R.drawable.arrow_right),
                                     contentDescription = null,
@@ -94,7 +102,6 @@ fun SettingsScreen() {
             modifier = Modifier.padding(top = padding.calculateTopPadding())
         )
     }
-
 
 
 }
