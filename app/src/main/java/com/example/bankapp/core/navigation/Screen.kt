@@ -68,6 +68,14 @@ enum class Screen(
         "CHOOSE_PRIMARY_COLOR",
         R.string.choose_primary_color_ru,
     ),
+    PIN(
+        "PIN",
+        R.string.pin_set_ru,
+    ),
+    ENTER_PIN(
+        "ENTER_PIN",
+        R.string.pin_set_ru, //костыль
+    ),
     ;
 
     companion object {

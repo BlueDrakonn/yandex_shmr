@@ -3,6 +3,7 @@ package com.example.bankapp.di
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.bankapp.domain.repository.SettingsRepository
+import com.example.bankapp.features.settings.repository.PinRepository
 import com.example.bankapp.features.settings.repository.SettingsRepositoryImpl
 import dagger.Module
 import dagger.Provides
@@ -24,6 +25,14 @@ class SettingsModule() {
         prefs: SharedPreferences
     ): SettingsRepository {
         return SettingsRepositoryImpl(prefs)
+    }
+
+    @Provides
+    @Singleton
+    fun providePinRepository(
+        context: Context
+    ): PinRepository {
+        return PinRepository(context)
     }
 
 }

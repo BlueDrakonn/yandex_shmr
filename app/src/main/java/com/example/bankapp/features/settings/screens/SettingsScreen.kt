@@ -53,15 +53,9 @@ fun SettingsScreen(navController: NavHostController) {
 
                 val clickableModifier = when (item) {
                     R.string.settings_dark_theme -> Modifier
-                    else -> Modifier.clickable {
-
-                        val route = when (item) {
-                            R.string.settings_main_color -> Screen.CHOOSE_PRIMARY_COLOR.route
-                            else -> ""
-                        }
-                        navController.navigate(route)
-
-                    }
+                    R.string.settings_main_color -> Modifier.clickable {navController.navigate(Screen.CHOOSE_PRIMARY_COLOR.route)  }
+                    R.string.settings_password -> Modifier.clickable {navController.navigate(Screen.PIN.route)  }
+                    else -> Modifier
                 }
 
                 ListItem(
