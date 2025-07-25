@@ -4,22 +4,28 @@ import android.database.sqlite.SQLiteConstraintException
 import com.example.bankapp.core.ResultState
 import com.example.bankapp.data.local.dao.AccountDao
 import com.example.bankapp.data.local.dao.SyncOperationDao
+import com.example.bankapp.data.local.dao.TransactionDao
 import com.example.bankapp.data.local.entity.AccountEntity
 import com.example.bankapp.data.local.entity.OperationType
 import com.example.bankapp.data.local.entity.SyncOperationEntity
 import com.example.bankapp.data.local.mappers.toEntity
 import com.example.bankapp.data.remote.model.UpdateAccountRequest
 import com.example.bankapp.domain.mapper.toDomain
+import com.example.bankapp.domain.mapper.toTransactionDetailed
 import com.example.bankapp.domain.model.Account
+import com.example.bankapp.domain.model.TransactionDetailed
 import com.example.bankapp.domain.repository.AccountRepository
 import com.example.bankapp.domain.repository.WriteRepository
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.time.Instant
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class LocalAccountRepositoryImpl @Inject constructor(
     private val accountDao: AccountDao,
+    private val transactionDao: TransactionDao,
     private val syncOperationDao: SyncOperationDao
 ) : AccountRepository, WriteRepository<Account> {
 
@@ -97,6 +103,21 @@ class LocalAccountRepositoryImpl @Inject constructor(
         }
 
 
+    }
+
+    override suspend fun loadTransactionsForChart(): ResultState<List<TransactionDetailed>> {
+        try {
+            val result = transactionDao.getTransactionsBetweenDates(
+                startDate =  LocalDate.of(LocalDate.now().year, 1, 1).format(DateTimeFormatter.ISO_DATE),
+                endDate = LocalDate.now().format(DateTimeFormatter.ISO_DATE),
+            )
+
+            return ResultState.Success(data = result.map { it.toTransactionDetailed() })
+
+        } catch (e: SQLiteConstraintException) {
+
+            return ResultState.Error(message = e.message)
+        }
     }
 
 

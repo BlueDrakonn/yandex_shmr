@@ -22,7 +22,12 @@ import com.example.bankapp.features.expenses.ExpensesScreen
 import com.example.bankapp.features.firstLaunch.MainViewModel
 import com.example.bankapp.features.history.HistoryScreen
 import com.example.bankapp.features.income.IncomeScreen
-import com.example.bankapp.features.settings.SettingsScreen
+import com.example.bankapp.features.settings.PinViewModel
+import com.example.bankapp.features.settings.screens.AppInfoScreen
+import com.example.bankapp.features.settings.screens.EnterPinScreen
+import com.example.bankapp.features.settings.screens.PrimaryColorScreen
+import com.example.bankapp.features.settings.screens.SetPinScreen
+import com.example.bankapp.features.settings.screens.SettingsScreen
 import com.example.bankapp.features.transactionAction.add.TransactionAddScreen
 import com.example.bankapp.features.transactionAction.edit.TransactionEditScreen
 
@@ -30,6 +35,7 @@ import com.example.bankapp.features.transactionAction.edit.TransactionEditScreen
 @Composable
 fun AppNavigation() {
     val viewModel: MainViewModel = viewModel(factory = LocalViewModelFactory.current)
+    val pinViewModel: PinViewModel = viewModel(factory = LocalViewModelFactory.current)
     viewModel.start()
     val navController = rememberNavController()
 
@@ -45,9 +51,16 @@ fun AppNavigation() {
 
         NavHost(
             navController = navController,
-            startDestination = Screen.EXPENSES.route,
+            startDestination = if (pinViewModel.hasPin()) Screen.ENTER_PIN.route else Screen.EXPENSES.route,
             modifier = Modifier.padding(bottom = padding.calculateBottomPadding())
         ) {
+            composable(Screen.ENTER_PIN.route) {
+                EnterPinScreen { navController.navigate(Screen.EXPENSES.route) }
+            }
+            composable(Screen.APP_INFO.route) {
+                AppInfoScreen()
+            }
+
             composable(Screen.EXPENSES.route) {
                 ExpensesScreen(navController = navController)
             }
@@ -61,8 +74,15 @@ fun AppNavigation() {
                 CategoriesScreen()
             }
             composable(Screen.SETTINGS.route) {
-                SettingsScreen()
+                SettingsScreen(navController = navController)
             }
+            composable(Screen.CHOOSE_PRIMARY_COLOR.route) {
+                PrimaryColorScreen()
+            }
+            composable(Screen.PIN.route) {
+                SetPinScreen { navController.popBackStack() }
+            }
+
             composable(Screen.HISTORY_INCOME.route) {
                 HistoryScreen(type = TransactionType.INCOME, navController = navController)
             }

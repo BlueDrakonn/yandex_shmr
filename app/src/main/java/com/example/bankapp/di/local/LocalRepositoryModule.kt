@@ -59,14 +59,14 @@ abstract class LocalRepositoryModule {
 
 
 
-    ////исправить
+
     @Binds
     @Singleton
     abstract fun bindAccountWriteRepository(
         impl: LocalAccountRepositoryImpl
     ): WriteRepository<Account>
 
-    ////исправить
+
     @Binds
     @Singleton
     abstract fun bindCategoryWriteRepository(

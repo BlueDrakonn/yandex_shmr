@@ -63,7 +63,23 @@ enum class Screen(
     ANALYSIS(
         "ANALYSIS",
         R.string.analysis_title
-    )
+    ),
+    CHOOSE_PRIMARY_COLOR(
+        "CHOOSE_PRIMARY_COLOR",
+        R.string.choose_primary_color_ru,
+    ),
+    PIN(
+        "PIN",
+        R.string.pin_set_ru,
+    ),
+    ENTER_PIN(
+        "ENTER_PIN",
+        R.string.pin_set_ru, //костыль
+    ),
+    APP_INFO(
+        "APP_INFO",
+        R.string.pin_set_ru, //костыль
+    ),
     ;
 
     companion object {

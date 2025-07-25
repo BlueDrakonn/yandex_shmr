@@ -10,6 +10,8 @@ import com.example.bankapp.features.expenses.ExpensesViewModel
 import com.example.bankapp.features.firstLaunch.MainViewModel
 import com.example.bankapp.features.history.HistoryViewModel
 import com.example.bankapp.features.income.IncomeViewModel
+import com.example.bankapp.features.settings.PinViewModel
+import com.example.bankapp.features.settings.SettingsViewModel
 import com.example.bankapp.features.transactionAction.add.TransactionAddViewModel
 import com.example.bankapp.features.transactionAction.edit.TransactionEditViewModel
 import dagger.Binds
@@ -29,38 +31,38 @@ annotation class ViewModelKey(val value: KClass<out ViewModel>)
 
 
 @Module
-interface ViewModelModule{
+interface ViewModelModule {
     @Binds
     @Singleton
     @IntoMap
     @ViewModelKey(AccountViewModel::class)
-     fun bindAccountViewModel(viewModel: AccountViewModel): ViewModel
+    fun bindAccountViewModel(viewModel: AccountViewModel): ViewModel
 
     @Binds
     @IntoMap
     @ViewModelKey(AccountEditViewModel::class)
-     fun bindAccountEditViewModel(viewModel: AccountEditViewModel): ViewModel
+    fun bindAccountEditViewModel(viewModel: AccountEditViewModel): ViewModel
 
     @Binds
     @Singleton
     @IntoMap
     @ViewModelKey(CategoriesViewModel::class)
-     fun bindCategoriesViewModel(viewModel: CategoriesViewModel): ViewModel
+    fun bindCategoriesViewModel(viewModel: CategoriesViewModel): ViewModel
 
     @Binds
     @IntoMap
     @ViewModelKey(ExpensesViewModel::class)
-     fun bindExpensesViewModel(viewModel: ExpensesViewModel): ViewModel
+    fun bindExpensesViewModel(viewModel: ExpensesViewModel): ViewModel
 
     @Binds
     @IntoMap
     @ViewModelKey(IncomeViewModel::class)
-     fun bindIncomeViewModel(viewModel: IncomeViewModel): ViewModel
+    fun bindIncomeViewModel(viewModel: IncomeViewModel): ViewModel
 
     @Binds
     @IntoMap
     @ViewModelKey(HistoryViewModel::class)
-     fun bindHistoryViewModel(viewModel: HistoryViewModel): ViewModel
+    fun bindHistoryViewModel(viewModel: HistoryViewModel): ViewModel
 
     @Binds
     @IntoMap
@@ -79,9 +81,21 @@ interface ViewModelModule{
 
     @Binds
     @IntoMap
+    @Singleton
+    @ViewModelKey(SettingsViewModel::class)
+    fun bindSettingsViewModel(viewModel: SettingsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @Singleton
+    @ViewModelKey(PinViewModel::class)
+    fun bindPinViewModel(viewModel: PinViewModel): ViewModel
+
+
+    @Binds
+    @IntoMap
     @ViewModelKey(MainViewModel::class)
     fun bindMainViewModel(viewModel: MainViewModel): ViewModel
-
 
 
     @Binds
@@ -93,12 +107,12 @@ interface ViewModelModule{
 
 class DaggerViewModelFactory @Inject constructor(
     private val creators: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>
-): ViewModelProvider.Factory {
+) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         val creator = creators[modelClass] ?: creators.entries.firstOrNull() {
             modelClass.isAssignableFrom(it.key)
-        } ?.value ?: throw IllegalArgumentException("Unknown ViewModel class $modelClass")
+        }?.value ?: throw IllegalArgumentException("Unknown ViewModel class $modelClass")
         return creator.get() as T
     }
 }

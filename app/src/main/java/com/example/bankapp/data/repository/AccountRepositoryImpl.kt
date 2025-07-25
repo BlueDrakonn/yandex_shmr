@@ -2,15 +2,21 @@ package com.example.bankapp.data.repository
 
 import com.example.bankapp.core.ResultState
 import com.example.bankapp.data.local.entity.OperationType
+import com.example.bankapp.data.local.repository.LocalTransactionRepositoryImpl
 import com.example.bankapp.data.remote.model.UpdateAccountRequest
 import com.example.bankapp.di.Local
 import com.example.bankapp.di.NetworkChecker
 import com.example.bankapp.di.Remote
 import com.example.bankapp.domain.model.Account
+import com.example.bankapp.domain.model.Transaction
+import com.example.bankapp.domain.model.TransactionDetailed
 import com.example.bankapp.domain.repository.AccountRepository
 import com.example.bankapp.domain.repository.SyncOperationRepository
+import com.example.bankapp.domain.repository.TransactionRepository
 import com.example.bankapp.domain.repository.WriteRepository
 import kotlinx.serialization.json.Json
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class AccountRepositoryImpl @Inject constructor(
@@ -107,6 +113,17 @@ class AccountRepositoryImpl @Inject constructor(
             localAccountRepositoryImpl.updateAccount(request = request)
         }
 
+    }
+
+    override suspend fun loadTransactionsForChart(): ResultState<List<TransactionDetailed>> {
+        return if (networkChecker.isOnline()) {
+
+            remoteAccountRepositoryImpl.loadTransactionsForChart()
+
+
+        } else {
+            localAccountRepositoryImpl.loadTransactionsForChart()
+        }
     }
 
 
