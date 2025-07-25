@@ -35,9 +35,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             settingsViewModel = ViewModelProvider(this, viewModelFactory)[SettingsViewModel::class.java]
             val isDarkTheme by settingsViewModel.isDarkTheme.collectAsState()
+            val primaryColor by settingsViewModel.primaryColor.collectAsState()
             CompositionLocalProvider(LocalViewModelFactory provides appComponent.viewModelProviderFactory()) {
 
-                BankAppTheme(isDarkTheme) {
+                BankAppTheme(isDarkTheme, primaryColor) {
 
                     Log.d("RECOMPOSE", "")
                     AppNavigation()

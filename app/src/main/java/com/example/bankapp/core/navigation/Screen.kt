@@ -63,7 +63,11 @@ enum class Screen(
     ANALYSIS(
         "ANALYSIS",
         R.string.analysis_title
-    )
+    ),
+    CHOOSE_PRIMARY_COLOR(
+        "CHOOSE_PRIMARY_COLOR",
+        R.string.choose_primary_color_ru,
+    ),
     ;
 
     companion object {

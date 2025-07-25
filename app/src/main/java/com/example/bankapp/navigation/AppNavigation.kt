@@ -22,7 +22,8 @@ import com.example.bankapp.features.expenses.ExpensesScreen
 import com.example.bankapp.features.firstLaunch.MainViewModel
 import com.example.bankapp.features.history.HistoryScreen
 import com.example.bankapp.features.income.IncomeScreen
-import com.example.bankapp.features.settings.SettingsScreen
+import com.example.bankapp.features.settings.screens.PrimaryColorScreen
+import com.example.bankapp.features.settings.screens.SettingsScreen
 import com.example.bankapp.features.transactionAction.add.TransactionAddScreen
 import com.example.bankapp.features.transactionAction.edit.TransactionEditScreen
 
@@ -61,8 +62,12 @@ fun AppNavigation() {
                 CategoriesScreen()
             }
             composable(Screen.SETTINGS.route) {
-                SettingsScreen()
+                SettingsScreen(navController = navController)
             }
+            composable(Screen.CHOOSE_PRIMARY_COLOR.route) {
+                PrimaryColorScreen()
+            }
+
             composable(Screen.HISTORY_INCOME.route) {
                 HistoryScreen(type = TransactionType.INCOME, navController = navController)
             }

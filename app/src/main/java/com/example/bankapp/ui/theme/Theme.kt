@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 
-val DarkGreenColorScheme = darkColorScheme(
+private val DarkGreenColorScheme = darkColorScheme(
     primary = Color(0xFF2E7D32),
     onPrimary = Color.White,
 
@@ -57,6 +57,7 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun BankAppTheme(
     darkTheme: Boolean,
+    primaryColor: Int,
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
@@ -72,8 +73,11 @@ fun BankAppTheme(
         else -> LightColorScheme
     }
 
+
+
+
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = colorScheme.copy(primary =  Color(primaryColor)),
         typography = Typography,
         content = content
     )

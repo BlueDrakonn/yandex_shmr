@@ -1,4 +1,4 @@
-package com.example.bankapp.features.settings
+package com.example.bankapp.features.settings.screens
 
 import ListItem
 import androidx.compose.foundation.clickable
@@ -21,16 +21,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.bankapp.R
 import com.example.bankapp.core.navigation.Screen
 import com.example.bankapp.di.LocalViewModelFactory
 import com.example.bankapp.features.common.ui.LazyList
+import com.example.bankapp.features.settings.SettingsViewModel
 import com.example.bankapp.features.settings.utils.SettingsItems
 import com.example.bankapp.navigation.TopAppBar
 
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(navController: NavHostController) {
     val settingsItems = SettingsItems.items
 
 
@@ -51,7 +53,15 @@ fun SettingsScreen() {
 
                 val clickableModifier = when (item) {
                     R.string.settings_dark_theme -> Modifier
-                    else -> Modifier.clickable { }
+                    else -> Modifier.clickable {
+
+                        val route = when (item) {
+                            R.string.settings_main_color -> Screen.CHOOSE_PRIMARY_COLOR.route
+                            else -> ""
+                        }
+                        navController.navigate(route)
+
+                    }
                 }
 
                 ListItem(
@@ -86,7 +96,9 @@ fun SettingsScreen() {
                             }
                         } else {
                             Box(
-                                modifier = Modifier.size(24.dp),
+                                modifier = Modifier
+                                    .size(24.dp),
+
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(

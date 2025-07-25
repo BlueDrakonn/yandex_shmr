@@ -8,16 +8,16 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository
 ) : ViewModel() {
-//    private val _primaryColor = MutableStateFlow<Boolean>(settingsRepository.isDarkTheme())
-//    val primaryColor = _primaryColor
+    private val _primaryColor = MutableStateFlow<Int>(settingsRepository.getPrimaryColor())
+    val primaryColor = _primaryColor
 
     private val _isDarkTheme = MutableStateFlow<Boolean>(settingsRepository.isDarkTheme())
     val isDarkTheme = _isDarkTheme
 
-//    fun setPrimaryColor(color: Int) {
-//        settingsRepository.setPrimaryColor(color)
-//        _primaryColor.intValue = color
-//    }
+    fun setPrimaryColor(color: Int) {
+        settingsRepository.setPrimaryColor(color)
+        _primaryColor.value = color
+    }
 
     fun setDarkTheme(enabled: Boolean) {
 
