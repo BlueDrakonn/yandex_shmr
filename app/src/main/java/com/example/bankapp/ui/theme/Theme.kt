@@ -57,7 +57,7 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun BankAppTheme(
     darkTheme: Boolean,
-    primaryColor: Int,
+    primaryColor: Long,
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {

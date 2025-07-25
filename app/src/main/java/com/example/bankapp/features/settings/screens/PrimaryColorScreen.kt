@@ -33,11 +33,11 @@ fun PrimaryColorScreen() {
 
     val currentColor by settingsViewModel.primaryColor.collectAsStateWithLifecycle()
     val colors = listOf(
-        0xFF00C853.toInt(),
-        0xFFFF5722.toInt(),
-        0xFF3F51B5.toInt(),
-        0xFFFFC107.toInt(),
-        0xFFE91E63.toInt(),
+        0xFF00C853,
+        0xFFFF5722,
+        0xFF3F51B5,
+        0xFFFFC107,
+        0xFFE91E63,
     )
 
 

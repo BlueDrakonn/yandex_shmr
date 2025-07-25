@@ -4,6 +4,6 @@ interface SettingsRepository {
     fun isDarkTheme(): Boolean
     fun setDarkTheme(enabled: Boolean)
 
-    fun getPrimaryColor(): Int
-    fun setPrimaryColor(color: Int)
+    fun getPrimaryColor(): Long
+    fun setPrimaryColor(color: Long)
 }

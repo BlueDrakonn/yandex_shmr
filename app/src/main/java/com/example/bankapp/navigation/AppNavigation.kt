@@ -23,6 +23,7 @@ import com.example.bankapp.features.firstLaunch.MainViewModel
 import com.example.bankapp.features.history.HistoryScreen
 import com.example.bankapp.features.income.IncomeScreen
 import com.example.bankapp.features.settings.PinViewModel
+import com.example.bankapp.features.settings.screens.AppInfoScreen
 import com.example.bankapp.features.settings.screens.EnterPinScreen
 import com.example.bankapp.features.settings.screens.PrimaryColorScreen
 import com.example.bankapp.features.settings.screens.SetPinScreen
@@ -55,6 +56,9 @@ fun AppNavigation() {
         ) {
             composable(Screen.ENTER_PIN.route) {
                 EnterPinScreen { navController.navigate(Screen.EXPENSES.route) }
+            }
+            composable(Screen.APP_INFO.route) {
+                AppInfoScreen()
             }
 
             composable(Screen.EXPENSES.route) {

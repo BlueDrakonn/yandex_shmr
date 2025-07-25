@@ -55,6 +55,7 @@ fun SettingsScreen(navController: NavHostController) {
                     R.string.settings_dark_theme -> Modifier
                     R.string.settings_main_color -> Modifier.clickable {navController.navigate(Screen.CHOOSE_PRIMARY_COLOR.route)  }
                     R.string.settings_password -> Modifier.clickable {navController.navigate(Screen.PIN.route)  }
+                    R.string.settings_about_program -> Modifier.clickable {navController.navigate(Screen.APP_INFO.route)  }
                     else -> Modifier
                 }
 

@@ -76,6 +76,10 @@ enum class Screen(
         "ENTER_PIN",
         R.string.pin_set_ru, //костыль
     ),
+    APP_INFO(
+        "APP_INFO",
+        R.string.pin_set_ru, //костыль
+    ),
     ;
 
     companion object {
