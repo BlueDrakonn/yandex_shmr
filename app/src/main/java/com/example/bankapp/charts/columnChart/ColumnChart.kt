@@ -3,6 +3,7 @@ package com.example.bankapp.charts.columnChart
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -11,6 +12,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import kotlin.math.abs
 import kotlin.math.sqrt
@@ -21,6 +23,7 @@ fun ColumnChart(
     modifier: Modifier = Modifier,
     values: DoubleArray
 ) {
+    val colorInt = MaterialTheme.colorScheme.onBackground.toArgb()
 
     val monthNamesNom = listOf(
         "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
@@ -63,7 +66,7 @@ fun ColumnChart(
             if (index == selectedIndex.value) {
                 drawContext.canvas.nativeCanvas.apply {
                     val paint = android.graphics.Paint().apply {
-                        color = android.graphics.Color.BLACK
+                        color = colorInt
                         textAlign = android.graphics.Paint.Align.CENTER
                         textSize = 36f
                         isAntiAlias = true

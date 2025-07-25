@@ -63,6 +63,7 @@ fun PieChart(
                     val name = "${(category.percent).toInt()}% ${category.category.name}"
                     Text(
                         text = name,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         style = MaterialTheme.typography.bodySmall,
                         maxLines = 2
                     )
