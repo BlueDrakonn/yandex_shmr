@@ -7,7 +7,10 @@ import com.example.bankapp.data.remote.model.UpdateAccountRequest
 import com.example.bankapp.data.remote.utils.safeApiCall
 import com.example.bankapp.data.remote.utils.safeApiCallList
 import com.example.bankapp.domain.model.Account
+import com.example.bankapp.domain.model.TransactionDetailed
 import com.example.bankapp.domain.repository.AccountRepository
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 
@@ -83,6 +86,22 @@ class RemoteAccountRepositoryImpl @Inject constructor(
         } else {
             ResultState.Error(message = accountError)
         }
+    }
+
+    override suspend fun loadTransactionsForChart(): ResultState<List<TransactionDetailed>> {
+        return safeApiCallList(
+            mapper = {
+                it.toTransactionDetailed()
+            },
+            block = {
+                apiService.getTransactions(
+                    accountId ?: 28,
+                    startDate = LocalDate.of(LocalDate.now().year, 1, 1)
+                        .format(DateTimeFormatter.ISO_DATE),
+                    endDate = LocalDate.now().format(DateTimeFormatter.ISO_DATE),
+                )
+            }
+        )
     }
 
 }

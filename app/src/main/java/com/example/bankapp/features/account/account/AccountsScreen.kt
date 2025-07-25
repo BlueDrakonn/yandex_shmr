@@ -3,6 +3,10 @@ package com.example.bankapp.features.account.account
 import ListItem
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -12,13 +16,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.bankapp.R
+import com.example.bankapp.charts.columnChart.ColumnChart
 import com.example.bankapp.core.navigation.Screen
 import com.example.bankapp.di.LocalViewModelFactory
 import com.example.bankapp.features.common.ui.LazyList
@@ -37,7 +44,7 @@ fun AccountsScreen(
     val viewModel: AccountViewModel = viewModel(factory = LocalViewModelFactory.current)
 
     val state by viewModel.accountState.collectAsStateWithLifecycle()
-
+    val chartState by viewModel.chartState.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -110,7 +117,31 @@ fun AccountsScreen(
                                 },
                             )
                         })
+
+                    HorizontalDivider()
+                    ResultStateHandler(
+                        state = chartState,
+                        onSuccess = { chartInfo ->
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                ColumnChart(
+                                    values = chartInfo,
+                                    modifier = Modifier
+                                        .padding(vertical = 64.dp, horizontal = 12.dp)
+                                        .fillMaxWidth()
+                                        .height(200.dp)
+                                )
+                            }
+
+                        }
+                    )
+
                 })
+
             }, modifier = Modifier.padding(top = padding.calculateTopPadding())
         )
     }

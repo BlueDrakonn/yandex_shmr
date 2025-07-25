@@ -56,7 +56,7 @@ fun PieChart(
         ) {
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(2.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                horizontalAlignment = Alignment.Start,
                 modifier = Modifier.padding(strokeWidth.dp)
             ) {
                 items(data) { category ->
@@ -64,7 +64,7 @@ fun PieChart(
                     Text(
                         text = name,
                         style = MaterialTheme.typography.bodySmall,
-                        maxLines = 1
+                        maxLines = 2
                     )
                 }
             }
