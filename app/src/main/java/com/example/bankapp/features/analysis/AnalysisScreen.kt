@@ -2,10 +2,14 @@ package com.example.bankapp.features.analysis
 
 import ListItem
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -32,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.bankapp.R
+import com.example.bankapp.charts.pieChart.PieChart
 import com.example.bankapp.core.navigation.Screen
 import com.example.bankapp.di.LocalViewModelFactory
 import com.example.bankapp.features.analysis.models.AnalysisIntent
@@ -113,22 +118,38 @@ fun AnalysisScreen(
 
                 LazyList(
                     topItem = {
-                        AnalysisTopBlock(
-                            startData = formState.startDate,
-                            endData = formState.endDate,
-                            totalSum = formState.totalAmount,
-                            currency = viewModel.getCurrency(),
-                            startDataChange = {
+                        Column{
+                            AnalysisTopBlock(
+                                startData = formState.startDate,
+                                endData = formState.endDate,
+                                totalSum = formState.totalAmount,
+                                currency = viewModel.getCurrency(),
+                                startDataChange = {
 
-                                showDatePicker = DatePickerState.OPEN_START
+                                    showDatePicker = DatePickerState.OPEN_START
 
-                            },
-                            endDataChange = {
+                                },
+                                endDataChange = {
 
-                                showDatePicker = DatePickerState.OPEN_END
+                                    showDatePicker = DatePickerState.OPEN_END
 
+                                }
+                            )
+                            HorizontalDivider()
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                PieChart(
+                                    pieChartData =  data,
+                                    modifier = Modifier.padding(vertical = 16.dp).size(180.dp)
+                                )
                             }
-                        )
+
+                        }
+
                     },
                     itemsList = data,
                     onItemListIsEmpty = {
