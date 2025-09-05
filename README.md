@@ -20,6 +20,22 @@ BankApp - это современное Android-приложение для уп
 
 ⚡ Разрешение конфликтов: Умное слияние изменений при конфликтах данных
 
+## 📸 Скриншоты приложения
+
+<div align="center">
+
+
+<img src="https://github.com/user-attachments/assets/e93f1ef0-fb60-4b18-97c7-57df52d3ca68" width="280" />
+<img src="https://github.com/user-attachments/assets/b94b5379-85d5-4bc6-968e-947d8c2b9ecd" width="280" />
+<img src="https://github.com/user-attachments/assets/51151102-a0b0-43ef-a107-19105f616fef" width="280" />
+
+
+<img src="https://github.com/user-attachments/assets/5922f852-b6d1-443a-af79-1256263ceb52" width="280" />
+<img src="https://github.com/user-attachments/assets/59dfc4fe-bc41-49b0-875d-7aa7703c33ca" width="280" />
+<img src="https://github.com/user-attachments/assets/3f56320d-a8c9-412e-8475-d146e91b1f31" width="280" />
+
+</div>
+
 
 
 🛠 Технологический стек
